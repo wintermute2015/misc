@@ -1,0 +1,36 @@
+<script>
+var answer = true;
+
+var func = function(callback, name) {
+    if (callback !== undefined) {
+        callback(name);
+    }
+};
+
+var func1 = function(callback,name,age) {
+    if (answer) {
+        console.log("Name is "+name+", age "+age);
+    if (callback !== undefined) {
+        callback(name);
+    }
+}
+};
+
+var func2 = function(callback,name) {
+    if (confirm('Продолжить ?')) { 
+        console.log("Hello "+name);
+        if (callback !== undefined) {
+            callback(name);
+        }
+    }  else {
+        answer=false
+       }
+};
+
+var func3 = function(name) {
+    console.log("Hello "+name);
+};
+
+func(func1(func2(func3('ann'),'ira'),'ed', 42))
+
+</script>

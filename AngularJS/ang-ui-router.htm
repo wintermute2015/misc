@@ -1,0 +1,463 @@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
+
+<html ng-app="app">
+<div ui-view></div>
+<ul class="menu">
+    <li><a ui-sref="state1">State 1</a></li>
+    <li><a ui-sref="state2">State 2</a></li>
+    <li><a ui-sref="state3">State 3</a></li>
+    <li><a ui-sref="state4">State 4</a></li>
+    <li><a ui-sref="state5">State 5</a></li>
+</ul>
+
+
+<div ui-view="login"></div>
+<div ui-view="screen"></div>
+<div ui-view="all"></div>
+</html>
+
+<script>
+    (function () {
+        angular
+            .module('app', ['ui.router']);
+
+        angular
+            .module('app')
+            .run(runHandler);
+
+        function runHandler($rootScope, $state) {
+            $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+                console.log(toState);
+                var requireLogin = toState.data.requireLogin;
+
+                if (requireLogin && typeof $rootScope.currentUser === 'undefined') {
+                    event.preventDefault();
+                    $state.go('state3');
+                }
+            });
+        }
+
+        angular
+            .module('app')
+            .config(redirectOn404)
+            .run(redirectUnAuthorized);
+
+        function redirectUnAuthorized($rootScope, $log, $state) {
+		//$rootScope.currentUser = {name:'ed',pass:1};
+            $rootScope.$on('$stateChangeError',
+                    function (event, toState, toParams, fromState, fromParams, error) {
+                        $log.debug(error);
+                        $state.go('state1');
+                    });
+        }
+
+        function redirectOn404 ($httpProvider) {
+            $httpProvider.interceptors.push(function($q, $injector, $log) {
+                return {
+                    'responseError': function(rejection) {
+                        if (rejection.status === 404) {
+                            $log.debug(rejection);
+                            return $injector.get('$state').go('state4');
+                        }
+
+                        return $q.reject(rejection);
+                    }
+                };
+            });
+        }
+
+        angular
+            .module('app')
+            .controller('LoginController', LoginController);
+			
+		LoginController.$injector = ['$stateParams','$state'];
+
+        function LoginController(user, $stateParams, $state) {
+			console.log($stateParams);		
+            var vm = this;
+            vm.inputValue = user;
+			console.log(vm.inputValue);				
+			vm.msg = 'Kiev,UA';
+            vm.testFunc = testFunc;
+			
+			vm.go = function(){
+				$state.go('state0',{myParam:{name: 'Wintermute', id: 1}});
+			};	
+				
+            vm.obj = {
+                text: 'CoolWorld'
+            };
+
+            function testFunc(str) {
+                alert(str);
+            }
+        }
+		
+        angular
+            .module('app')
+            .controller('stateCtrl', stateCtrl);
+			stateCtrl.$injector = ['$scope','$state','$stateParams'];
+			
+			function stateCtrl($scope, $state, $stateParams) {
+				var vm = this;
+				console.log($stateParams.myParam);
+				vm.msg = $stateParams.myParam.name;
+				
+				vm.go = function(){
+				$state.go('state3',{myParam:{name: 'Wintermute', id: 1}});
+				}	
+			}
+			
+        angular
+            .module('app')
+            .controller('UsersCtrl', UsersCtrl);
+			
+		function UsersCtrl(results) {
+		    var vm = this;
+            vm.items = results;
+		}	
+		
+        angular
+            .module('app')
+            .config(routeConfig);
+
+        function routeConfig($stateProvider, $urlRouterProvider) {
+		
+			resolveHerokuUsers.$inject = ['$http', '$q'];
+			
+			function resolveHerokuUsers($http, $q) {
+				var url = 'http://coolworld.herokuapp.com/api/users/get';
+				return $http.get(url)
+					.then(function (result) {
+						return result.data;
+					})
+					.catch(function (reject) {
+						return $q.reject(reject);
+					});
+ 			}
+	
+            $urlRouterProvider.otherwise('/state1');
+
+            $stateProvider
+			        .state('users', {
+                        url: '/users',
+						params: {myParam: null},
+                        data: {
+                            requireLogin: false
+                        },
+                        views: {
+                            'screen': {
+                                template: '<div><center>'+
+								          	'<table border=1>'+
+												'<tr ng-repeat="item in usersCtrl.items">'+
+													'<td ng-click="usersCtrl.updateUser(item)">&nbsp E &nbsp</td>'+
+													'<td ng-click="usersCtrl.findUser(item)">{{item.id}}</td>'+
+													'<td ng-click="usersCtrl.findUser(item)">{{item.name}}</td>'+
+													'<td ng-click="usersCtrl.findUser(item)">{{item.pass}}</td>'+
+													'<td ng-click="usersCtrl.delUser(item)">&nbsp X &nbsp</td>'+
+												'</tr>'+
+											'</table>'+
+										  '</div>',
+								resolve: {
+									results: resolveHerokuUsers
+								},
+                                controller: 'UsersCtrl',
+                                controllerAs: 'usersCtrl'
+                            }
+                        }
+                    })
+					
+			        .state('state0', {
+                        url: '/state0',
+						params: {myParam: null},
+                        data: {
+                            requireLogin: false
+                        },
+                        views: {
+                            'screen': {
+                                template: '<div class="d0" ng-click="ctx.go()">State 0 - {{ctx.msg}}</div>',
+                                controller: 'stateCtrl',
+                                controllerAs: 'ctx'
+                            }
+                        }
+                    })
+					
+                    .state('state1', {
+                        url: '/state1',
+                        data: {
+                            requireLogin: false
+                        },
+                        views: {
+                            'login': {
+                                template: '' +
+                                '<div class="d1" ng-click="ctx.go()">State 1 - {{ctx.msg}} - {{ctx.inputValue.data.main.temp-273 | number:2 }} °C</div>',
+                                controller: 'LoginController',
+                                controllerAs: 'ctx',
+                                resolve: {
+									weatherFactory: 'weatherFactory',
+                                    user: function(weatherFactory) {
+                                        return weatherFactory.getWeather('kiev');	
+                                    }
+                                }
+                          },
+                            'screen': {
+								template: '<div class="d2"><a ui-sref="state0" style="color:white">Go to State 0</a></div>',
+                            },
+                            'all': {
+                                template: '<div class="d0" ui-sref="users">Heroku Users !!!</div>'
+                            }
+                        }
+                    })
+
+                    .state('state2', {
+                        url: '/state2',
+                        data: {
+                            requireLogin: true
+                        },
+                        views: {
+                            'screen': {
+                                template: '<div class="d2">State 2</div>'
+                            }
+                        }
+                    })
+
+                    .state('state3', {
+                        url: '/state3/:name?id',
+                        data: {
+                            requireLogin: false
+                        },
+                        views: {
+                            'screen': {
+                                template: '<div class="d0">{{msg}} <a ui-sref="state1({nameID:555})">CoolWorld !!! {{name}}</a></div>',
+                                controller: function($scope, init, $stateParams){
+												console.log($stateParams);
+												$scope.msg = 'Hello';
+												$scope.msg = init.data.name;
+												console.log(init.data);
+												$scope.name = $stateParams.name;
+											},
+								resolve: {
+								    init: ['weatherFactory',function(weatherFactory) {
+											return weatherFactory.getWeather('kiev');									
+                                    }]
+								}
+                            }
+                        }
+                    })
+ 
+        .state('state4', {
+                url: '/state4',
+                data: {
+                    requireLogin: false
+                },
+                views: {
+                    'screen': {
+                        template: '<div class="d0">State 4 {{msg}}</div>',
+                        controller: function($scope, data){
+										$scope.msg = 'None';
+										$scope.msg = data.data.weather[0].description;
+  										},
+                                resolve: {
+                                    data: function(weatherFactory) {
+									return weatherFactory.getWeather('kiev');
+                                    }
+                                }						
+                    }
+                }
+            })
+
+        .state('state5', {
+                url: '/state5',
+                data: {
+                    requireLogin: false
+                },
+                views: {
+                    'screen': {
+                        template: ''+
+                        '<center>'+
+                        '<div class="d0" style="height: 450px">'+
+                        '<hr>{{ ctrl.weatherData.name }}, {{ ctrl.weatherData.sys.country }}<hr>'+
+                        '<input enter value={{ctrl.city}} ng-model="ctrl.city"/>'+
+                        '<hr>{{ctrl.city}}<hr>'+
+                        '<span>Visual: {{ ctrl.weatherData.weather[0].main }} </span><br>'+
+                        '<span>Temp: {{ ctrl.weatherData.main.temp-273 | number:2 }} °C</span><br>'+
+                        '<span>Wind: {{ ctrl.weatherData.wind.speed }} m/s</span><br>'+
+                        '<span>Humidity: {{ ctrl.weatherData.main.humidity }} %</span><br>'+
+                        '<span>Press: {{ ctrl.weatherData.main.pressure}} mm</span><br>'+
+                        '</div>'+
+                        '</center>',
+                        controller: 'WeatherController',
+                        controllerAs: 'ctrl'
+                    }
+                }
+            });
+            /*
+             $urlRouterProvider.otherwise(function ($injector) {
+             var $state = $injector.get('$state');
+             $state.go('state3');
+             });
+             */
+        }
+
+        angular
+            .module('app')
+            .controller('WeatherController', WeatherController);
+
+        function WeatherController(weatherFactory) {
+            var ctrl = this;
+            ctrl.city = 'Kiev';
+            ctrl.init = init;
+            ctrl.initOther = initOther;
+
+            init(ctrl.city);
+
+            function initOther(city) {
+                var url = 'http://qapi.openweathermap.org/data/2.5/weather?q=kiev&callback=JSON_CALLBACK';
+                weatherFactory.getOtherWeather(url).then(success, failed);
+
+                function success(data) {
+                    ctrl.weatherData = data.data;
+                    console.log(data);
+                }
+
+                function failed(data) {
+                    ctrl.city = data.status;
+                }
+            }
+
+            function init(city) {
+                weatherFactory.getWeather(ctrl.city)
+                    .success(getData)
+                    .error(getError);
+            }
+
+            function getData(data) {
+                ctrl.weatherData = data;
+                console.log(data);
+            }
+
+            function getError(data, status, headers, config) {
+                console.log('Error status - ' + status);
+            }
+        }
+
+        angular
+            .module('app')
+            .directive('enter', enter);
+
+        function enter() {
+            return function (scope, element, attrs) {
+                element.on('keyup', function () {
+                    if (event.keyCode === 13) {
+                        scope.ctrl.initOther(scope.ctrl.city);
+                    }
+                })
+            };
+        }
+
+        angular
+            .module('app')
+            .factory('weatherFactory', weatherFactory);
+
+        weatherFactory.$inject = ['$http', '$q'];
+
+        function weatherFactory($http, $q) {
+            return {
+                getWeather: getWeather,
+                getOtherWeather: getOtherWeather
+            };
+
+            function getWeather(city) {
+                return $http.jsonp('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&callback=JSON_CALLBACK');
+            }
+
+            function getOtherWeather(url) {
+                var deferred = $q.defer();
+
+                $http.jsonp(url)
+                        .then(function (data) {
+                            deferred.resolve(data);
+                        },
+                        function (error) {
+                            deferred.reject(error);
+                        });
+
+                return deferred.promise;
+            }
+        }
+
+    })();
+</script>
+
+<style>
+
+    .d0 {
+        background: #9AC0CD;
+        padding: 50px;
+        width: 45%;
+        height: 40px;
+        color: white;
+        font-size: 200%;
+        text-align: center;
+        border: solid 1px black;
+        overflow: auto;
+        margin: auto;
+    }
+
+    .d1 {
+        background: #9AC0CD;
+        margin: 1%;
+        padding: 1%;
+        width: 45%;
+        color: white;
+        height: 100px;
+        float: left;
+        border: solid 1px black;
+        text-align: left;
+        overflow: auto;
+    }
+
+    .d2 {
+        background: #9AC0CD;
+        margin: 1%;
+        padding: 1%;
+        width: 45%;
+        color: white;
+        height: 100px;
+        float: right;
+        border: solid 1px black;
+        text-align: justify;
+        overflow: auto;
+    }
+
+    ul {
+        display: block;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    ul:after {
+        display: block;
+        content: ' ';
+        clear: both;
+        float: none;
+    }
+
+    ul.menu > li {
+        width: 20%;
+        float: left;
+        position: relative;
+    }
+
+    ul.menu > li > a {
+        display: block;
+        padding: 10px;
+        color: white;
+        background: rgb(46, 95, 122);
+
+        text-decoration: none;
+    }
+</style>
+

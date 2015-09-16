@@ -1,0 +1,99 @@
+﻿<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+
+<html ng-app="App">
+<center>
+<div ng-controller="outterCtrl"> 
+  <h2>Outter {{time}}</h2>
+      
+	<div ng-controller="middleCtrl"> 
+      <h2>Middle {{time}}</h2>
+          
+		<div ng-controller="innerCtrl"> 
+          <h2>Inner {{time}}</h2>
+			 <digest-button></digest-button>
+			 <apply-button></apply-button>   
+ 		<div ng-controller="lowCtrl"> 
+          		<h2>Low {{time}}</h2>
+				 <digest-button></digest-button>
+			 	<apply-button></apply-button>          
+			</div>      
+
+		</div>
+      
+	</div>
+  
+</div>
+</center>  
+</html>
+
+<script>
+//-------------------------------------------------------------------------------------
+var App = angular.module('App',[]);
+
+App.controller('outterCtrl',['$scope','$filter', function($scope, $filter){
+}]);
+
+App.controller('middleCtrl',['$scope', function($scope){
+}]);
+
+App.controller('innerCtrl',['$scope', function($scope){
+}]);
+
+App.controller('lowCtrl',['$scope', function($scope){
+}]);
+
+App.directive('digestButton',['$rootScope','$filter', function($rootScope,$filter){
+  return {
+      restrict: 'E',
+	  template: '<button>Digest {{digestCount}}</button>',
+      link: function(scope, element, attrs){
+         scope.digestCount = 0;
+         element.on('click', function(){
+            var now = new Date();
+            now = $filter('date')(now,'dd/MM/yyyy H:mm:ss ');
+            
+           $rootScope.time = now;
+           scope.digestCount++;           
+           scope.$digest();
+         }); 
+      }
+  };
+}]);
+
+App.directive('applyButton',['$rootScope','$filter', function($rootScope,$filter){
+  return {
+      restrict: 'E',
+	  template: '<button>Apply {{applyCount}}</button>',
+      link: function(scope, element, attrs){
+         scope.applyCount = 0;
+         element.on('click', function(){
+            var now = new Date();
+            now = $filter('date')(now,'dd/MM/yyyy H:mm:ss ');
+            
+           $rootScope.time = now;
+           scope.applayCount++;
+           scope.$apply();
+         }); 
+      }
+  };
+}]);
+
+//-------------------------------------------------------------------------------------
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

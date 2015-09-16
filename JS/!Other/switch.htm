@@ -1,0 +1,59 @@
+<center>
+<div id=d1></div>
+<br>
+<select id=s1>
+<option value="Test1">Test1</option>
+<option value="Test2">Test2</option>
+<option value="Test3">Test3</option>
+</select>
+
+<script>
+var Test = {};
+s1.addEventListener("change", mySwitch);
+
+function init() {
+Test.data = [];
+var obj = {};
+obj.name = 'Test1';
+obj.color = 'red';
+obj.size = 44;
+obj.tag = '<br><input type="submit">';
+Test.data.push(obj);
+
+obj = {};
+obj.name = 'Test2';
+obj.color = 'blue';
+obj.size = 44;
+obj.tag = '<br><input type="reset">';
+Test.data.push(obj);
+
+obj = {};
+obj.name = 'Test3';
+obj.color = 'green';
+obj.size = 44;
+obj.tag = '<br><input type="button" value="Click">';
+Test.data.push(obj);
+
+d1.style.width='200px';
+d1.style.padding='100px';
+}
+
+function mySwitch() {
+switch (s1.value) {
+case 'Test1' : {myApply(Test.data[0]); break;}
+case 'Test2' : {myApply(Test.data[1]); break;}
+case 'Test3' : {myApply(Test.data[2]); break;}
+}
+}
+
+function myApply(obj) {
+var d1 = document.getElementById('d1');
+d1.style.background = obj.color;
+d1.style.fontSize = obj.size;
+d1.style.color = 'white';
+d1.innerHTML= obj.name+obj.tag;
+}
+
+init();
+
+</script>

@@ -1,0 +1,128 @@
+<html>
+<style>
+	.img {
+		transition: width 1s, height 1s, transform .3s; 	//300ms
+ 	}
+	
+	.img-animated {
+		transition: width 1s, height 1s, transform .3s;		//300ms
+		//transform: translateX(-1000px);
+		//transform: skewY(180deg);
+		transform: scale(0.3,0.3);
+	}	
+
+</style>
+
+<body>
+<center>
+    <hr><br>
+	<div>
+		<img id="picBig" width=170 height=400>
+	</div>
+    <br><br>
+    <input type=button id='btnLeft' value="<">
+    <input type=button id='btnRight' value=">">
+    <br> <br>
+    <hr>
+</center>
+</body>
+
+<script>
+    (function (window) {
+        var obj = {};
+
+        var init = function (config) {
+            obj.arrPics = config.arr || [];
+            obj.pic = config.pic;
+            obj.counter = 0;
+
+            var left = config.left;
+            var right = config.right;
+
+            var picBig = document.getElementById(obj.pic);
+            picBig.src = obj.arrPics[0].pic;
+
+            var btnLeft = document.getElementById(left);
+            var btnRight = document.getElementById(right);
+
+            btnLeft.addEventListener('click', goLeft);
+            btnRight.addEventListener('click', goRight);
+            window.addEventListener('resize', myResize);
+            myResize();
+        };
+
+        var myResize = function () {
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var picBig = document.getElementById(obj.pic);
+            picBig.width = w - 200;
+        };
+
+        var goRight = function () {
+		    var picBig = document.getElementById(obj.pic);
+			picBig.className = 'img-animated';
+			
+			setTimeout(function() {
+				obj.counter++;
+				if (obj.counter > obj.arrPics.length - 1) {
+                obj.counter = 0;
+				}
+
+				picBig.src = obj.arrPics[obj.counter].pic;
+ 			},300);
+
+			setTimeout(function() {
+				picBig.className = 'img';
+			},300);
+         };
+		 
+        var goLeft = function () {
+		    var picBig = document.getElementById(obj.pic);
+			picBig.className = 'img-animated';
+			
+			setTimeout(function() {
+				obj.counter--;
+				if (obj.counter < 0) {
+					obj.counter = obj.arrPics.length - 1;
+				}
+
+				picBig.src = obj.arrPics[obj.counter].pic;
+ 			},300);
+
+			setTimeout(function() {
+				picBig.className = 'img';
+			},300);
+         };
+
+        var goLeft1 = function () {
+            obj.counter--;
+            if (obj.counter < 0) {
+                obj.counter = obj.arrPics.length - 1;
+            }
+            var picBig = document.getElementById(obj.pic);
+            picBig.src = obj.arrPics[obj.counter].pic;
+        };
+
+        window.slider = init;
+    }(window));
+
+    var myArr = [
+        {name: '1', pic: 'pics/1.jpg'},
+        {name: '2', pic: 'pics/2.jpg'},
+        {name: '3', pic: 'pics/3.jpg'},
+        {name: '4', pic: 'pics/4.jpg'}
+    ];
+
+    var config =  {
+        arr: myArr,
+        pic: 'picBig',
+        left: 'btnLeft',
+        right: 'btnRight'
+    };
+
+    window.slider(config);
+
+</script>
+</html>
+
+

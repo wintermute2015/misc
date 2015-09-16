@@ -1,0 +1,1449 @@
+<div id=d1></div>
+
+<script>
+//---------------------------------------------------------------------------------------------------------------------------------------04.12.14
+var Person = function(name) {
+this.name = name;
+};
+
+Person.prototype.hello = function() {
+return this.name;
+};
+
+var Developer = function(name, skills) {
+this.name = name;
+this.skills=skills;
+};
+
+Developer.prototype =  new Person();
+Developer.prototype.constructor = Developer;
+
+//----------------------------------------------------------------------------
+var coolWorld = coolWorld || {};
+var coolWorld = {
+str: 'Hello',
+say: function() {
+console.log(coolWorld.str);
+}
+}
+
+//----------------------------------------------------------------------------
+var myCoolWorld = (function() {
+var privatVar = 0;
+var privatMetod = function(name) {
+console.log(name);
+};
+
+return {
+name : 'WinterMute',
+
+getter : function() {
+privatMetod(this.name);
+},
+
+setter : function(str) {
+this.name=str;
+}
+
+};
+})();
+
+//----------------------------------------------------------------------------
+function Warrior(name, level) {
+this.name = name;
+this.level = level;
+this.prepare = function() {};
+this.attack = function() {
+this.prepare();
+console.log('Strike = '+this.level*0.1);
+};
+}
+var joda = new Warrior('Joda', 100);
+
+function Jedi (name, level) {
+this.name=name;
+this.level=level;
+this.sideOfForce = 'Light';
+this.Code = 'Ќет волнени€ Ч есть покой...'
+
+this.prepare = function() {
+console.log('Call power of '+this.sideOfForce+' !!!');
+};
+
+this.toLightSide = function(obj) {
+if (obj.sideOfForce == 'Light') {
+throw new Error(obj.name+' alredy is on LightSide !!!');
+}
+else
+{
+console.log('Level of '+obj.name+' is '+obj.level+'.');
+console.log(obj.name+' is on '+obj.sideOfForce+'Side.');
+
+if (this.level>obj.level) {
+obj.sideOfForce = 'Light';
+console.log(obj.name+' is becoming Light !!!');
+}
+
+if (this.level<obj.level) {
+obj.sideOfForce = 'Dark';
+console.log(this.name+' is becoming Dark !!!');
+}
+} 
+}; 
+
+};
+
+Jedi.prototype = new Warrior();
+Jedi.prototype.constructor = Jedi;
+
+var luke = new Jedi('Luke Skywalker', 50);
+
+function Sith (name, level) {
+this.name=name;
+this.level=level;
+this.sideOfForce = 'Dark';
+this.Code = '—покойствие Ч ложь, есть только страсть...'
+
+this.prepare = function() {
+console.log('Call power of '+this.sideOfForce+' !!!');
+};
+
+this.toDarkSide = function(obj) {
+if (obj.sideOfForce == 'Dark') {
+throw new Error(obj.name+' alredy is on DarkSide !!!');
+}
+else
+{
+console.log('Level of '+obj.name+' is '+obj.level+'.');
+console.log(obj.name+' is on '+obj.sideOfForce+'Side.');
+
+if (this.level>obj.level) {
+obj.sideOfForce = 'Dark';
+console.log(obj.name+' is becoming Dark !!!');
+}
+
+if (this.level<obj.level) {
+obj.sideOfForce = 'Light';
+console.log(this.name+' is becoming Light !!!');
+}
+} 
+}; 
+
+};
+
+Sith.prototype = new Warrior();
+Sith.prototype.constructor = Sith;
+
+var darth = new Sith('Darth Weider', 70);
+
+//----------------------------------------------------------------------------
+//$('#d1').innerHTML='xxx';
+
+//---------------------------------------------------------------------------------------------------------------------------------------05.12.14
+var Force = {
+power : 100,
+
+show : function() {
+console.log('Total power is '+Power.power)
+},
+
+attack : function(num) {
+Force.power=Power.power-num;
+console.log('Attack use '+num+' of Power')
+}
+
+};
+
+Object.keys(Force);
+
+var DarkForce = Object.create(Force);
+var LightForce = Object.create(Force);
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------08.12.14
+var result = (function(a,b) {
+return a*b;
+})(2,3);
+
+//----------------------------------------------------------------------------
+var myCoolWorld = (function(luke) {
+
+var name = luke.name;
+
+_getter = function() {
+console.log(name);
+};
+
+_setter = function(str) {
+name=str;
+};
+
+//------------------------------------------------------
+return {
+getter : _getter,
+setter : _setter,
+luke : luke
+};
+//------------------------------------------------------
+
+})(luke);
+
+//---------------------------------------------------------------------------------------------------------------------------------------11.12.14
+Budget = {};
+Budget.cool='cool';
+Budget.data = {};
+ 
+Budget.data.outputs = JSON.parse(localStorage.getItem('budgetOutputs'));
+Budget.data.inputs   = JSON.parse(localStorage.getItem('budgetInputs'));
+
+//console.log(Budget.data.outputs[0].name);
+ 
+//---------------------------------------------------------------------------------------------------------------------------------------12.12.14
+
+var Animal = function() {
+this.getName = function() {
+return this.name
+}
+};
+
+var Dog = function(name) {
+this.name = name,
+this.gav = function() {
+return 'Dog '+this.name+' is saying gav';
+}
+};
+
+Dog.prototype = new Animal();
+Dog.prototype.constructor = Dog;
+
+var dog = new Dog ('Aban');
+dog.getName() === 'garfield';
+dog.gav() === 'Dog Aban is saying gav'; 
+
+//------------------------------------------------------
+var animal = {};
+var rabbit = {};
+rabbit.__proto__ = animal; 
+var hedgehog = Object.create(rabbit); 
+
+//---------------------------------------------------------------------------------------------------------------------------------------17.12.14
+
+function initFriends() 
+{
+var friends = {
+data : [
+{id:1, name:'Edward', date:'01/11/2002', email:'ed@gmail.com',sign:'Capricorn'},
+{id:2, name:'Irinka',date:'08/06/2000', email:'ira@gmail.com',sign:'Leo'},
+{id:3, name:'Alex',date:'09/07/2001', email:'alex@gmail.com',sign:'Libra'},
+{id:4, name:'John',date:'03/03/2001', email:'alex@gmail.com',sign:'Aries'},
+{id:5, name:'Mary',date:'04/27/2001', email:'alex@gmail.com',sign:'Taurus'},
+{id:6, name:'Ann',date:'05/29/2001', email:'alex@gmail.com',sign:'Gemini'},
+{id:7, name:'Jane',date:'06/25/2001', email:'alex@gmail.com',sign:'Cancer'},
+{id:8, name:'Dave',date:'07/26/2001', email:'alex@gmail.com',sign:'Leo'},
+{id:9, name:'Carl',date:'09/02/2001', email:'alex@gmail.com',sign:'Virgo'},
+{id:10, name:'Chris',date:'10/25/2001', email:'alex@gmail.com',sign:'Scorpio'},
+{id:11, name:'Rick',date:'11/24/2001', email:'alex@gmail.com',sign:'Sagittarius'},
+{id:12, name:'Will',date:'12/27/2001', email:'alex@gmail.com',sign:'Capricorn'}
+]
+};
+
+friends = JSON.stringify(friends);
+return friends;
+};
+
+friends = initFriends();
+friends = JSON.parse(friends);
+friends.data[0].name;
+
+//---------------------------------------------------------------------------------------------------------------------------------------19.12.14
+
+function f(n) {
+return n ? n*f(n-1) : 1
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------25.12.14
+
+function myAllKeys(obj) {
+var arr = [];
+for (k in obj) {
+arr.push(k);
+}
+return arr;
+}
+
+//------------------------------------------------------
+
+luke.hasOwnProperty('Code');
+
+//------------------------------------------------------
+
+//console.log(Object.keys(luke));
+
+//------------------------------------------------------
+
+function myOwnKeys(obj) {
+var arr = [];
+for (k in obj) {
+if (luke.hasOwnProperty(k)) {
+arr.push(k);
+}
+}
+return arr;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------26.12.14
+
+function myApply(arr,callback) {
+for (var i=0,len = arr.length; i<len; i++) {
+callback.call(this, arr[i]);
+}
+}
+
+myApply([1,2,3], function(data) {
+//console.log('Now is '+ data);
+});
+
+//------------------------------------------------------
+function myApply(arr,callback) {
+for (var i=0,len = arr.length; i<len; i++) {
+callback(arr[i]);
+}
+}
+
+myApply([1,2,3], function(data) {
+//console.log('Now is '+ data);
+});
+
+//------------------------------------------------------
+function makeCounter() {
+var count = 0;
+var func = function() {
+count++;
+console.log(count);
+}
+return func;
+}
+
+var count = makeCounter();
+
+//---------------------------------------------------------------------------------------------------------------------------------------28.12.14
+
+function dev(name, skills) {
+this.name = name;
+this.skills = skills;
+}
+
+dev.prototype.cv = function() {
+console.log(this.name+' can do '+this.skills)
+}
+
+d1 = new dev('ed','js')
+
+//------------------------------------------------------
+function doNew(FnClass) {
+var instance = {};
+instance.__proto__ = FnClass.prototype;
+constructorReturns = FnClass.apply(instance, arguments);
+return constructorReturns instanceof Object ? constructorReturns : instance;
+}
+
+//------------------------------------------------------
+function New (f) {
+var n = { '__proto__': f.prototype };
+return function () {
+f.apply(n, arguments);
+return n;
+};
+}
+
+//------------------------------------------------------
+
+function New (f) {
+var obj = {};
+obj.__proto__ = f.prototype;
+return function () {
+f.apply(obj, arguments);
+return obj;
+};
+}
+
+d2 = New(dev)('ed','js')
+
+//---------------------------------------------------------------------------------------------------------------------------------------02.01.15
+
+function doPrep(data) {
+return function(text) {
+console.log(text+' did '+data+' times !!!');
+}
+}
+
+f1 = doPrep(500);
+//f1('Ed');
+
+//---------------------------------------------------------------------------------------------------------------------------------------06.01.15
+
+function f(n) {
+return n ? n*arguments.callee(n-1) : 1
+}
+
+function create() {
+return function(n) {
+if (n <= 1)
+return 1;
+return n * arguments.callee(n - 1);
+};
+}
+
+var result = create()(5); // returns 120 (5 * 4 * 3 * 2 * 1)
+
+//---------------------------------------------------------------------------------------------------------------------------------------09.01.15
+
+arr = [1, 7, 12, 5];
+a = arr.slice();
+
+arr.sort();
+
+arr.sort(function(a,b) {
+return a > b ? 1 : -1
+})
+
+//shift - unshift
+//push - pop
+//split str
+//join str
+//slice
+//splice
+//concat
+
+//---------------------------------------------------------------------------------------------------------------------------------------17.01.15
+
+var largeStr = new Array(100).join('x');
+
+arr.forEach(function(el) {
+//console.log(el);
+});
+
+arr1 = arr.map(function(el) {
+return el*el;
+});
+
+var str = '12345';
+[].map.call(str, function(x) {
+return x;
+}).reverse().join('');
+
+var filtered = [12, 5, 8, 130, 44].filter(function(el) {
+return el >= 10;
+});
+
+//---------------------------------------------------------------------------------------------------------------------------------------18.01.15
+
+CoolworldController = {};
+CoolworldController.loadJSON = function (data) {
+    this.gateway.loadCoolworld(this.viewJSON.showDATA(data));
+};
+
+CoolworldJSON = {};
+CoolworldJSON.showDATA = function (data) {
+    data = data+' !!!'; 
+    return console.log(data);
+};
+CoolworldController.viewJSON = CoolworldJSON; 
+
+CoolworldGateway = {};
+CoolworldGateway.loadCoolworld = function (onSuccess) {
+    return onSuccess;
+}
+CoolworldController.gateway = CoolworldGateway;
+ 
+//CoolworldController.loadJSON('Hello JSON');
+
+//---------------------------------------------------------------------------------------------------------------------------------------04.02.15
+
+CoolWorld = (function() {
+
+var name = 'Wintermute';
+
+_getter = function() {
+return name;
+};
+
+_setter = function(str) {
+name=str;
+}
+
+return {
+getter: _getter,
+setter:_setter
+}
+
+})();
+
+//---------------------------------------------------------------------------------------------------------------------------------------05.02.15
+
+var doubleDecorator = function(f) {
+return function () {
+return 2*f.apply(this, arguments);
+};
+};
+
+var sum = function(a, b) {
+return a + b
+};
+
+doubleSum = doubleDecorator(sum);
+
+var wraperDecorator = function(f) {
+return function () {
+return '<div>' + f.apply(this, arguments) + '</div>';
+};
+};
+
+wraper = wraperDecorator(sum);
+
+//------------------------------------------------------
+
+function copy(obj) {
+for (var i = 1; i < arguments.length; i++) {
+var o = arguments[i];
+for (var key in o) {
+obj[key] = o[key];
+}
+}
+return obj;
+}
+
+var user = {
+name: 'ed',
+cv: 'js'
+};
+
+user1 = copy({}, user);
+user1 = copy(user, luke);
+
+//------------------------------------------------------
+
+arr = ['1','4','5aa','2sd'];
+
+function parserToInteger(arr) {
+var newArray = [];
+for (var i=0; i<arr.length; i++) {
+newArray.push(parseInt(arr[i]));
+}
+newArray.sort();
+return newArray;
+}
+
+//------------------------------------------------------
+
+str = 'Hello my my dear my CoolWorld';
+
+function deleteFromStr(str, el) {
+var arr = str.split(' ');
+
+for (var i=0; i<arr.length; i++) {
+if (arr[i] == el) {
+arr.splice(i, 1);
+i--;
+}
+}
+return arr.join(' ');
+}
+
+arr1 = deleteFromStr(str, 'my');
+
+//---------------------------------------------------------------------------------------------------------------------------------------06.02.15
+
+var arr = [22, 7, 2, 1, 4, 55, -12, 8, 10, 3, -66, 9, 5];
+
+sort = function(arr) {
+
+for (var j= 0; j < arr.length; j++) {
+for (var i = 0; i < arr.length; i++) {
+
+if (arr[i] > arr[i+1]) {
+var max = arr[i];
+arr[i] = arr[i+1];
+arr[i+1] = max;
+}
+console.log(arr);
+}
+}
+
+return arr;
+}
+
+//sort(arr);
+
+//------------------------------------------------------
+
+max = function(arr) {
+var max = arr[0];
+
+for (var i = 0; i < arr.length; i++) {
+
+if (max < arr[i]) {
+max = arr[i];
+}
+
+}
+return max;
+}
+
+//max(arr);
+
+//------------------------------------------------------
+
+min = function(arr) {
+var min = arr[0];
+
+for (var i = 0; i < arr.length; i++) {
+
+if (min > arr[i]) {
+min = arr[i]; 
+}
+
+}
+return min;
+}
+
+//min(arr);
+
+//---------------------------------------------------------------------------------------------------------------------------------------11.02.15
+
+var myDom = function(event) {
+var el = document.createElement('a'); 
+
+el.innerHTML = 'CoolWorld ';
+el.id = 'myLink';
+el.setAttribute('id', 'myLink1');
+
+var linkText = document.createTextNode(" Wintermute");
+el.appendChild(linkText);
+
+el.href = "http://example.com";
+document.body.appendChild(el);
+};
+
+myDom();
+
+var myHandler = function(event) {
+event.preventDefault();
+var el = document.getElementById('myLink1');
+document.body.removeChild(el);
+removeEventListener('click', myHandler);
+};
+
+addEventListener('click', myHandler);
+
+//---------------------------------------------------------------------------------------------------------------------------------------12.02.15
+
+function mySum(a) {
+return function(b) {
+return a+b
+}
+}
+
+mySum(1)(2);
+
+//---------------------------------------------------------------------------------------------------------------------------------------17.02.15
+
+var chain = {
+step: 0,
+up: function() { 
+this.step++; 
+return this;
+},
+
+down: function() { 
+this.step--; 
+return this;
+},
+
+showStep: function() { 
+console.log(this.step); 
+return this;
+}
+
+}
+
+//chain.up().up().down().up().down().showStep();
+
+//---------------------------------------------------------------------------------------------------------------------------------------18.02.15
+
+var obj1 = {
+myMetod: function(){
+}
+};
+
+var obj2 = Object.create(obj1);
+obj2.test = 'Test';
+obj2.cool = 'Cool';
+
+//console.log(obj2.hasOwnProperty('test'));
+
+//console.log(Object.getOwnPropertyDescriptor(obj2,"test"));
+
+//console.log(Object.keys(obj2));
+
+//console.log(obj1.hasOwnProperty('test'));
+
+for (var key in obj2) {
+//console.log(key);
+}
+
+var myConst = function(obj) {
+this.name = obj.name || 'no_name';
+this.age = obj.age || 0;
+this.skills = obj.skills || 'no_skills';
+}
+
+var myObj2 = new myConst({
+name: 'ed',
+age: 43,
+skills: 'js'
+});
+
+//console.log(myObj2 instanceof myConst);
+
+//---------------------------------------------------------------------------------------------------------------------------------------19.02.15
+
+a = 10;
+var b = function() {
+console.log(a);
+a = 5;
+console.log(a++);
+console.log(a);
+var a = 1;
+}
+
+//b();
+
+//------------------------------------------------------
+var obj = {
+a: 42,
+say: function() {
+setTimeout(console.log(this.a), 2000);
+}
+};
+
+//obj.say();
+
+var obj = {
+a: 42,
+say: function() {
+setTimeout(function(){
+console.log(this.a);
+}, 2000);
+}
+};
+
+//obj.say();
+
+var obj = {
+a: 42,
+say: function() {
+var that = this;
+setTimeout(function(){
+console.log(that.a);
+}, 3000);
+}
+};
+
+//obj.say();
+
+//------------------------------------------------------
+var regexp = 'user@site.com';
+
+var patternBirthdate =/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
+var patternEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//patternEmail.test(t2.value)
+
+//------------------------------------------------------
+var orders = [
+['usd', 99, 1000],
+['usd', 99, 1000],
+['usd', 109, 1000],
+['chf', 107, 3000],
+['eur', 101, 3000],
+['usd', 105, 2000],
+['eur', 90, 3000],
+['chf', 97, 3000],
+['cad', 100, 3000]
+];
+
+var optimal = 100;
+
+var result = (function() {
+var profit = 0, loss = 0, val,  obj, filtered, i, arr = ['usd', 'eur', 'chf', 'cad'], data = [];
+
+for (i = 0; i<arr.length; i++) {
+profit = 0;
+loss = 0;
+
+filtered = orders.filter(function(el) {
+return el[0] == arr[i];
+}).forEach(function(el) {
+val = el[0];
+if (el[1] < 100) {profit += el[1];} 
+else {loss += el[1];}
+});
+
+switch (arr[i]) {
+case 'usd' : {obj = {usd: [profit, loss]}; data.push(obj);break;}
+case 'eur' : {obj = {id:'eur',balance: {profit: profit, loss: loss}}; data.push(obj);break;}
+case 'chf' : {obj = {id:'chf',balance: {profit: profit, loss: loss}}; data.push(obj);break;}
+case 'cad' : {obj = {id:'cad',balance: {profit: profit, loss: loss}}; data.push(obj);break;}
+}
+
+}
+
+return data;
+}());
+
+//console.log(result);
+//------------------------------------------------------
+
+var getFirstProp = function(obj) {
+for (var i in obj) {
+return obj[i];
+}
+};
+
+var s = getFirstProp(result[0])[0];
+
+//---------------------------------------------------------------------------------------------------------------------------------------22.02.15
+
+arrA = [1,2,3,4,5,6];
+arrB = [2,4,6];
+
+function campareArray(a, b) {
+var c = [];
+for (var i = 0; i < a.length; i++) {
+for (var j = 0; j < b.length; j++) {
+if (a[i] == b[j]) {
+c.push(a[i]);
+break;
+}
+}
+}
+return c;
+}
+
+console.log(campareArray(arrA, arrB));
+
+//---------------------------------------------------------------------------------------------------------------------------------------26.02.15
+
+typeof foo // "undefined"
+typeof typeof foo //"string"
+typeof (function(){})()  // "undefined"
+
+//[1,2,3,4,5][1,2,3] //4
+
+//------------------------------------------------------
+
+var list = [];
+for (var i = 0; i < 5; i++) {
+list[i] = function() {
+console.log(i);
+}
+}
+
+list[2]();
+
+var list = [];
+for (var i = 0; i < 5; i++) {
+list[i] = (function(x) {
+return function() {
+console.log(x);
+}
+})(i);
+}
+
+list[2]();
+//------------------------------------------------------
+
+a = {};
+a.name = 'test';
+Object.getOwnPropertyDescriptor(a,'name');
+Object.defineProperty(a, 'name',{
+value:'cool',
+writable: false
+});
+
+a.name = 'xxx'; //'cool'
+
+//---------------------------------------------------------------------------------------------------------------------------------------03.03.15
+var a = function(a,b) {
+};
+
+a.length; //2
+
+//---------------------------------------------------------------------------------------------------------------------------------------17.03.15
+/*
+
+L1:MOV;
+   NOP;
+IF (FLAG != TRUE) GOTO L1;
+L2:MOV;
+GOTO L2;
+
+*/
+//------------------------------------------------------
+
+function Cat(name) {
+this.name = name;
+
+var id = "777";
+
+var _get = function() {
+console.log(id);
+};
+
+var _set = function(data) {
+id = data;
+}
+
+this.dataId = {
+get: _get,
+set: _set
+};
+}
+
+var cat = new Cat('kitty');
+cat.dataId.get();
+
+//---------------------------------------------------------------------------------------------------------------------------------------18.03.15
+
+function getCouter() {
+return this.myCount++;
+}
+
+var counter = getCouter.bind({myCount:100});
+counter();
+
+//---------------------------------------------------------------------------------------------------------------------------------------19.03.15
+function format(t) {
+t = t.split(' ');
+t = t[1].split(']');
+return t[0];
+}
+
+function test() {
+var t = arguments;
+var a = [];
+var o = {};
+
+t = Object.prototype.toString.call(t);
+a = Object.prototype.toString.call(a);
+o = Object.prototype.toString.call(o);
+
+console.log(format(t));
+console.log(format(a));
+console.log(format(o));
+}
+//test();
+
+//---------------------------------------------------------------------------------------------------------------------------------------20.03.15
+
+function test(x){
+var a = x || 'None'
+return a;
+}
+
+test.length; //Arguments quantity
+//------------------------------------------------------
+
+var obj = {
+name:'Cool',
+say: function() {
+setTimeout(function(){
+console.log(this.name);
+}.bind(this), 1000);
+}
+};
+
+obj.say();
+
+//---------------------------------------------------------------------------------------------------------------------------------------24.03.15
+
+isNaN('1aaa'); //false
+
+//---------------------------------------------------------------------------------------------------------------------------------------25.03.15
+
+function bar() {
+ console.log(foo);
+ foo = 10;
+ //debugger;
+ var b=10;
+ return;  
+ var c = function(){};
+ function foo() {}
+}
+bar();
+
+//---------------------------------------------------------------------------------------------------------------------------------------01.04.15
+
+function A(){};
+function B(){};
+B.prototype = new A();
+
+A.prototype.arr = [1,2,3,4];
+A.prototype.z = 5;
+
+var a = new A();
+var b = new B();
+
+b.arr.push(5);
+b.z++;
+
+//---------------------------------------------------------------------------------------------------------------------------------------02.04.15
+
+//document.getElementById(targetElementSelector.split('#')[1]).getElementsByTagName('input')[0].focus();
+
+//---------------------------------------------------------------------------------------------------------------------------------------03.04.15
+
+var obj = {
+  foo: 0,
+  bar: 1
+};
+
+Object.observe(obj, function(changes) {
+  console.log(changes);
+});
+
+//---------------------------------------------------------------------------------------------------------------------------------------08.04.15
+var objectToAnalyze = {
+  kakashka: "maybe",
+  marker: {
+    boolka: "yes",
+    marker: {
+      povidlo: "yes yes!",
+      marker: {
+        mak: "no"
+      }
+    }
+  }
+};
+
+function findDeepness(obj, marker, counter) {
+  counter = counter || 0;
+  if(obj[marker] && typeof obj[marker] === 'object')  {
+    return findDeepness(obj[marker], marker, ++counter);
+  } else {
+    return counter;
+  }
+}
+
+console.log(findDeepness(objectToAnalyze, 'marker'));
+
+//---------------------------------------------------------------------------------------------------------------------------------------10.04.15
+
+var a = {
+  id:1,
+  node: {
+        id:2,
+        node: {
+              id:3,
+              test:'test',
+              gate: {
+                    id:777,
+                    text:'CoolWorld'
+              }
+        }
+  }
+
+};
+
+function func(a) {
+    var initial = a,
+        currentprop;
+
+    for (currentprop in initial) {
+        if (typeof(initial[currentprop]) === 'object') {
+            console.log(currentprop);
+            func(initial[currentprop]);
+          
+        } else {
+            console.log(currentprop+': '+initial[currentprop]);
+            console.log('------------------------');
+        }
+    }
+}
+func(a);
+
+function func(obj) {
+    for (var key in obj) {
+        if (typeof(obj[key]) === 'object') {
+            console.log(key);
+            func(obj[key]);
+          
+        } else {
+            console.log(key+': '+obj[key]);
+            console.log('------------------------');
+        }
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------14.04.15
+
+[1,2,3,'77',5].indexOf('77'); //3
+
+//<div class='cool'> //аргумент
+//d1.className  //свойство
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------23.04.15
+
+function MyClass() {
+    this.a = 1;
+    return 1;
+}
+
+var o = new MyClass();
+console.log(o.a);
+
+var a = (function f() {
+   function f() { return 1 }
+    return f();
+    function f() { return 2 }
+})();
+
+var s = "String"
+s.myProp = 12;
+console.log(s.myProp);
+
+function MyClass () {
+}
+
+MyClass.prototype = {a: 1};
+
+var obj = new MyClass();
+obj.a = 10;
+delete obj.a;
+console.log(obj.a);
+
+//---------------------------------------------------------------------------------------------------------------------------------------28.04.15
+
+a = {
+a:  5,
+b: function() {
+console.log(this.a)
+}
+}
+
+a.b();
+a.constructor.prototype;
+
+c = a.b.bind({a:555});
+c(); //555
+
+//---------------------------------------------------------------------------------------------------------------------------------------29.04.15
+a = [];
+typeof a; //"object"
+Object.prototype.toString.call(a).split('object ')[1].split(']')[0]; //"Array"
+
+//---------------------------------------------------------------------------------------------------------------------------------------06.05.15
+var App = {};
+
+(function(){
+
+function init(){
+var obj = {
+listClients: _listClients
+};
+return obj;
+}
+
+function _listClients(){
+console.log('This is implementation of function "listClients"');
+}
+
+App.clients = init();
+}());
+
+App.clients.listClients();
+
+//---------------------------------------------------------------------------------------------------------------------------------------08.05.15
+
+var a;
+
+(function(a){
+
+a = document.getElementById('d1');
+
+function test() {
+a.parentNode.parentNode.removeChild(a.parentNode); 
+}
+
+test();
+console.log(a);
+}
+());
+
+console.log(a);
+
+//---------------------------------------------------------------------------------------------------------------------------------------13.05.15
+
+[1]+[2]-[3] === 9; //true
+
+//---------------------------------------------------------------------------------------------------------------------------------------15.05.15
+
+(function(App) {
+
+function init(){
+	var obj = {
+		listBase: _listBase
+	};
+return obj;
+};
+
+function _listBase(){
+	console.log('This is implementation of function "listBase"');
+}
+
+App.base = init();
+}(App));
+
+//---------------------------------------------------------------------------------------------------------------------------------------28.05.15
+var obj = { m : "ok"}, 
+obj2 = {m: "not ok"};
+
+function showM() { 
+console.log(this.m);
+}
+
+var f = showM.bind(obj).bind(obj2);
+f(); // ok
+
+//---------------------------------------------
+var a = {a:1};
+var b = {b:2};
+var c = {c:3};
+
+var all = angular.extend(a,b,c);
+
+//---------------------------------------------------------------------------------------------------------------------------------------11.06.15
+(function() {
+    f();
+
+    f = function() {
+        console.log(1);
+    }
+})()
+
+function f() {
+    console.log(2)
+}
+
+f();
+//http://habrahabr.ru/post/239065/
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------15.06.15
+/*
+    tempTransactions = tempTransactions
+        ? tempTransactions
+        : jfs.json(__dirname, 'transactions.json');
+		
+//-------------------------------------------		
+    tempTransactions = tempTransactions ? tempTransactions : jfs.json(__dirname, 'transactions.json');	
+	
+//-------------------------------------------		
+	if (tempTransactions) {
+        tempTransactions = tempTransactions;
+    } else {
+        tempTransactions = jfs.json(__dirname, 'transactions.json');
+    }
+	
+//-------------------------------------------		
+    if (!tempTransactions) {
+        tempTransactions = jfs.json(__dirname, 'transactions.json');
+    }
+*/	
+//--------------------------------------------------------------------------------------------------------------
+/*
+    'use strict';
+
+    angular
+        .module('app')
+        .directive('marksTransactionsScroll', marksTransactionsScroll);
+
+    function marksTransactionsScroll($timeout) {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var grid = element[0];
+
+                scope.$on('marksTransactionsScroll:scrollBottom', function(event, data){
+                    $timeout(function(){
+                        grid.scrollTop = grid.scrollHeight - grid.clientHeight;
+                    }, 100);
+                });
+            }
+        }
+    }
+})();
+
+(function () {
+    'use strict';
+    angular
+        .module('app')
+        .controller('TransactionsController', TransactionsController);
+
+ 
+    function TransactionsController(init, $scope, $timeout, TransactionsService) {
+        var vm = this;
+
+        angular.extend(vm, {
+            results: init,
+            input: 'cool',
+            add: add
+        });
+
+        $timeout(function() {
+            $scope.$broadcast('marksTransactionsScroll:scrollBottom');
+        });
+
+        function add() {
+            TransactionsService
+                .add(vm.input)
+                .then(function (response) {
+                    vm.results = response;
+                    $scope.$broadcast('marksTransactionsScroll:scrollBottom');
+                });
+        }
+    }
+})();
+*/	
+
+//---------------------------------------------------------------------------------------------------------------------------------------17.06.15
+
+for(var i = 0; i < 5; i++){
+  var log = function(i){console.log(i);}
+  setTimeout(log, 1000, i);
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------23.06.15
+
+var a = {o: 1};
+var b = [];
+
+for (var i = 0; i< 10; i++) {
+a.o++; 
+b.push(a); 
+}
+
+for (var i = 0; i< 10; i++) {
+a.o++; 
+b.push(JSON.parse(JSON.stringify(a))); 
+}
+
+for (var i = 0; i< 10; i++) { 
+a.o++; 
+b.push(Object.create(a)); 
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------25.06.15
+function depth(obj) {
+        var weigths = [];
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                if (typeof obj[key] === 'object') {
+                    weigths.push(1 + depth(obj[key]));
+                } else {
+                    weigths.push(1);
+                }
+            }
+        }
+        if (weigths.length) {
+            weigths.sort();
+            return weigths[weigths.length -1];
+        }
+        return 0;
+    }
+
+//---------------------------------------------------------------------------------------------------------------------------------------05.07.15
+
+//<input type="text" onkeypress="return isNumberKey(event)"/>
+
+function isNumberKey(evt)
+          {
+             var charCode = (evt.which) ? evt.which : event.keyCode;
+            console.log(charCode);
+             if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+             }
+             return true;
+          }
+		  
+//---------------------------------------------------------------------------------------------------------------------------------------23.07.15
+		  
+clients = ['a','b','c']
+["a", "b", "c"]
+arr = new Array(1,2,3)
+[1, 2, 3]
+options = clients.concat(arr)
+["a", "b", "c", 1, 2, 3]
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------17.08.15
+[1,2,3,4,5,6,7,8].reduce(function (acc, item, index) { console.log(acc); return acc += item;  } , 0)
+		  
+[1,2,3,4,5,6,7,8].map(function (item, index) { return item + '';  })
+
+[1,2,3,4,5,6,7,8].filter(function (item, index) { return item > 4;  })
+
+[1,2,3,4,5,6,7,8].reduce(function (acc, item, index) { if(item > 4) {acc.push(item); } return acc;  } , [])
+
+[1,2,3,4,5,6,7,8].reduce(function (acc, item, index) { if(item > 4) {acc[index] = item; } return acc;  } , {})
+
+['a', 'b', 'c'].reduce(function (acc, item, index) {  acc[item] = null; return acc;  } , {})	
+
+//---------------------------------------------------------------------------------------------------------------------------------------19.08.15
+//Copy array
+a = [1,2,3];
+b = [].concat(a);
+b.pop(); 
+
+//---------------------------------------------------------------------------------------------------------------------------------------30.08.15
+function uploadJson() {
+var json = JSON.parse(localStorage.getItem('budget_projects'));
+//var json = localStorage.getItem('budget_projects');
+var json = JSON.stringify(json);
+document.write(json);
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

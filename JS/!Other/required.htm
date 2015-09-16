@@ -1,0 +1,20 @@
+<form action="aspuse.asp" onsubmit="return test()">
+<p><input name="user" required placeholder="Ваше имя"></p>
+<p><input type="submit" value="Отправить"></p>
+</form>
+
+<input type="text" ng-model="color" placeholder="Enter a color" />
+
+<script>
+
+function test() {
+var user = document.getElementsByName('user')[0];
+if (user.value == "1") {
+alert(user.value);
+return false;
+} else {
+alert('go');
+}
+}
+
+</script>

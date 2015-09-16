@@ -1,0 +1,70 @@
+<META http-equiv=Content-Type content="text/json; charset=windows-1251">
+<style>
+    .d0 {
+        background: #9AC0CD;
+        padding: 50px;
+        width: 25%;
+        height: 60px;
+        color: white;
+        font-size: 150%;
+        text-align: center;
+        border: solid 1px black;
+        overflow: auto;
+        margin: auto;
+    }
+</style>
+
+<div class="d0">Коллекция оружия</div>
+
+<script>
+    function get(url) {
+        return new Promise(function (resolve, reject) {
+            var req = new XMLHttpRequest();
+            req.open('GET', url);
+
+            req.onload = function () {
+                if (req.status == 200) {
+                    resolve(req.response);
+                }
+                else {
+                    reject(Error(req.statusText));
+                }
+            };
+
+            req.onerror = function () {
+                reject(Error("Network Error"));
+            };
+
+            req.send();
+        });
+    }
+
+    get('http://127.0.0.1/base/json_coll.asp').then(function (response) {
+                render(response);
+            },
+
+            function (error) {
+                console.error("Failed!", error);
+            });
+
+    function render(response) {
+        response = JSON.parse(response);
+
+        console.log(response);
+
+        var div = document.createElement('div');
+
+        for (var i = 0; i < response.data.length - 1; i++) {
+            div.innerHTML += response.data[i].id + ' ' + response.data[i].name + '<br>';
+        }
+
+        document.body.children[0].appendChild(div);
+    }
+
+</script>
+
+
+
+
+
+

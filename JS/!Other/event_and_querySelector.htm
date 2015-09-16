@@ -1,0 +1,40 @@
+<center>
+<input type="text" id="t1" onkeyup1="func()">
+<div title="Hello">Hello1</div>
+<div title="Hello">Hello2</div>
+<div title="Hello">Hello3</div>
+
+<input type="button" id="b1" value="Add">
+<input type="button" id="b2" value="Remove">
+
+<script>
+var el = document.querySelectorAll('div');
+var b1 = document.getElementById('b1');
+var b2 = document.getElementById('b2');
+ 
+el[1].addEventListener("click", func1);
+t1.addEventListener("keyup", func);
+
+b1.addEventListener("click", func2);
+b2.addEventListener("click", func3);
+
+function func() {
+var el = document.querySelector('div');
+el.innerHTML = t1.value; 
+}
+
+function func1() {
+el[1].innerHTML="Hello from querySelector"; 
+el[1].title=el.length; 
+}
+
+function func2() {
+t1.addEventListener("keyup", func);
+console.log(1);
+}
+
+function func3() {
+t1.removeEventListener("keyup", func);
+console.log(2);
+}
+</script>

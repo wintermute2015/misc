@@ -1,0 +1,184 @@
+﻿<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+<html ng-app="App">
+<center>
+<div ng-controller="myCtrl1"> 
+  <h2>{{title}}</h2><hr>
+  <h2 time></h2><hr><br>  
+  
+  <chart height='400' width='600'>
+    <datapoint label='2001' d='20'></datapoint>
+    <datapoint label='2002' d='10'></datapoint>
+    <datapoint label='2003' d='50'></datapoint>
+    <datapoint label='2004' d='130'></datapoint>
+    <datapoint label='2005' d='100'></datapoint>
+    <datapoint label='2006' d='40'></datapoint>
+    <datapoint label='2007' d='50'></datapoint>
+    <datapoint label='2008' d='20'></datapoint>
+  </chart>
+  <hr> 
+</div>
+</html>
+
+<script>
+//-------------------------------------------------------------------------------------
+var App = angular.module('App',[]);
+
+App.directive('chart', [function() {
+    return {
+        restrict: 'E',
+        replace: true,
+        transclude: true,
+        controller: function($scope, $element, $attrs){
+            var H = parseInt($attrs.height, 10);
+            var W = parseInt($attrs.width, 10);          
+            var borderW = 40;
+            var highest = 0;  
+            var count = 0;
+          
+            this.getX = function(point){
+              if(typeof point.num === 'undefined'){
+                point.num = count++;
+                $scope.$broadcast('new-width');
+              }
+              var adj = parseInt(point.radius) + parseInt(point.strokeWidth) - 1; 
+              var wSpacer = (W - borderW - adj)/ (count - 1);
+              return borderW + point.num*wSpacer;              
+            };
+          
+            this.getY = function(point){
+             if(point.d > highest){
+               highest = point.d;
+               $scope.$broadcast('new-highest');
+             } 
+             var adj = parseInt(point.radius) + parseInt(point.strokeWidth) + 5; 
+             var hSpacer = (H - borderW - adj)/ highest;
+             return H-borderW - point.d*hSpacer;
+           };
+          
+            $scope.points = [];
+
+            this.addPoint = function(point){
+               $scope.points.push(point);
+            };
+
+        },
+        template:''+ 
+        '<svg>'+
+        '<g>'+
+      
+        '<line style="stroke:black;stroke-width:1" '+
+        'ng-repeat="point in points track by $index"'+
+        'ng-attr-x1="{{point.cx}}" '+
+        'ng-attr-y1="{{point.cy}}" '+
+        'ng-attr-x2="{{ points[$index - 1].cx ? points[$index - 1].cx : point.cx}}" '+
+        'ng-attr-y2="{{ points[$index - 1].cy ? points[$index - 1].cy : point.cy}}" '+      
+        '/>'+
+      
+        '<line style="stroke:black;stroke-width:1" x1="40" y1="0" x2="40" y2="360" />'+
+        '<line style="stroke:black;stroke-width:1" x1="40" y1="360" x2="600" y2="360" />'+  
+ 
+        '</g>'+
+        '<g ng-transclude>'+
+        '</g>'+
+        '</svg>'
+    };
+}]);
+
+App.directive('datapoint', [function() {
+    return {
+        replace: true,
+        require: '^chart',
+        template:''+ 
+            
+        '<g><circle ng-attr-cx="{{cx}}" ng-attr-cy="{{cy}}" ng-attr-r="{{radius}}" '+
+        'stroke="{{stroke}}" ng-attr-stroke-width="{{strokeWidth}}" fill="white" />'+
+        '<text ng-attr-x={{cx-25}} ng-attr-y={{400}}>{{label}}</text>'+
+        '<text ng-attr-x={{0}} ng-attr-y={{cy}}>{{d}}</text>'+      
+        '',
+
+        scope:{
+          d:'@', 
+          label:'@'
+        },
+      
+        link: function (scope, element, attrs, ctrl) {
+                scope.stroke = '#5b90bf';          
+                scope.d = parseInt(scope.d, 10);
+                scope.radius = 4;
+                scope.strokeWidth = 3;
+  
+                ctrl.addPoint(scope);
+                
+                setY();   
+                scope.$on('new-highest',setY);
+          
+                setX();  
+                scope.$on('new-width',setX);
+          
+                function setY(){
+                  scope.cy = ctrl.getY(scope);
+                }
+          
+                function setX(){
+                  scope.cx = ctrl.getX(scope);
+                }
+          
+        }
+   };
+}]);
+
+App.controller('myCtrl1',['$scope', '$filter', function($scope, $filter){
+  $scope.title = $filter('capitalize')('coolWorld');
+  $scope.test = {
+    text: 'Cool'
+  };
+  $scope.testFunc = function(){
+    alert('Hello, Denis !!!');
+  };
+}]);
+
+App.filter('capitalize', [function() {
+  return function(str){
+    if(str) {
+      var s = str[0].toUpperCase()+str.slice(1);
+      return s;
+    }
+  };
+}]);
+
+App.directive('time',['$interval','$filter', function($interval, $filter){
+  return {
+      scope:{},
+      link: function(scope, element, attrs){
+              update();
+            function update(){
+            var now = new Date();
+            now = $filter('date')(now,'dd/MM/yyyy H:mm:ss ');
+            element.text(now);
+            }
+        intervalID = $interval(update, 1000); 
+      }
+  };
+  
+}]);
+
+
+//-------------------------------------------------------------------------------------
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

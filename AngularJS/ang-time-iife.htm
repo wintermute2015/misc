@@ -1,0 +1,80 @@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+<html ng-app="App">
+<center>
+<div ng-controller="myCtrl as vm"> 
+  <h2>{{vm.title}}</h2><hr>
+  <h2 time obj="vm.obj"></h2><hr> 
+
+<button ng-click="vm.startTime()">Start timer</button>  
+<button ng-click="vm.stopTime()">Stop timer</button>
+
+<hr>
+<span time obj="vm.obj"></span>
+
+</div>
+
+</center>
+</html>
+
+<script>
+//-------------------------------------------------------------------------------------
+(function() {
+	angular
+	.module('App', []);
+
+	angular
+	.module('App')
+	.controller('myCtrl', myCtrl);
+
+	myCtrl.$inject = ['$scope', '$interval'];
+
+	function myCtrl($scope, $interval) {
+		var vm = this;
+		vm.title = 'CoolWorld';
+		vm.obj = {};
+		vm.stopTime = stopTime;
+		vm.startTime = startTime;
+
+		function stopTime() {
+    			$interval.cancel(vm.obj.intervalID);
+			vm.obj.intervalID.$$intervalId=vm.obj.intervalID.$$intervalId-1;
+    			$interval.cancel(vm.obj.intervalID);
+
+		};
+
+		function startTime() {
+     			$scope.$broadcast('timer-start');
+ 		};
+	};
+
+ 	angular
+	.module('App')
+	.directive('time', time);
+
+	time.$inject = ['$filter', '$interval'];
+ 
+	function time($filter, $interval) {
+  		return {
+		scope: {
+		obj: '='
+		},
+		link: function(scope, element, attrs) {
+			start();
+			scope.$on('timer-start', start);
+
+            			function update() {
+            			var now = new Date();
+            			now = $filter('date')(now,'dd/MM/yyyy H:mm:ss ');
+            			element.text(now);
+            			}
+
+			function start() {
+        		         	scope.obj.intervalID = $interval(update,1000); 
+			}
+     		         }
+		}
+	};
+
+})();
+//-------------------------------------------------------------------------------------
+</script>

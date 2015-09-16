@@ -1,0 +1,265 @@
+﻿<style>
+th {
+cursor: pointer;
+}
+
+th:hover {
+background: yellow;
+}
+</style>
+
+<center>
+<div id="d1"><b></div>
+<br>
+
+<table id="grid" border=1 width="50%">
+<thead>
+<th data-type="number" width="5%">ID</th>
+<th data-type="string" width="25%">Name</th>
+<th data-type="string" width="25%">Date</th>
+<th data-type="string" width="25%">Sign</th>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+<br>
+<div id="d2"><b>Records</div>
+<br>
+<input type=button id=b1 value="Add record">
+<input type=button id=b3 value="Submit grid">
+<select id=s1></select>
+<input type=button id=b2 value="Delete">
+<br>
+<br>
+ 
+
+<script>
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+init();
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function init() { 
+grid = document.getElementById('grid'); 
+tbody = grid.getElementsByTagName('tbody')[0];
+t1 = document.getElementById('t1');
+t0 = document.getElementById('t0');
+
+console.log(localStorage.getItem('table_friends'));
+
+friends = JSON.parse(localStorage.getItem('table_friends'));
+friends_count = localStorage.getItem('table_friends_count');
+
+if (friends == undefined)
+{ 
+friends_count = 1; 
+localStorage.setItem('table_friends_count', friends_count);
+
+friends = {
+data : [{id:1, name:'Edward', date:'01/11/2002', email:'ed@gmail.com',sign:'Capricorn'},]
+};
+localStorage.setItem('table_friends', JSON.stringify(friends));
+//friends = JSON.parse(localStorage.getItem('table_friends'));
+} 
+
+grid.addEventListener('click', gridClick);
+b1.addEventListener('click', addRecord);
+b2.addEventListener('click', delRecord);
+b3.addEventListener('click', gridSubmit);
+//b4.addEventListener('click', recordSubmit);
+makeView();
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function makeView() { 
+makeTable();
+fillSelect();
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function fillSelect() { 
+s1.options.length = 0;
+for (var i=0, len=friends.data.length; i<len; i++) {
+var ob1=document.createElement("OPTION");
+ob1.text=friends.data[i].name;
+ob1.value=friends.data[i].id;
+s1.add(ob1);
+}
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function delRecord() { 
+for (var i = 0, len = friends.data.length; i < len; i++) {
+if (friends.data[i].id == s1.value) {
+friends.data.splice(i,1);
+break;
+} 
+}
+localStorage.setItem('table_friends', JSON.stringify(friends));
+makeView();
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function addRecord() {
+friends_count++; 
+
+var obj = {
+id: friends_count,
+name: 'xxx_'+friends_count,
+date: '01/10/2015',
+sign: 'Capricorn'
+};
+
+friends.data.push(obj);
+localStorage.setItem('table_friends', JSON.stringify(friends));
+
+localStorage.setItem('table_friends_count', friends_count);
+makeView();
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function recordSubmit() {
+var obj = {
+id: t01.value,
+name: t02.value,
+date: t03.value,
+sign: t04.value,
+};
+
+for (var i = 0; i<tbody.children.length; i++) {
+if (friends.data[i].id == t01.value) {
+friends.data.splice(i,1,obj);
+break;
+} 
+}
+d1.innerText='';
+localStorage.setItem('table_friends', JSON.stringify(friends));
+makeView();
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function gridSubmit() {
+var tr=document.createElement('tr');
+var td1=document.createElement('td');
+var rowsArray = [];
+var obj;
+friends.data=[];
+
+for (var i = 0; i<tbody.children.length; i++) {
+rowsArray.push(tbody.children[i].cells[1].innerHTML);
+
+obj = {
+id: tbody.children[i].cells[0].innerText,
+name: tbody.children[i].cells[1].children[0].innerText,
+date: tbody.children[i].cells[2].innerHTML,
+sign: tbody.children[i].cells[3].innerHTML
+};
+
+friends.data.push(obj);
+}
+
+d1.innerHTML = rowsArray;
+localStorage.setItem('table_friends', JSON.stringify(friends));
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function makeTable() {
+rowsArray = [];
+tbody.innerHTML = '';
+
+for (var i=0, len=friends.data.length; i<len; i++) {
+var tr=document.createElement('tr');
+var td1=document.createElement('td');
+var td2=document.createElement('td');
+var td3=document.createElement('td');
+var td4=document.createElement('td');
+
+td1.appendChild(document.createTextNode(friends.data[i].id));
+
+span = document.createElement('span');
+span.appendChild(document.createTextNode(friends.data[i].name));
+td2.appendChild(span);
+
+td3.appendChild(document.createTextNode(friends.data[i].date));
+td4.appendChild(document.createTextNode(friends.data[i].sign));
+
+tr.appendChild(td1);
+tr.appendChild(td2);
+tr.appendChild(td3);
+tr.appendChild(td4);
+
+rowsArray.push(tr);
+
+tbody.appendChild(rowsArray[i]);
+}
+
+grid.appendChild(tbody);
+d2.innerHTML = 'Records - ' + friends.data.length+' (' +friends_count+')';
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function gridClick(e) {
+var target = e && e.target
+var str;
+gridObj = {};
+
+if (target.tagName != 'TH') {
+target.firstChild.contentEditable = true;
+console.log(target.firstChild.textContent);
+
+d1.innerHTML= '<b>'+target.firstChild.textContent;
+d1.contentEditable = true;
+debugger;
+for (var i = 0, len = friends.data.length; i < len; i++) {
+if (friends.data[i].id == target.firstChild.textContent) {
+
+gridObj.id = friends.data[i].id;
+gridObj.name = friends.data[i].name;
+gridObj.date = friends.data[i].date;
+gridObj.sign = friends.data[i].sign;
+
+str = 'Edit record<br>'+
+'<input id=t01 readonly value="'+friends.data[i].id+'"><br>'+
+'<input id=t02 value="'+friends.data[i].name+'"><br>'+
+'<input id=t03 value="'+friends.data[i].date+'"><br>'+
+'<input id=t04 value="'+friends.data[i].sign+'"><br>'+
+'<input type=button id=b4 value="Submit record">';
+d1.innerHTML= str;
+b4.addEventListener('click', recordSubmit);
+break;
+} 
+}
+return;
+};
+ 
+sortGrid(target.cellIndex, target.getAttribute('data-type'));
+};
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function sortGrid(colNum, type) 
+{
+var tbody = grid.getElementsByTagName('tbody')[0];
+var rowsArray = [];
+
+for (var i = 0; i<tbody.children.length; i++) {rowsArray.push(tbody.children[i]);}
+
+var compare;
+
+switch(type)
+{
+case 'number':  compare = function(rowA, rowB) {return rowA.cells[colNum].innerHTML - rowB.cells[colNum].innerHTML; };  break;
+case 'string':     compare = function(rowA, rowB) {return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? 1 : -1;};  break;
+}
+
+rowsArray.sort(compare);
+
+for (var i=0, len=rowsArray.length; i<rowsArray.length; i++) {
+tbody.appendChild(rowsArray[i]);
+}
+
+grid.appendChild(tbody);
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</script>

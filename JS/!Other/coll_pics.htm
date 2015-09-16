@@ -1,0 +1,53 @@
+<center>
+<div id="name1">xxx</div>
+<img id="pic" width=170 height=150>
+<br>
+<span id="num" contentEditable></span>
+<br>
+<input type=button id=b1 value="Stop">
+<input type=button id=b2 value="Start">
+
+<script>
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function init() {
+arrPics  = JSON.parse(localStorage.getItem('base_pics'));
+
+name1 = document.getElementById("name1");
+pic = document.getElementById("pic");
+num = document.getElementById("num");
+
+name1.innerHTML='<b>'+arrPics[0].name;
+pic.src=arrPics[0].pic;
+num.innerHTML='<b>'+1; 
+
+b1.addEventListener('click', stop);
+b2.addEventListener('click', start);
+
+intervalID='';
+i = 1;
+}
+
+function stop() {
+clearInterval(intervalID);
+}
+
+function start() {
+i = parseInt(num.innerText);
+
+clearInterval(intervalID);
+intervalID = setInterval(show,500);
+}
+
+function show() {
+if (i>arrPics.length-1) {i=1;};
+
+name1.innerHTML='<b>'+arrPics[i].name;
+pic.src=arrPics[i].pic;
+num.innerHTML='<b>'+i; 
+i++; 
+}
+
+init();
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</script>
+
