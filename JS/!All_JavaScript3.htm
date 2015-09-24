@@ -1,0 +1,62 @@
+<script>
+//-------------------------------------------------------------------------------------24.09.15
+function count() {
+	var counter = 0;
+	return function() {
+		return counter++;
+	}
+}
+counter = count();
+counter();
+
+var myCoolWorld = (function() {
+	var name = 'Wintermute';
+	
+	return {
+		getter: function() {
+			_getter(name);
+		},
+
+		setter: function(value) {
+			name = value;
+		}
+	};
+		
+	function _getter(name) {
+		console.log(name);
+	};
+
+}());
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

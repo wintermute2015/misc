@@ -1,0 +1,247 @@
+<html onclick="myFunction()">
+<body>
+<div id="d1" class="c1">Container#1</div>  
+<div id="d01" class="d01"></div>
+ 
+<div id="d2" class="c2">Container#2   
+	  <div id="d21" class="d2">d2</div>   
+	  <div class="clear">  
+	 <div id="d02" class="d0"></div>  
+	  <div id="d22" class="d2">d2</div>  
+</div>  
+<!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+<style>
+
+.d0 {
+background: rgb(234, 231, 231);
+color: black;
+height: 2%;
+}
+
+.d01 {
+background: rgb(234, 231, 231);
+color: white;
+margin: 1% 0% 0% 0%;
+padding: 1% 0% 2px 0%;
+width: 1%; 
+height: 94%;
+float: left;
+//border: solid 1px 0px 0px 1px black;
+//box-shadow: 0 0 0 1px black;
+text-align: left; 
+overflow: auto;
+}
+
+.c1 {
+background: #9AC0CD;
+color: white;
+margin: 1% 0% 0% 1%;
+padding: 1% 0% 0% 1%;
+width: 48%; 
+//min-width: 50px;
+height: 94%;
+float: left;
+border: solid 1px black;
+text-align: left; 
+overflow: auto;
+}
+
+.c2 {
+background: #9AC0CD;
+color: white;
+margin: 1% 0% 0% 0%;
+padding: 1% 0% 0% 0%;
+width: 48%; 
+//min-width: 50px;
+height: 94%;
+float: left;
+border: solid 1px black;
+text-align: left; 
+overflow: auto;
+}
+</style>
+
+<!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+<script>
+
+function myFunction() {
+	d01 = document.getElementById("d01");
+	d02 = document.getElementById("d02");
+	
+	d1 = document.getElementById("d1");
+	d2 = document.getElementById("d2");
+	
+	d21 = document.getElementById("d21");
+	d22 = document.getElementById("d22");
+	
+ 	d01.style.cursor = "col-resize";
+	d02.style.cursor = "row-resize";
+	d01.addEventListener('mousedown', initDrag1, false);
+	d02.addEventListener('mousedown', initDrag2, false);
+}
+
+function initDrag1(e) {
+event.preventDefault();
+   startX = e.clientX;
+   startY = e.clientY;
+   
+   startWidth1 = parseInt(document.defaultView.getComputedStyle(d1).width, 10);
+   //startHeight1 = parseInt(document.defaultView.getComputedStyle(d1).height, 10);
+   
+   startWidth2 = parseInt(document.defaultView.getComputedStyle(d2).width, 10);
+   //startHeight2 = parseInt(document.defaultView.getComputedStyle(d2).height, 10);
+   
+   document.documentElement.addEventListener('mousemove', doDrag1, false);
+   document.documentElement.addEventListener('mouseup', stopDrag, false);
+}
+
+function initDrag2(e) {
+event.preventDefault();
+   startX = e.clientX;
+   startY = e.clientY;
+   
+   //startWidth1 = parseInt(document.defaultView.getComputedStyle(d1).width, 10);
+   startHeight1 = parseInt(document.defaultView.getComputedStyle(d21).height, 10);
+   
+   //startWidth2 = parseInt(document.defaultView.getComputedStyle(d2).width, 10);
+   startHeight2 = parseInt(document.defaultView.getComputedStyle(d22).height, 10);
+   
+   document.documentElement.addEventListener('mousemove', doDrag2, false);
+   document.documentElement.addEventListener('mouseup', stopDrag, false);
+}
+
+function doDrag1(e) {
+   d1.style.width = (startWidth1 + e.clientX - startX) + 'px';
+   //d1.style.height = (startHeight1 + e.clientY - startY) + 'px';
+   
+   d2.style.width = (startWidth2 - e.clientX + startX) + 'px';
+   //d2.style.height = (startHeight2 - e.clientY - startY) + 'px';
+   console.log(d2.style.width);
+}
+
+function doDrag2(e) {
+   //d1.style.width = (startWidth1 + e.clientX - startX) + 'px';
+   d21.style.height = (startHeight1 + e.clientY - startY) + 'px';
+   
+   //d2.style.width = (startWidth2 - e.clientX + startX) + 'px';
+   d22.style.height = (startHeight2 - e.clientY + startY) + 'px';
+   console.log(d2.style.width);
+}
+
+function stopDrag(e) {
+    document.documentElement.removeEventListener('mousemove', doDrag1, false);    		
+    document.documentElement.removeEventListener('mousemove', doDrag2, false);    		
+	document.documentElement.removeEventListener('mouseup', stopDrag, false);
+}
+</script>
+ 
+<!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+<style>
+ 
+
+body {
+background: white;
+margin: 0;
+padding: 0;
+}
+
+.clear {
+clear: both;
+}
+
+
+
+
+
+.d1 {
+background: #9AC0CD;
+color: white;
+margin: 1% 1% 0% 1%;
+padding: 1%;
+width: 45%; 
+height: 90%;
+float: left;
+border: solid 1px black;
+text-align: left; 
+overflow: auto;
+}
+
+.d2 {
+background: white;
+color: black;
+margin: 1%;
+padding: 1%;
+width: 90%; 
+height: 41%;
+float: right;
+border: solid 1px black;
+text-align: justify;
+overflow: auto;
+}
+
+.d3 {
+background: #9AC0CD;
+margin: 1%;
+padding: 1%;
+width: 20%; 
+height: 100px;
+float: left;
+border: solid 1px black;
+text-align: justify;
+overflow: auto;
+}
+
+.d4 {
+background: #9AC0CD;
+margin: 1%;
+padding: 1%;
+width: 20%; 
+height: 100px;
+float: right;
+border: solid 1px black;
+text-align: justify;
+overflow: auto;
+}
+
+.d20 {
+background: #9AC0CD;
+margin-right: 55%;
+padding: 1%;
+width: 20%; 
+height: 100px;
+float: right;
+border: solid 1px black;
+text-align: justify;
+overflow: auto;
+}
+
+.d21 {
+background: #9AC0CD;
+margin-right: 33%;
+margin-top: 1%;
+padding: 1%;
+width: 20%; 
+height: 100px;
+float: right;
+border: solid 1px black;
+text-align: justify;
+overflow: auto;
+}
+
+.d22 {
+background: #9AC0CD;
+margin-right: 11%;
+margin-top: 1%;
+margin-bottom: 1%;
+padding: 1%;
+width: 20%; 
+height: 100px;
+float: right;
+border: solid 1px black;
+text-align: justify;
+overflow: auto;
+}
+</style>
+
+ </body>
+</html>
