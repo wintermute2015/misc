@@ -1,0 +1,106 @@
+<style>
+body {
+    //font: 14px 'Verdana';
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+ul:after {
+    display: block;
+    content: ' ';
+    clear: both;
+    float: none;
+}
+
+ul.menu > li {
+    float: left;
+    position: relative;
+    width: 20%;
+}
+
+ul.menu > li > a {
+    display: block;
+    padding: 10px;
+    color: white;
+    background: rgb(46,95,122);
+    text-decoration: none;
+}
+
+ul.menu > li > a:hover {
+  background: rgb(96,145,172);
+}
+
+ul.submenu {
+    display: none;
+    position: absolute;
+    width: 120px;
+    top: 37px;
+    left: 0;
+    background: rgb(46,95,122);
+    //border: 1px solid black;
+}
+ul.submenu > li {
+    display: block;
+}
+ul.submenu > li > a {
+    display: block;
+    padding: 10px;
+    color: white;
+background: rgb(46,95,122);
+    text-decoration: none;
+}
+
+ul.submenu > li > a:hover {
+    //text-decoration: underline;
+  background: rgb(96,145,172);
+}
+ul.menu > li:hover > ul.submenu {
+    display: block;
+}
+
+</style>
+
+<ul class="menu">
+    <li><a href="">Menu 1</a>
+        <ul class="submenu">
+            <li><a href=#>Sudmenu 11</a></li>
+            <li><a href=#>Sudmenu 12</a></li>
+            <li><a href=#>Sudmenu 13</a></li>
+        </ul>
+    </li>
+    <li><a href=#>Menu 2</a>
+        <ul class="submenu">
+            <li><a href=#>Sudmenu 21</a></li>
+            <li><a href=#>Sudmenu 22</a></li>
+            <li><a href=#>Sudmenu 23</a></li>
+        </ul>
+    </li>
+    <li><a href=#>Menu 3</a>
+        <ul class="submenu">
+            <li><a href=#>Sudmenu 31</a></li>
+            <li><a href=#>Sudmenu 32</a></li>
+            <li><a href=#>Sudmenu 33</a></li>
+        </ul>
+    </li>
+    <li><a href=#>Menu 4</a>
+        <ul class="submenu">
+            <li><a href=#>Sudmenu 41</a></li>
+            <li><a href=#>Sudmenu 42</a></li>
+            <li><a href=#>Sudmenu 43</a></li>
+        </ul>
+    </li>
+    <li><a href=#>Menu 5</a>
+        <ul class="submenu">
+            <li><a href=#>Sudmenu 51</a></li>
+            <li><a href=#>Sudmenu 52</a></li>
+            <li><a href=#>Sudmenu 53</a></li>
+        </ul>
+    </li>
+</ul>
