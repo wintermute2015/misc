@@ -1,0 +1,273 @@
+
+
+Ext.define('DOC.templateManager', function () {
+    var templateManager = {
+        singleton: true
+    };
+
+    /**
+     * by Eduard Tkachuk
+     * @param sender
+     * @param templateEntity
+     * @param toolbar
+     * @param index
+     * @param onClickHandlerName
+     * @param entity
+     */
+    templateManager.formTemplateActions = function (sender, templateEntity, toolbar, index, onClickHandlerName, entity) {
+        sender.templateManagerParams = {
+            templateEntity: templateEntity,
+            toolbar: toolbar,
+            index: index,
+            onClickHandlerName: onClickHandlerName,
+            entity: entity
+        };
+        templateManager.buildButtonMenu(sender);
+    };
+
+    /**
+     * by Eduard Tkachuk
+     * @param sender
+     */
+    templateManager.buildButtonMenu = function (sender) {
+        var
+            params = sender.templateManagerParams,
+            request = {
+                entity: params.templateEntity,
+                method: 'select',
+                fieldList: ['ID', 'caption']
+            },
+            myEntityID = request.entity;
+
+        if (params.entity) {
+            request.fieldList.push('entity');
+            request.whereList = {
+                byEntity: {
+                    expression: '[entity]',
+                    condition: 'equal',
+                    values: {
+                        entity: params.entity
+                    }
+                }
+            };
+        }
+
+        $App.connection.select(request)
+            .done(function (response) {
+                var menuItems = templateManager.createMenu(params.onClickHandlerName, response, myEntityID);
+                var templateButton = Ext.create('Ext.Button', {
+                    text: UB.i18n('byTemplate'),
+                    menu: menuItems,
+                    scope: sender,
+                    itemID: 'templateButton'
+                });
+                if (params.toolbar.query('[itemID=templateButton]')[0] !== undefined) {
+                    params.toolbar.query('[itemID=templateButton]')[0].destroy();
+                }
+                params.toolbar.insert(params.index, templateButton);
+                params.toolbar.fireEvent('templateButtonAdded');
+            });
+    };
+
+    /**
+     * by Eduard Tkachuk
+     * @param onClickHandlerName
+     * @param serverResponse
+     * @returns {Array}
+     */
+    templateManager.createMenu = function (onClickHandlerName, serverResponse, myEntityID) {
+        var menu = [],
+            addSplitter = '-';
+        menu.push({
+            text: 'Создать шаблон',
+            glyph: UB.core.UBUtil.glyphs.faPlusCircle,
+            align: 'right',
+            handler: function () {
+                var myParentForm = this.up('basepanel');
+                templateManager.onCreateTemplate(myEntityID, myParentForm)
+            }
+        });
+        menu.push(addSplitter);
+
+        var result = serverResponse.resultData.data;
+        result.forEach(function (row) {
+            menu.push({
+                templateID: row[0],
+                text: row[1],
+                menu: [
+                    {
+                        text: 'Редактировать',
+                        iconCls: 'ub-icon-table-edit',
+                        handler: function () {
+                            var config = {
+                                cmdType: 'showForm',
+                                formCode: myEntityID,
+                                entity: myEntityID,
+                                instanceID: row[0],
+                                isModal: true
+                            };
+                            UB.core.UBApp.doCommand(config);
+                        }
+                    },
+                    {
+                        text: 'Удалить',
+                        iconCls: 'iconDelete',
+                        templateID: row[0],
+                        handler: function () {
+                            var myParentForm = this.up('basepanel'),
+                                templateID = this.templateID;
+                            if (myEntityID == 'doc_recstagestemplate') {
+                                templateManager.onDeleteRecstagesTemplate(templateID, myParentForm)
+                            }
+                            if (myEntityID == 'doc_resolutiontemplate') {
+                                templateManager.onDeleteResolutionTemplate(templateID, myParentForm)
+                            }
+                            if (myEntityID == 'doc_executorstemplate') {
+                                templateManager.onDeleteExecutorsTemplate(templateID, myParentForm)
+                            }
+                        }
+                    }
+                ],
+                handler: templateManager[onClickHandlerName]
+            });
+        });
+        return menu;
+    };
+
+    /**
+     * by Eduard Tkachuk
+     */
+    templateManager.onCreateTemplate = function (myEntityID, myParentForm) {
+        $App.showModal({
+            formCode: 'doc_document-nameParam',
+            customParams: {
+                sender: myParentForm
+            }
+        }).done(function (result) {
+                if (result.action === 'cancel') {
+                } else {
+                    if (myEntityID == 'doc_recstagestemplate') {
+                        templateManager.onCreateRecstagesTemplate(result.additionalExecParams.name, myParentForm);
+                    }
+                    if (myEntityID == 'doc_resolutiontemplate') {
+                        templateManager.onCreateResolutionTemplate(result.additionalExecParams.name, myParentForm);
+                    }
+                    if (myEntityID == 'doc_executorstemplate') {
+                        templateManager.onCreateExecutorsTemplate(result.additionalExecParams.name, myParentForm);
+                    }
+                }
+            });
+    };
+
+    /**
+     * by Eduard Tkachuk
+     * @param templateName
+     * @param parentForm
+     */
+    templateManager.onCreateRecstagesTemplate = function (templateName, parentForm) {
+        $App.connection.run({
+            entity: 'doc_recstagestemplate',
+            method: 'createTemplateByDocument',
+            execParams: {
+                templateName: templateName,
+                docID: parentForm.record.get('ID')
+            }
+        }).then(function (result) {
+                var serverResult = JSON.parse(result.resultData);
+                var str = serverResult.newTemplateID;
+                alert(str);
+                templateManager.buildButtonMenu(parentForm);
+            }).done();
+    };
+
+    /**
+     * by Eduard Tkachuk
+     * @param templateName
+     * @param parentForm
+     */
+    templateManager.onCreateResolutionTemplate = function (templateName, parentForm) {
+        var shortText = parentForm.getUBCmp('attrShortText').getValue();
+        $App.connection.run({
+            entity: 'doc_resolutiontemplate',
+            method: 'createTemplateByDocument',
+            execParams: {
+                templateName: templateName,
+                docID: parentForm.record.get('ID'),
+                shortText: shortText
+            }
+        }).then(function (result) {
+                var serverResult = JSON.parse(result.resultData);
+                var str = serverResult.newTemplateID;
+                alert(str);
+                templateManager.buildButtonMenu(parentForm);
+            }).done();
+    };
+
+    /**
+     * by Eduard Tkachuk
+     * @param templateName
+     * @param parentForm
+     */
+    templateManager.onCreateExecutorsTemplate = function (templateName, parentForm) {
+        $App.connection.run({
+            entity: 'doc_executorstemplate',
+            method: 'createTemplateByDocument',
+            execParams: {
+                templateName: templateName,
+                execItemID: parentForm.record.get('ID')
+            }
+        }).then(function (result) {
+                var serverResult = JSON.parse(result.resultData);
+                var str = serverResult.newTemplateID;
+                alert(str);
+                templateManager.buildButtonMenu(parentForm);
+            }).done();
+    };
+
+    /**
+     * by Eduard Tkachuk
+     * @param templateName
+     * @param parentForm
+     */
+    templateManager.onDeleteRecstagesTemplate = function (templateID, parentForm) {
+        $App.connection.run({
+            entity: 'doc_recstagestemplate',
+            method: 'delete',
+            execParams: {
+                ID: templateID
+            }
+        }).then(function (result) {
+                templateManager.buildButtonMenu(parentForm);
+            }).done();
+    };
+
+    /**
+     * by Eduard Tkachuk
+     */
+    templateManager.onDeleteResolutionTemplate = function (templateID, parentForm) {
+        $App.connection.run({
+            entity: 'doc_resolutiontemplate',
+            method: 'delete',
+            execParams: {
+                ID: templateID
+            }
+        }).then(function (result) {
+                templateManager.buildButtonMenu(parentForm);
+            }).done();
+    };
+
+    /**
+     * by Eduard Tkachuk
+     */
+    templateManager.onDeleteExecutorsTemplate = function (templateID, parentForm) {
+        $App.connection.run({
+            entity: 'doc_executorstemplate',
+            method: 'delete',
+            execParams: {
+                ID: templateID
+            }
+        }).then(function (result) {
+                templateManager.buildButtonMenu(parentForm);
+            }).done();
+    };
+

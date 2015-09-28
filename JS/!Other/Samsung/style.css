@@ -1,0 +1,66 @@
+body {
+	background: white;
+	margin: 0;
+	padding: 0;
+}
+
+.clear {
+	clear: both;
+}
+
+.dividerHorizontal {
+	background: rgb(234, 231, 231);
+	color: black;
+	height: 2%;
+}
+
+.dividerVertical {
+	background: rgb(234, 231, 231);
+	color: white;
+	margin: 1% 0% 0% 0%;
+	padding: 1% 0% 2px 0%;
+	width: 1%; 
+	height: 94%;
+	float: left;
+	text-align: left; 
+	overflow: auto;
+}
+
+.svgContainer {
+	background: #9AC0CD;
+	color: white;
+	margin: 1% 0% 0% 1%;
+	padding: 1% 0% 0% 1%;
+	width: 48%; 
+	height: 94%;
+	float: left;
+	border: solid 1px black;
+	text-align: left; 
+	overflow: auto;
+}
+
+.rightContainer {
+	background: #9AC0CD;
+	color: white;
+	margin: 1% 0% 0% 0%;
+	padding: 1% 0% 0% 0%;
+	width: 48%; 
+	height: 94%;
+	float: left;
+	border: solid 1px black;
+	text-align: left; 
+	overflow: auto;
+}
+
+.ctrlContainer {
+	background: white;
+	color: black;
+	margin: 1% 4% 1% 4%;
+	padding: 1%;
+	width: 90%; 
+	height: 41%;
+	float: right;
+	border: solid 1px black;
+	text-align: justify;
+	overflow: auto;
+}

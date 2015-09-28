@@ -1,0 +1,68 @@
+Список структур данных
+
+Линейные структуры данных (Linear data structures)
+Список (List)
+Массив (Array)
+Битовые поля (Bitmaps)
+Изображения (Images)
+Поля высот (Heightfields)
+Фильтр Блума (Bloom filter)
+Параллельный массив (Parallel array)
+Дерево Фенвика
+Разреженная таблица
+Связный список (Linked list)
+Список с пропусками (Skip list)
+Развёрнутый связный список (Unrolled linked list)
+XOR-связный список (Xor linked list)
+V-список (VList)
+Кольцевой буфер (Circular buffer)
+Ассоциативный массив (Associative array a.k.a. dictionary or map) — также известен как словарь или карта
+Хеш-таблица (Hash table)
+Стек (Stack a.k.a. LIFO Last in, first out) — также известен как ЛИФО
+Очередь (Queue a.k.a. FIFO First in, first out) — также известен как ФИФО
+Очередь с приоритетом (Priority queue), одна из реализаций -- Двоичная куча, см. ниже
+Дек (Deque) — двусвязная очередь
+Буферное окно (Buffer gap)
+Граф (Graph)
+Список рёбер (Adjacency list)
+Представление графа в разорванном виде (Disjoint-set data structure)
+Представление графа в виде стеков (Graph-structured stack)
+Сценограф (Scene graph)
+Деревья
+B+ дерево
+2-3-дерево
+Дерево отрезков
+BSP-дерево
+M-Way Tree
+B-дерево
+Связка (англ.)[2]
+Двоичное дерево поиска (Binary search tree)
+Самобалансирующееся дерево поиска (Self-balancing binary search tree)
+АВЛ-дерево (AVL tree)
+Дерево Фибоначчи
+Красно-чёрное дерево (Red-black tree)
+Декартово дерево (Treap)
+Дерево со штрафами (Scapegoat tree)
+Расширяющееся дерево (Splay tree)
+Дерево ван Емде Боаса (van Emde Boas tree)
+Дерево остатков (Radix tree)
+Интервальное дерево (Interval tree)
+Ориентированный граф
+Направленный ациклический граф
+Бинарная диаграмма решений
+Куча (Heap)
+Двоичная куча (Binary heap)
+Биномиальная куча (Binomial heap)
+Фибоначчиева куча (Fibonacci heap)
+Сливаемая куча (Mergable heap)
+2-3-куча (2-3 heap)
+Мягкая куча (Soft heap)
+Дерево разбора (Parse tree)
+Квадродерево (Quadtree) и Октодерево (Octree)
+Суффиксное дерево (Suffix tree)
+Префиксное дерево (Trie)
+Патриция (Patricia trie)
+Другие структуры данных
+Помеченное объединение (Tagged union)
+Объединение (Union)
+Таблица (Table)

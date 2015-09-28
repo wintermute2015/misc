@@ -1,0 +1,53 @@
+<html>
+<link rel="stylesheet" href="style.css"/>
+<body>
+<div id="svgContainer" class="svgContainer">SVG Container
+	<div>
+		<svg width="90%" height="90%"  viewBox="0 0 120 120" style='background-color: white; display: block; margin: auto;'>
+			<polygon id="triangle" points="60,30 90,90 30,90" fill="blue">
+				<animateTransform attributeName="transform"
+								  attributeType="XML"
+								  type="rotate"
+								  from="0 60 70"
+								  to="360 60 70"
+								  dur="10s"
+								  repeatCount="indefinite"/>
+			</polygon>
+			
+			<rect id="rectangle" fill="red" sketch:type="MSShapeGroup" x="0" y="0" width="9" height="9">
+				  <animateTransform attributeName="transform"
+					type="translate"
+					from="-20 0"
+					to="100 50"
+					begin="0s"
+					dur="12s"
+					repeatCount="indefinite"
+				  />
+			</rect>
+		</svg>
+	</div> 
+</div>  
+
+<div id="dividerVertical" 
+	class="dividerVertical">
+</div>
+ 
+<div id="rightContainer" class="rightContainer"> 
+	<div id="ctrlContainer" class="ctrlContainer">
+		<strong>Controls</strong><hr>
+	  <button id="redButton">Click here to change colors</button>	  
+ 	</div>   
+	
+	<div class="clear">  
+	<div id="dividerHorizontal" 
+		class="dividerHorizontal">
+	</div>  
+	
+	<div id="historyContainer" class="ctrlContainer">
+		<strong>History</strong><hr>
+	</div>  
+</div>  
+
+<script src="app.js"></script>
+</body>
+</html>
