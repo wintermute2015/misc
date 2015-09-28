@@ -9,24 +9,58 @@ function count() {
 counter = count();
 counter();
 
+//--------------------------------
 var myCoolWorld = (function() {
-	var name = 'Wintermute';
+	var name, _getter, _setter;
 	
-	return {
-		getter: function() {
-			_getter(name);
-		},
-
-		setter: function(value) {
-			name = value;
-		}
-	};
-		
-	function _getter(name) {
+	name = 'Wintermute';
+	
+	_getter = function() {
 		console.log(name);
 	};
-
+	
+	_setter = function(value) {
+		name = value;
+	};
+		
+	return {
+		getter: _getter,
+		setter: _setter
+	};
+	
 }());
+
+//-------------------------------------------------------------------------------------25.09.15
+var a; //undefined
+b = a + 5 //NaN
+typeof b //number
+
+function f(n) {
+	var n = n 
+			? n*f(n-1) 
+			: 1;
+	return n
+}
+//-------------------------------------------------------------------------------------28.09.15
+function f() {
+   function f() { return 1 }
+   return f();
+   function f() { return 2 }
+}
+f(); //2
+
+//Copy array
+a = [1,2,3];
+b = [].concat(a);
+b.pop(); 
+
+//push [].<-  
+//pop  [].->
+
+//unshift  ->.[]  
+//shift <-.[] 
+
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
