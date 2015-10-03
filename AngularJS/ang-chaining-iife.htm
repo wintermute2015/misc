@@ -1,0 +1,240 @@
+<script src="angular.min.js"></script>
+
+<html ng-app="app">
+<center>
+<div ng-controller="myCtrl as ctx">
+	<div>
+		<hr>
+			<strong>{{ ctx.name }}</strong>
+		<hr>
+
+		<div>
+		<button ng-click="ctx.fillRequests()">Start chaining</button>
+		<hr>
+		</div>
+
+		<div ng-show="ctx.loading" style="font-size:25px;">&nbsp
+			Loading...
+		</div>
+
+		<div ng-show="ctx.error" style="font-size:25px;">
+			Something went wrong
+		</div>
+ 
+		<pre>{{ctx.status}}</pre>
+		<hr>
+    </div>
+</div>
+</center>
+</html>
+
+<script>
+    (function () {
+        'use strict';
+
+        angular
+			.module('app', []);
+
+        angular
+			.module('app')
+			.config(Sequential);
+			
+			function Sequential($provide) {
+				$provide
+					.decorator("$q", function ($delegate) {
+						//Helper method copied from q.js.
+						
+						var isPromiseLike = function (obj) { return obj && angular.isFunction(obj.then); }
+
+						/*
+						 * @description Execute a collection of tasks serially.  A task is a function that returns a promise
+						 * 
+						 * @param {Array.<Function>|Object.<Function>} tasks An array or hash of tasks.  A tasks is a function
+						 *   that returns a promise.  You can also provide a collection of objects with a success tasks, failure task, and/or notify function
+						 * @returns {Promise} Returns a single promise that will be resolved or rejected when the last task
+						 *   has been resolved or rejected.
+						 */
+						function serial(tasks) {
+							//Fake a "previous task" for our initial iteration
+							var prevPromise;
+							var error = new Error();
+							angular.forEach(tasks, function (task, key) {
+							var success = task.success || task;
+							var fail = task.fail;
+							var notify = task.notify;
+							var nextPromise;
+
+							//First task
+							if (!prevPromise) {
+								nextPromise = success();
+								if (!isPromiseLike(nextPromise)) {
+									error.message = "Task " + key + " did not return a promise.";
+									throw error;
+								}
+							} else {
+							  //Wait until the previous promise has resolved or rejected to execute the next task
+							  nextPromise = prevPromise.then(
+								/*success*/function (data) {
+								  if (!success) { return data; }
+								  var ret = success(data);
+								  if (!isPromiseLike(ret)) {
+									error.message = "Task " + key + " did not return a promise.";
+									throw error;
+								  }
+								  return ret;
+								},
+								/*failure*/function (reason) {
+								  if (!fail) { return $delegate.reject(reason); }
+								  var ret = fail(reason);
+								  if (!isPromiseLike(ret)) {
+									error.message = "Fail for task " + key + " did not return a promise.";
+									throw error;
+								  }
+								  return ret;
+								},
+								notify);
+							}
+							prevPromise = nextPromise;
+							});
+
+							return prevPromise || $delegate.when();
+						}
+
+				$delegate.serial = serial;
+				return $delegate;
+				});
+			}
+			
+        angular
+			.module('app')
+			.controller('myCtrl', myCtrl);
+
+        myCtrl.$inject = ['$http', '$q'];
+
+        function myCtrl($http, $q) {
+            var vm = this;
+			
+            angular.extend(vm, {
+                init: init,
+				fillRequests: fillRequests,
+                simpleChaining: simpleChaining,
+				flatChaining: flatChaining,
+				modifyClients: modifyClients,
+				getClients: getClients,
+				getUsers: getUsers,
+				getGoods: getGoods,
+				errorHandler: errorHandler
+            });
+
+            init();
+
+            function init() {
+                vm.name = 'Chaining';
+				vm.status = '';
+				vm.f = null;
+                vm.server = 'http://coolworld2015a1.herokuapp.com/';
+				vm.clients = vm.server + 'api/clients/get';
+                vm.users = vm.server + 'api/users/get';
+                vm.goods = vm.server + 'api/goods/get';
+				
+				vm.inputInvoice = [1,2,3,4,5];
+				vm.requests = [];
+				fillRequests();
+
+				$q.serial(vm.requests)
+					.catch(errorHandler);
+            }
+	
+			function fillRequests() {
+				vm.inputInvoice.forEach(function (el) {
+					if (el >= 1) {
+						vm.requests.push(modifyClients);
+					}
+				});
+			}
+			
+            function flatChaining() {
+                vm.loading = true;
+                vm.error = false;
+				vm.status = '';
+				
+				return getClients()
+					.then(getUsers)
+					.then(getGoods)
+					.catch(errorHandler);
+            }
+			
+	
+			function modifyClients() {
+				return getClients()
+					.then(getUsers)
+					.then(getGoods)
+					.catch(errorHandler)
+			}
+			
+            function simpleChaining() {
+                vm.loading = true;
+                vm.error = false;
+				vm.status = '';
+				
+                $http.get(vm.clients)
+					.then(function (data) {
+						vm.loading = false;
+						console.log(data);
+						vm.status = 'Clients - ' + data.data.length + '\n';
+						
+						$http.get(vm.users)
+							.then(function (data) {
+								vm.loading = false;
+								console.log(data);
+								vm.status = vm.status + 'Users - ' + data.data.length + '\n';
+								
+							$http.get(vm.goods)
+								.then(function (data) {
+									vm.loading = false;
+									console.log(data);
+									vm.status = vm.status + 'Goods - ' + data.data.length + '\n';
+								})
+								.catch(errorHandler);
+							})
+							.catch(errorHandler);
+					})
+					.catch(errorHandler);
+            }
+				
+			function getClients() {
+				return $http.get(vm.clients)
+						.then(function (data) {
+							vm.loading = false;
+							console.log(data);
+							vm.status = vm.status + 'Clients - ' + data.data.length + '\n';
+						});
+			}
+			
+			function getUsers() {
+				return $http.get(vm.users)
+						.then(function (data) {
+							vm.loading = false;
+							console.log(data);
+							vm.status = vm.status + 'Users - ' + data.data.length + '\n';
+						});
+			}			
+			
+			function getGoods() {
+				return $http.get(vm.goods)
+						.then(function (data) {
+							vm.loading = false;
+							console.log(data);
+							vm.status = vm.status + 'Goods - ' + data.data.length + '\n';
+						});
+			}
+			
+			function errorHandler() {
+				vm.loading = false;
+				vm.error = true;
+				vm.name = 'Error';
+			}
+			
+		}
+	})();
+</script>
