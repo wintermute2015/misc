@@ -2,29 +2,29 @@
 
 <html ng-app="app">
 <center>
-<div ng-controller="myCtrl as ctx">
-	<div>
-		<hr>
-			<strong>{{ ctx.name }}</strong>
-		<hr>
-
+	<div ng-controller="myCtrl as ctx">
 		<div>
-		<button ng-click="ctx.startRequests()">Start chaining</button>
-		<hr>
-		</div>
+			<hr>
+				<strong>{{ ctx.name }}</strong>
+			<hr>
 
-		<div ng-show="ctx.loading" style="font-size:25px;">&nbsp
-			Loading...
-		</div>
+			<div>
+			<button ng-click="ctx.startRequests()">Start chaining</button>
+			<hr>
+			</div>
 
-		<div ng-show="ctx.error" style="font-size:25px;">
-			Something went wrong
+			<div ng-show="ctx.loading" style="font-size:25px;">&nbsp
+				Loading...
+			</div>
+
+			<div ng-show="ctx.error" style="font-size:25px;">
+				Something went wrong
+			</div>
+	 
+			<pre>{{ctx.status}}</pre>
+			<hr>
 		</div>
- 
-		<pre>{{ctx.status}}</pre>
-		<hr>
-    </div>
-</div>
+	</div>
 </center>
 </html>
 
