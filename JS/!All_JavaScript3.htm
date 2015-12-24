@@ -66,6 +66,20 @@ var copy = JSON.parse(JSON.stringify(original))
 //-------------------------------------------------------------------------------------19.11.15
 obj = angular.copy(obj);
 
+//-------------------------------------------------------------------------------------24.12.15
+var arrExclude = ["ipAddress", "description", "statusDescription"];
+var arr = ["item1", "ipAddress", "item2", "description", "statusDescription", "item3"];
+var idx = arr.indexOf(arrExclude[1]); 
+var results = [];
+
+for (var i = 0; i < arr.length; i++) {
+    idx = arrExclude.indexOf(arr[i]);
+	if (idx == -1) {
+		results.push(arr[i])
+	}
+} 
+// results ["item1", "item2", "item3"]
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
