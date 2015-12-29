@@ -1,0 +1,42 @@
+<div ng-app='myApp'>
+    <div ng-controller="controller">
+        <button ng-click="orderByAttribute = 'position'">Order by Position</button>
+        <button ng-click="orderByAttribute = ''">Use order in object</button>
+        
+        <ul>
+            <li ng-repeat="item in testData | orderObjectBy:orderByAttribute">
+                {{item.name}} (Pos: {{item.position}})
+            </li>
+        </ul>
+    </div>
+</div>
+
+var myApp = angular.module('myApp', []);
+
+myApp.filter('orderObjectBy', function(){
+ return function(input, attribute) {
+    if (!angular.isObject(input)) return input;
+
+    var array = [];
+    for(var objectKey in input) {
+        array.push(input[objectKey]);
+    }
+
+    array.sort(function(a, b){
+        a = parseInt(a[attribute]);
+        b = parseInt(b[attribute]);
+        return a - b;
+    });
+    return array;
+ }
+});
+
+myApp.controller('controller', ['$scope', function ($scope) {
+    $scope.orderByAttribute = '';
+    
+    $scope.testData = {
+        123: {name: "Test B", position: "2"},
+        456: {name: "Test A", position: "1"},
+        789: {name: "Test C", position: "3"}
+	};
+}]);
