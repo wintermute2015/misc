@@ -91,10 +91,7 @@
 	}
 	
 	window.onload = init;
-	
-}());
-
-
+})();
 
 
 
