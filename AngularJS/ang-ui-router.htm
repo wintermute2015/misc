@@ -44,7 +44,7 @@
             .run(redirectUnAuthorized);
 
         function redirectUnAuthorized($rootScope, $log, $state) {
-		//$rootScope.currentUser = {name:'ed',pass:1};
+			$rootScope.currentUser = {name:'ed',pass:1};
             $rootScope.$on('$stateChangeError',
                     function (event, toState, toParams, fromState, fromParams, error) {
                         $log.debug(error);
@@ -137,7 +137,7 @@
 					});
  			}
 	
-            $urlRouterProvider.otherwise('/state1');
+            $urlRouterProvider.otherwise('/state2');
 
             $stateProvider
 			        .state('users', {
