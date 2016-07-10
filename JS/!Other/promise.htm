@@ -4,7 +4,7 @@
         background: #9AC0CD;
         padding: 50px;
         width: 25%;
-        height: 60px;
+        height: 500px;
         color: white;
         font-size: 150%;
         text-align: center;
@@ -14,7 +14,7 @@
     }
 </style>
 
-<div class="d0">Коллекция оружия</div>
+<div class="d0">Clients</div>
 
 <script>
     function get(url) {
@@ -39,7 +39,7 @@
         });
     }
 
-    get('http://127.0.0.1/base/json_coll.asp').then(function (response) {
+    get('http://ui-warehouse.herokuapp.com/api/clients/get').then(function (response) {
                 render(response);
             },
 
@@ -54,8 +54,8 @@
 
         var div = document.createElement('div');
 
-        for (var i = 0; i < response.data.length - 1; i++) {
-            div.innerHTML += response.data[i].id + ' ' + response.data[i].name + '<br>';
+        for (var i = 0; i < response.length - 1; i++) {
+            div.innerHTML += response[i].id + ' ' + response[i].name + '<br>';
         }
 
         document.body.children[0].appendChild(div);
