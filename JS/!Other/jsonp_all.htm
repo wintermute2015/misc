@@ -1,0 +1,90 @@
+<center>
+<div id=d1 style="font-weight:bold"></div>
+
+<script>
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+var d1 = document.getElementById("d1");
+
+function Callback1(data) 
+{
+document.body.removeChild(tempscript);
+tempscript = null;
+res = data;
+for (i=0;i<10;i++)
+{
+d1.innerHTML += res.Results[i].Title+'\n';
+}
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function Callback2(data) 
+{
+document.body.removeChild(tempscript);
+tempscript = null;
+res = data;
+for (i=0;i<10;i++)
+{
+d1.innerHTML +=  res.data.children[i].data.title+'<br>'+'<img src='+res.data.children[i].data.thumbnail+'>'+'<br>';
+}
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function Callback3(data) 
+{
+document.body.removeChild(tempscript);
+tempscript = null;
+res = data;
+for (i=0;i<10;i++)
+{
+d1.innerHTML += res.items[i].description;
+}
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function Callback4(data) 
+{
+document.body.removeChild(tempscript);
+tempscript = null
+res = data;
+d1.innerHTML = 
+res.postalcodes[0].adminName1+'<br>'+
+res.postalcodes[0].adminName2+'<br>'+
+res.postalcodes[0].countryCode+'<br>'+
+res.postalcodes[0].postalcode+'<br>'+
+res.postalcodes[0].placeName;
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function Callback5(data) 
+{
+document.body.removeChild(tempscript);
+tempscript = null;
+res = data;
+d1.innerHTML = 
+res[7].details.signName+'<br>'+
+res[7].details.extScope+'<br>'+
+res[7].details.scope;
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function startCall(str)
+{
+tempscript = document.createElement("script");
+tempscript.type = "text/javascript";
+tempscript.id = "tempscript";
+
+tempscript.src = str;
+document.body.appendChild(tempscript);
+}
+
+startCall("http://www.reddit.com/.json?limit=10&jsonp=Callback2");
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</script>
+
+<!--
+<script src="http://stg.api.bazaarvoice.com/data/reviews.json?apiversion=5.4&passkey=kuy3zj9pr3n7i0wxajrzj04xo&callback=Callback1"></script>
+<script id=one src="http://www.reddit.com/.json?limit=10&jsonp=Callback2"></script>
+<script id=one src="https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=Callback3&tags=monkey&tagmode=any&format=json"></script>
+<script id=one src="http://www.geonames.org/postalCodeLookupJSON?postalcode=90210&country=US&callback=Callback4"></script>
+<script id=one src="http://m-api.californiapsychics.com/horoscope?format=json&callback=Callback5"></script>
+-->
