@@ -1,0 +1,123 @@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+ 
+<html ng-app="app">
+	<div ng-controller="myCtrl as ctx">
+	<center>
+    <hr>{{ 'Hello ' + ctx.msg }}<hr>
+	<button ng-click="ctx.getSklad()">{{ctx.text}}</button>
+	<hr>
+    <div ng-repeat="item in ctx.items">{{item.id}} - {{item.name}} - {{item.price | number:2}}</div>
+</html>
+
+<script>
+(function () {
+    angular.module('app', []);
+	
+     angular.module('app')
+        .factory('NodeService', NodeService);
+		
+ 	function NodeService($q, $timeout, $http) {	
+		return {
+			callGET: callGET,
+			callPOST: callPOST,
+			getSklad: getSklad
+		}
+		
+		function getSklad() {
+            var url = 'http://localhost/base/json_sklad.asp';
+            return $http.get(url).then(success, failed);
+        }
+		
+		function callGET() {
+            var url = 'http://localhost:3000/app';
+            return $http.get(url).then(success, failed);
+        }
+
+        function callPOST() {
+            var url = 'http://localhost:3000/app';
+
+            var data = ({
+                id: Math.random(10000) * 10,
+                name: 'CoolWorld',
+                price: Math.random(10000) * 100
+            });
+
+            return $http.post(url, data).then(success, failed);
+        }
+		
+        function success(result) {
+			return result;
+        }
+
+        function failed(result) {
+            return $q.reject(result);
+        }
+		
+        function getTest(url) {
+            var deferred = $q.defer();
+
+            $http.jsonp(url)
+                .then(function (data) {
+                    deferred.resolve(data);
+                },
+                function (error) {
+                    deferred.reject(error);
+                });
+
+            return deferred.promise;
+        }		
+	}
+		
+    angular.module('app')
+        .controller('myCtrl', myCtrl);
+
+    myCtrl.$inject = ['NodeService'];
+
+    function myCtrl(NodeService) {
+		var vm = this;
+        angular.extend(vm, {
+            msg: 'CoolWorld',
+			text: 0,
+            items: [],
+			init: init,
+			post: post,
+			getSklad: getSklad
+        });
+		
+		init();
+		
+		function init() {
+			NodeService.callGET()
+				.then(function(data){
+					console.log(data);
+					vm.items = data.data;
+					vm.msg = data.status;
+				});
+		}
+		
+		function getSklad() {
+			NodeService.getSklad()
+				.then(function(data){
+					console.log(data);
+					vm.msg = data.status;
+					if (data.data) {
+						vm.items = data.data.dataSet;
+					}
+				})
+				.catch(function(data){
+					console.log('catch - ' + data.status);
+					console.log(data);
+				});
+		}
+		
+		function post() {
+			NodeService.callPOST()
+				.then(function(data){
+					console.log(data);
+					vm.items = data.data;
+					vm.msg = data.status;
+				});
+		}
+    }
+})();       
+</script>

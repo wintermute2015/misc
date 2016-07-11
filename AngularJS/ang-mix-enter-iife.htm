@@ -1,0 +1,113 @@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+<html ng-app="App">
+<center>
+<div ng-controller="myCtrl as vm"> 
+ 
+  <hr>
+  <div my-test value='CoolWorld' ed="test"></div> 
+  <hr>
+  
+  <input type="text" enter test=test label="cool" value={{vm.inputValue}} ng-model="vm.inputValue" ed="test" denis="testFunc()" ng-enter="myTest()">
+  <br> <br>
+  <button ng-click="vm.testFunc(vm.inputValue)">Click</button>
+  <hr>
+  {{vm.inputValue}}
+</div>
+</html>
+
+<script>
+//-------------------------------------------------------------------------------------
+(function() {
+	angular
+	.module('App', []);
+  
+	angular
+	.module('App')
+	.controller('myCtrl', myCtrl);
+
+	function myCtrl() {
+		var vm = this;
+		vm.inputValue = 'CoolWorld';
+		
+		vm.testFunc = testFunc;
+		
+		vm.obj = {
+			text: 'CoolWorld'
+		};
+				
+		function testFunc(str){
+			alert(str);
+		};
+	};
+	
+	//myCtrl.$inject = ['$scope'];
+	
+ 	angular
+	.module('App')
+	.directive('myTest', myTest);
+	
+	function myTest() {
+		return 	function (scope, element, attrs, ngModel) {
+			element.text('CoolWorld');
+			element.on('click', function () {
+				var text;
+  				//scope[attrs.ed](attrs.value);
+				
+				if (attrs.value == 'CoolWorld') {
+					text = 'Wintermute';
+					} else {
+					text = 'CoolWorld';
+				}
+				
+				element.text(text);
+                attrs.$set('value', text);
+            });
+		};
+	};
+	
+	angular
+	.module('App')
+	.directive('enter', enter);
+	
+	function enter() {
+    return {
+        restrict: 'A',
+        scope: {
+            test: '=',
+            funcTest: '&denis',
+            label: '@'
+        },
+		controller: function($scope){
+			$scope.test = function(val){
+				alert(val);
+			};
+		},
+
+        template: '<span>{{test.text}}</span>',
+        link: function (scope, element, attrs, ngModel) {
+		
+		ngModel.$render = function() {
+		element.html(ngModel.$viewValue || 'xxx');
+			};
+	
+			element.on('click', function () {
+                //alert(scope.test.text);
+				//alert(attrs.denis);
+				//alert(attrs.label);
+				//scope.funcTest();
+			});
+     			
+            element.on('keyup', function () {
+ 				if (event.keyCode === 13) {
+					scope[attrs.ed](attrs.value);
+					attrs.$set('value', 'Wintermute');
+				}
+            });
+        }
+    };
+};
+
+
+})();
+//-------------------------------------------------------------------------------------
+</script>

@@ -1,0 +1,133 @@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+ 
+<html ng-app="app">
+	<div ng-controller="myCtrl as ctx">
+	<center>
+    <hr>{{ 'Hello ' + ctx.name }}<hr>
+	<button ng-click="ctx.addClient()">{{ctx.text}}</button>
+	<hr>
+		<table border=1 ng-if="ctx.items">
+			<tr ng-repeat="item in ctx.items">
+				<td ng-click="ctx.updateClient(item)">&nbsp E &nbsp </td> 
+				<td ng-click="ctx.findClient(item)">{{item.id}}</td> 
+				<td ng-click="ctx.findClient(item)">{{item.name}}</td> 
+				<td ng-click="ctx.findClient(item)">{{item.sum | number:2}}</td> 		
+				<td ng-click="ctx.delClient(item)">&nbsp X &nbsp </td> 
+			</tr>
+		</table>
+</html>
+
+<script>
+(function () {
+	'use strict';
+	
+    angular.module('app', []);
+
+    angular.module('app')
+        .controller('myCtrl', myCtrl);
+
+    myCtrl.$inject = ['$http'];
+
+    function myCtrl($http) {
+        var vm = this;
+        angular.extend(vm, {
+            name: 'CoolWorld',
+            text: 'Action',
+			
+            getClients: getClients,
+            findClient: findClient,
+            addClient: addClient,	
+			delClient: delClient,
+			updateClient: updateClient
+        });
+
+        getClients();
+
+        function getClients() {
+			var url = 'http://ui-warehouse.herokuapp.com/api/clients/get';
+			
+            $http.get(url)
+                .then(function (data) {
+                    vm.items = data.data;
+                    vm.msg = data.status;
+                })
+                .catch(function (data) {
+                    console.log('catch - ' + data.status);
+                    console.log(data);
+                });
+        }   
+		
+        function findClient(item) {
+			var url = 'http://ui-warehouse.herokuapp.com/api/clients/find';
+            var client = {
+                "id": item.id
+            };
+            $http.post(url, client)
+                .then(function (data) {
+					vm.name = data.data.name;
+                })
+                .catch(function (data) {
+                    console.log('catch - ' + data.status);
+                });
+        }
+		
+        function addClient() {
+			var url = 'http://ui-warehouse.herokuapp.com/api/clients/add';
+			var r = (Math.random(1000000) * 100000).toFixed();
+            var client = {
+				"id": r,
+                "name": "client_"+r,
+                "address": "address",
+                "phone": "phone",
+                "description": "description",
+                "sum": r
+            };
+            $http.post(url, client)
+                .then(function (data) {
+                    console.log(data);
+                    getClients();
+                })
+                .catch(function (data) {
+                    console.log('catch - ' + data.status);
+                    console.log(data);
+                });
+        }
+		
+		function delClient(item) {
+			var url = 'http://ui-warehouse.herokuapp.com/api/clients/delete';
+			var client = {
+                "id": item.id
+            };
+            $http.post(url, client)
+                .then(function (data) {
+					vm.name = data.data;
+					getClients();
+                })
+                .catch(function (data) {
+                    console.log('catch - ' + data.status);
+                });			
+        }
+
+        function updateClient(item) {
+			var url = 'http://ui-warehouse.herokuapp.com/api/clients/update';
+            var client = {
+                "id": item.id,
+                "name": "Wintermute",
+                "address": "address",
+                "phone": "phone",
+                "description": "description",
+                "sum": (Math.random(1000000) * 100000).toFixed()
+            };
+            $http.post(url, client)
+                .then(function (data) {
+					vm.name = data.data.name;
+					getClients();
+                })
+                .catch(function (data) {
+                    console.log('catch - ' + data.status);
+                });		
+        }
+    }
+	
+})();       
+</script>
