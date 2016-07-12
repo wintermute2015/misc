@@ -1,0 +1,43 @@
+<script src="angular.1.5.7.min.js"></script>
+<html ng-app="app">
+<center>
+	<div>
+		<hr>
+			<test-component></test-component>
+		<hr>
+	</div> 
+</html>
+
+<script>
+//-------------------------------------------------------------------------------------
+(function() {
+	angular
+		.module('app', []);
+		
+//----------------------------------------	
+ 	angular
+		.module('app')
+		.component('testComponent', {
+			template: '<div>Test Component from {{vm.name}}<hr></div>' + 
+					  '<div ng-repeat="item in vm.clients">{{item.name}}</div>',
+			controllerAs: 'vm',
+			controller: ['$http', controller]
+		});
+		
+		function controller($http) {
+			var vm = this;
+			vm.name = "CoolWorld";
+			
+			var url = 'http://ui-warehouse.herokuapp.com/api/clients/get';
+			$http.get(url)
+				.then(function (result) {
+					vm.clients = result.data;
+				})
+				.catch(function (reject) {
+					return $q.reject(reject);
+				});
+		}
+	
+})();
+//-------------------------------------------------------------------------------------
+</script>
