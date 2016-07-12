@@ -1,50 +1,109 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
-<html ng-app="App">
+<html ng-app="app">
 <center>
-<div ng-controller="myCtrl as vm"> 
- 
-  <hr>
-  <div my-test value='CoolWorld' ed="test"></div> 
-  <hr>
-  
-  <input type="text" enter test=test label="cool" value={{vm.inputValue}} ng-model="vm.inputValue" ed="test" denis="testFunc()" ng-enter="myTest()">
-  <br> <br>
-  <button ng-click="vm.testFunc(vm.inputValue)">Click</button>
-  <hr>
-  {{vm.inputValue}}
-</div>
+
+	<div ng-controller="myCtrl as vm"> 
+	  <hr>
+		<div my-test 
+			value='CoolWorld' 
+			ed="test">
+		</div> 
+	  <hr>
+	  
+	  <input type="text" ng-model="vm.inputValue"
+			value={{vm.inputValue}} 
+			enter 
+			test=test 
+			label="cool" 
+			ed="test" 
+			denis="testFunc()" 
+			ng-enter="myTest()">
+	  
+	  <br><br>
+	  
+	  <button ng-click="vm.testFunc(vm.inputValue)">Click</button>
+	  <hr>
+		{{vm.inputValue}}
+	</div>
 </html>
 
 <script>
 //-------------------------------------------------------------------------------------
 (function() {
 	angular
-	.module('App', []);
-  
+		.module('app', []);
+		
 	angular
-	.module('App')
-	.controller('myCtrl', myCtrl);
+		.module('app')
+		.controller('myCtrl', myCtrl);
 
+	myCtrl.$inject = ['$scope'];
+	
 	function myCtrl() {
 		var vm = this;
-		vm.inputValue = 'CoolWorld';
 		
-		vm.testFunc = testFunc;
-		
-		vm.obj = {
-			text: 'CoolWorld'
-		};
-				
+		angular.extend(vm, {
+			inputValue: 'CoolWorld',
+			testFunc: testFunc,
+			obj: {
+				text: 'CoolWorld'
+			}
+		});
+						
 		function testFunc(str){
 			alert(str);
 		};
-	};
+	};		
 	
-	//myCtrl.$inject = ['$scope'];
-	
+//----------------------------------------	
  	angular
-	.module('App')
-	.directive('myTest', myTest);
+		.module('app')
+		.directive('enter', enter);
+	
+	function enter() {
+		return {
+			restrict: 'A',
+			
+			scope: {
+				test: '=',
+				funcTest: '&denis',
+				label: '@'
+			},
+			
+			controller: function($scope) {
+				$scope.test = function(val) {
+					alert(val);
+				};
+			},
+
+			template: '<span>{{test.text}} - {{test.label}}</span>',
+			
+			link: function (scope, element, attrs, ngModel) {
+					ngModel.$render = function() {
+						element.html(ngModel.$viewValue || 'xxx');
+					};
+			
+					element.on('click', function () {
+						//alert(scope.test.text);
+						//alert(attrs.denis);
+						//alert(attrs.label);
+						//scope.funcTest();
+					});
+						
+					element.on('keyup', function () {
+						if (event.keyCode === 13) {
+							scope[attrs.ed](attrs.value);
+							attrs.$set('value', 'Wintermute');
+						}
+					});
+				}
+		};
+	};
+ 
+//----------------------------------------
+ 	angular
+		.module('app')
+		.directive('myTest', myTest);
 	
 	function myTest() {
 		return 	function (scope, element, attrs, ngModel) {
@@ -65,47 +124,9 @@
 		};
 	};
 	
-	angular
-	.module('App')
-	.directive('enter', enter);
-	
-	function enter() {
-    return {
-        restrict: 'A',
-        scope: {
-            test: '=',
-            funcTest: '&denis',
-            label: '@'
-        },
-		controller: function($scope){
-			$scope.test = function(val){
-				alert(val);
-			};
-		},
 
-        template: '<span>{{test.text}}</span>',
-        link: function (scope, element, attrs, ngModel) {
-		
-		ngModel.$render = function() {
-		element.html(ngModel.$viewValue || 'xxx');
-			};
 	
-			element.on('click', function () {
-                //alert(scope.test.text);
-				//alert(attrs.denis);
-				//alert(attrs.label);
-				//scope.funcTest();
-			});
-     			
-            element.on('keyup', function () {
- 				if (event.keyCode === 13) {
-					scope[attrs.ed](attrs.value);
-					attrs.$set('value', 'Wintermute');
-				}
-            });
-        }
-    };
-};
+
 
 
 })();
