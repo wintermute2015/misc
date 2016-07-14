@@ -30,6 +30,8 @@ var myCoolWorld = (function() {
 	
 }());
 
+Object.freeze(myCoolWorld);
+
 //-------------------------------------------------------------------------------------25.09.15
 var a; //undefined
 b = a + 5 //NaN
@@ -176,6 +178,30 @@ for (var i = 1; i <= 3; i++) {
 		}
 	}(i);
 }
+
+//-------------------------------------------------------------------------------------14.07.16
+
+var User = function(name) {
+	this.name = name;
+	this.showName = function() {
+		return this.name;
+	};
+};
+
+user1 = new User('ed'); //User {name: "ed"}
+user1.showName() //"ed"
+
+var Dev = function(name, skills) {
+	this.name = name;
+	this.skills = skills;
+	this.showSkills = function() {
+		return this.skills;
+	};
+};
+
+Dev.prototype =  new User();
+Dev.prototype.constructor = Dev;
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
