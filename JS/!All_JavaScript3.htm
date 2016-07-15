@@ -90,7 +90,6 @@ b.name //'ed'
 a = null
 
 //-------------------------------------------------------------------------------------08.07.16
-
 Object.defineProperty();
 Object.observe();
 Object.freeze();
@@ -168,7 +167,6 @@ function sum(a, a, c) // !!! syntax error
 var sum = 015 + // !!! syntax error
 
 //-------------------------------------------------------------------------------------11.07.16
-
 //Closure
 for (var i = 1; i <= 3; i++) {
   document.getElementById('button-' + i).onclick = 
@@ -180,7 +178,6 @@ for (var i = 1; i <= 3; i++) {
 }
 
 //-------------------------------------------------------------------------------------14.07.16
-
 var User = function(name) {
 	this.name = name;
 	this.showName = function() {
@@ -199,8 +196,17 @@ var Dev = function(name, skills) {
 	};
 };
 
-Dev.prototype =  new User();
+Dev.prototype = new User();
 Dev.prototype.constructor = Dev;
+
+//-------------------------------------------------------------------------------------15.07.16
+a1 = {id: 1, name: 'ed'};
+
+Object.keys(a1); //["id", "name"]
+Object.keys(a1)[0]; //"id"
+Object.keys(a1)[1]; //"name"
+
+delete a1[Object.keys(a1)[0]]
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </script>

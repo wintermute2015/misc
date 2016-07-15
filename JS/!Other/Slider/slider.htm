@@ -28,10 +28,10 @@
 </body>
 
 <script>
-    (function (window) {
+    (function(window) {
         var obj = {};
 
-        var init = function (config) {
+        var init = function(config) {
             obj.arrPics = config.arr || [];
             obj.pic = config.pic;
             obj.counter = 0;
@@ -51,14 +51,14 @@
             myResize();
         };
 
-        var myResize = function () {
+        var myResize = function() {
             var w = window.innerWidth;
             var h = window.innerHeight;
             var picBig = document.getElementById(obj.pic);
             picBig.width = w - 200;
         };
 
-        var goRight = function () {
+        var goRight = function() {
 		    var picBig = document.getElementById(obj.pic);
 			picBig.className = 'img-animated';
 			
@@ -76,7 +76,7 @@
 			},300);
          };
 		 
-        var goLeft = function () {
+        var goLeft = function() {
 		    var picBig = document.getElementById(obj.pic);
 			picBig.className = 'img-animated';
 			
@@ -94,7 +94,7 @@
 			},300);
          };
 
-        var goLeft1 = function () {
+        var goLeft1 = function() {
             obj.counter--;
             if (obj.counter < 0) {
                 obj.counter = obj.arrPics.length - 1;

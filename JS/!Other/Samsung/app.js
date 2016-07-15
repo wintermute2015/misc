@@ -69,7 +69,7 @@
 		document.documentElement.removeEventListener('mouseup', stopDrag, false);
 	}
 	
-	var changeColor = function() {
+	function changeColor() {
 		var triangle, rectangle, historyContainer;
 		
 		if (app.triangleColor == 'red') {
