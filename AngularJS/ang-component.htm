@@ -1,43 +1,109 @@
 <script src="angular.1.5.7.min.js"></script>
+<script src="angular-ui-router.js"></script>
 <html ng-app="app">
-<center>
-	<div>
-		<hr>
-			<test-component></test-component>
-		<hr>
-	</div> 
+<div ui-view></div>
 </html>
 
 <script>
 //-------------------------------------------------------------------------------------
 (function() {
 	angular
-		.module('app', []);
+		.module('app', ['ui.router']);
+		
+//----------------------------------------		
+        angular
+            .module('app')
+            .config(routeConfig);
+
+        function routeConfig($stateProvider, $urlRouterProvider) {
+		
+			resolveHerokuClients.$inject = ['$http', '$q'];
+			
+			function resolveHerokuClients($http, $q) {
+				var url = 'http://ui-warehouse.herokuapp.com/api/clients/get';
+				return $http.get(url)
+					.then(function (result) {
+						return result.data;
+					})
+					.catch(function (reject) {
+						return $q.reject(reject);
+					});
+ 			}			
+			
+			function resolveHerokuGoods($http, $q) {
+				var url = 'http://ui-warehouse.herokuapp.com/api/goods/get';
+				return $http.get(url)
+					.then(function (result) {
+						return result.data;
+					})
+					.catch(function (reject) {
+						return $q.reject(reject);
+					});
+ 			}
+	
+            $urlRouterProvider.otherwise('/state1');	
+			
+			$stateProvider
+					.state('state1', {
+                        url: '/state1',
+                        data: {
+                            requireLogin: true
+                        },
+ 						template: '<div><hr><a ui-sref="state1">Home</a> <a ui-sref="state2">Clients</a> <a ui-sref="state3">Goods</a><hr></div>'
+                     })	
+		  			 
+                    .state('state2', {
+                        url: '/state2',
+                        data: {
+                            requireLogin: true
+                        },
+ 						template: '<div><hr><clients-component clients="$resolve.clients"></clients-component><hr></div>',
+						resolve: {
+							clients: resolveHerokuClients
+						}
+                     })		 	
+					 
+                    .state('state3', {
+                        url: '/state3',
+                        data: {
+                            requireLogin: true
+                        },
+ 						template: '<div><hr><goods-component goods="$resolve.goods"></goods-component><hr></div>',
+						resolve: {
+							goods: resolveHerokuGoods
+						}
+                     })						 
+		 }
+		 
+//----------------------------------------	
+ 	angular
+		.module('app')
+		.component('clientsComponent', {
+			template: '<div><a ui-sref="state1">Home</a> <a ui-sref="state2">Clients</a> <a ui-sref="state3">Goods</a><hr></div>' + 
+					  '<div ng-repeat="client in vm.clients">{{client.name}}</div>',
+			bindings: {clients: '<'}, 
+			controllerAs: 'vm',
+			controller: controller
+		});
+		
+		function controller() {
+			var vm = this;
+		}
 		
 //----------------------------------------	
  	angular
 		.module('app')
-		.component('testComponent', {
-			template: '<div>Test Component from {{vm.name}}<hr></div>' + 
-					  '<div ng-repeat="item in vm.clients">{{item.name}}</div>',
+		.component('goodsComponent', {
+			template: '<div><a ui-sref="state1">Home</a> <a ui-sref="state2">Clients</a> <a ui-sref="state3">Goods</a><hr></div>' + 
+					  '<div ng-repeat="good in vm.goods">{{good.name}}</div>',
+			bindings: {goods: '<'}, 
 			controllerAs: 'vm',
-			controller: ['$http', controller]
+			controller: controller
 		});
 		
-		function controller($http) {
+		function controller() {
 			var vm = this;
-			vm.name = "CoolWorld";
-			
-			var url = 'http://ui-warehouse.herokuapp.com/api/clients/get';
-			$http.get(url)
-				.then(function (result) {
-					vm.clients = result.data;
-				})
-				.catch(function (reject) {
-					return $q.reject(reject);
-				});
-		}
-	
+		}	
 })();
 //-------------------------------------------------------------------------------------
 </script>

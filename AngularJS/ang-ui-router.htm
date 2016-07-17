@@ -1,4 +1,4 @@
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.js"></script>
+<script src="angular.1.5.7.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
 
 <html ng-app="app">
@@ -117,7 +117,30 @@
 		    var vm = this;
             vm.items = results;
 		}	
+//-------------------------------------------------------------------------------------		
+		angular
+			.module('app')
+			.component('testComponent', {
+				template: '<div>Test Component from {{vm.name}}<hr></div>' + 
+						  '<div ng-repeat="item in vm.clients">{{item.name}}</div>',
+				controllerAs: 'vm',
+				controller: ['$http', controller]
+			});
 		
+		function controller($http) {
+			var vm = this;
+			vm.name = "CoolWorld";
+			
+			var url = 'http://ui-warehouse.herokuapp.com/api/clients/get';
+			$http.get(url)
+				.then(function (result) {
+					vm.clients = result.data;
+				})
+				.catch(function (reject) {
+					return $q.reject(reject);
+				});
+		}
+//-------------------------------------------------------------------------------------		
         angular
             .module('app')
             .config(routeConfig);
@@ -217,7 +240,11 @@
                         },
                         views: {
                             'screen': {
-                                template: '<div class="d2">State 2</div>'
+                                template: '<div>' +
+												'<hr>' +
+													'<test-component></test-component>' +
+												'<hr>' +
+											'</div> '
                             }
                         }
                     })
