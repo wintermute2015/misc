@@ -1,0 +1,1 @@
+{"id": "1", "name": "Level 1", "node2": {"id": "2", "name": "Level 2"}, "test": "test", "node1": {"id": "2", "name": "Level 2",	"node": {"id": "3", "test": "test", "name": "Level 3", "gate": {"id": "777", "text": "CoolWorld", "name": "Level 4"}}}, "node3": {"id": "2", "name": "Level 2"}, "last": "last"}

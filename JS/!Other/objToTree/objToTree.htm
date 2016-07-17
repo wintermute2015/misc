@@ -1,0 +1,57 @@
+<html>
+<body>
+<input type="file" onchange="app.JSONFileLoader()"><br>
+<hr>
+<div id="tree"></div>
+
+<script>
+(function() {
+	app = {
+		JSONFileLoader: JSONFileLoader
+	};
+	
+	init();
+	
+	function init() {
+		app.tree = document.getElementById('tree');
+		app.strToParse = '';
+	}
+	
+	function JSONFileLoader() {
+		app.tree.innerHTML = '';
+		app.strToParse = '';
+		
+		var file = document.querySelector('input[type=file]').files[0];
+		var reader = new FileReader();
+
+		reader.onloadend = function () {
+			console.log(reader.result);
+			objToTree(JSON.parse(reader.result));
+			app.tree.innerHTML += app.strToParse;
+		}
+
+		if (file) {
+			reader.readAsText(file);
+			} else {
+			console.log('error');
+			}
+	}
+
+	function objToTree(obj) {
+		for (var key in obj) {
+			app.strToParse +='<ul>';
+			if (typeof(obj[key]) === 'object') {
+				app.strToParse +='<ul>';
+				app.strToParse +='<li>' + key + '</li>';
+				objToTree(obj[key]);
+				app.strToParse +='</ul>';       
+			} else {
+				app.strToParse +='<li>' + key + ': ' + obj[key] + '</li>';
+			}
+			app.strToParse +='</ul>';	
+		}
+	}
+})();
+</script>
+</body>
+</html>
