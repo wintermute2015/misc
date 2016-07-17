@@ -208,6 +208,59 @@ Object.keys(a1)[1]; //"name"
 
 delete a1[Object.keys(a1)[0]]
 
+//-------------------------------------------------------------------------------------17.07.16
+b = document.getElementsByTagName('body');
+b[0].innerHTML = '';
+b[0].innerHTML = '<div id="tree"></div>';
+var tree = document.getElementById('tree');
+
+var a = {
+	id:1,
+	name: 'Level 1',
+	node2: {
+		id:2,
+		name: 'Level 2'
+	},	
+	test:'test',
+	node1: {
+	id:2,
+	name: 'Level 2',
+	node: {
+		id:3,
+		test:'test',
+		name: 'Level 3',
+		gate: {id:777, text:'CoolWorld', name: 'Level 4'}
+		}
+	},
+	node3: {
+		id:2,
+		name: 'Level 2'
+	},		
+	last: 'last'
+};
+ 
+tree.innerHTML = '';
+var s = '';
+
+function func(obj) {
+ 
+    for (var key in obj) {
+		s +='<ul>';
+        if (typeof(obj[key]) === 'object') {
+			s +='<ul>';
+			s +='<li>' + key + '</li>';
+				func(obj[key]);
+			s +='</ul>';
+          
+        } else {
+			s +='<li>' + key + ': ' + obj[key] + '</li>';
+        }
+		s +='</ul>';	
+	}
+}
+
+func(a);
+tree.innerHTML += s;
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
