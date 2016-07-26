@@ -41,34 +41,27 @@
 					});
  			}
 	
-            $urlRouterProvider.otherwise('/state1');	
+            $urlRouterProvider.otherwise('/home');	
 			
 			$stateProvider
-					.state('state1', {
-                        url: '/state1',
-                        data: {
-                            requireLogin: true
-                        },
- 						template: '<div><hr><a ui-sref="state1">Home</a> <a ui-sref="state2">Clients</a> <a ui-sref="state3">Goods</a><hr></div>'
+					.state('home', {
+                        url: '/home',
+ 						template: '<header title="Home"></header>'
                      })	
 		  			 
-                    .state('state2', {
-                        url: '/state2',
-                        data: {
-                            requireLogin: true
-                        },
- 						template: '<div><hr><clients-component clients="$resolve.clients"></clients-component><hr></div>',
+                    .state('clients', {
+                        url: '/clients',
+ 						template: '<header title="Clients"></header>' + 
+								  '<clients-component clients="$resolve.clients"></clients-component>',
 						resolve: {
 							clients: resolveHerokuClients
 						}
                      })		 	
 					 
-                    .state('state3', {
-                        url: '/state3',
-                        data: {
-                            requireLogin: true
-                        },
- 						template: '<div><hr><goods-component goods="$resolve.goods"></goods-component><hr></div>',
+                    .state('goods', {
+                        url: '/goods',
+ 						template: '<header title="Goods"></header>' + 
+								  '<goods-component goods="$resolve.goods"></goods-component>',
 						resolve: {
 							goods: resolveHerokuGoods
 						}
@@ -78,9 +71,27 @@
 //----------------------------------------	
  	angular
 		.module('app')
+		.component('header', {
+			template: '<div><hr>' +
+						'<a style="color:blue" ui-sref="home">Home</a>&nbsp' +
+						'<a style="color:blue" ui-sref="clients">Clients</a>&nbsp' + 
+						'<a style="color:blue" ui-sref="goods">Goods</a>' +
+						'&nbsp&nbsp&nbsp&nbsp&nbsp <b>{{vm.title}}</b>' +
+					  '<hr></div>',
+
+			bindings: {title: '@'}, 
+			controllerAs: 'vm',
+			controller: controller
+		});
+		
+		function controller() {
+			var vm = this;
+		}		 
+//----------------------------------------	
+ 	angular
+		.module('app')
 		.component('clientsComponent', {
-			template: '<div><a ui-sref="state1">Home</a> <a ui-sref="state2">Clients</a> <a ui-sref="state3">Goods</a><hr></div>' + 
-					  '<div ng-repeat="client in vm.clients">{{client.name}}</div>',
+			template: '<div ng-repeat="client in vm.clients">{{client.name}}</div>',
 			bindings: {clients: '<'}, 
 			controllerAs: 'vm',
 			controller: controller
@@ -94,8 +105,7 @@
  	angular
 		.module('app')
 		.component('goodsComponent', {
-			template: '<div><a ui-sref="state1">Home</a> <a ui-sref="state2">Clients</a> <a ui-sref="state3">Goods</a><hr></div>' + 
-					  '<div ng-repeat="good in vm.goods">{{good.name}}</div>',
+			template: '<div ng-repeat="good in vm.goods">{{good.name}}</div>',
 			bindings: {goods: '<'}, 
 			controllerAs: 'vm',
 			controller: controller
