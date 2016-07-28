@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+    <!-- jQuery, jQuery.ui -->
+    <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <!-- React -->
+    <script src="https://fb.me/react-0.13.3.min.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+
+    <!--Custom Styles -->
+    <link href="style1.css" rel="stylesheet" type="text/css" />
+    <title>React Bulletin Board</title>
+</head>
+<body>
+    <div id="react-container"></div>
+	
+<script type="text/jsx">
+var Note = React.createClass({
+    getInitialState: function() {
+        return {editing: false}
+    },
+    componentWillMount: function() {
+        this.style = {
+            right: this.randomBetween(0, window.innerWidth - 150) + 'px',
+            top: this.randomBetween(0, window.innerHeight - 150) + 'px',
+            transform: 'rotate(' + this.randomBetween(-15, 15) + 'deg)'
+        };
+    },
+    componentDidMount: function(){
+        $(this.getDOMNode()).draggable();
+    },
+    randomBetween: function(min, max) {
+        return (min + Math.ceil(Math.random() * max));
+    },
+    edit: function() {
+        this.setState({editing: true});
+    },
+    save: function() {
+        this.props.onChange(this.refs.newText.getDOMNode().value, this.props.index);
+        this.setState({editing: false});
+    },
+    remove: function() {
+        this.props.onRemove(this.props.index);
+    },
+	
+    renderDisplay: function() {
+        return (
+            <div className="note"
+                style={this.style}>
+                <p>{this.props.children}</p>
+                <span>
+                    <button onClick={this.edit} className="btn btn-primary glyphicon glyphicon-pencil"/>
+                    <button onClick={this.remove} className="btn btn-danger glyphicon glyphicon-trash"/>
+                </span>
+            </div>
+            );
+    },
+    renderForm: function() {
+        return (
+            <div className="note" style={this.style}>
+				<textarea ref="newText" defaultValue={this.props.children} className="form-control"></textarea>
+				<button onClick={this.save} className="btn btn-success btn-sm glyphicon glyphicon-floppy-disk" />
+            </div>
+            )
+    },
+    render: function() {
+        if (this.state.editing) {
+            return this.renderForm();
+        }
+        else {
+            return this.renderDisplay();
+        }
+    }
+});
+
+	var Board = React.createClass({
+		propTypes: {
+			count: function(props, propName) {
+				if (typeof props[propName] !== "number"){
+					return new Error('The count property must be a number');
+				}
+				if (props[propName] > 100) {
+					return new Error("Creating " + props[propName] + " notes is ridiculous");
+				}
+			}
+		},
+		getInitialState: function() {
+			return {
+				notes: []
+			};
+		},
+		nextId: function() {
+			this.uniqueId = this.uniqueId || 0;
+			return this.uniqueId++;
+		},
+		componentWillMount1: function() {
+			var self = this;
+			if(this.props.count) {
+				$.getJSON("http://baconipsum.com/api/?type=all-meat&sentences=" +
+					this.props.count + "&start-with-lorem=1&callback=?", function(results){
+						results[0].split('. ').forEach(function(sentence){
+							self.add(sentence.substring(0,10));
+						});
+					});
+			}
+		},
+		add: function(text) {
+			var arr = this.state.notes;
+			arr.push({
+				id: this.nextId(),
+				note: text
+			});
+			this.setState({notes: arr});
+		},
+		update: function(newText, i) {
+			var arr = this.state.notes;
+			arr[i].note = newText;
+			this.setState({notes:arr});
+		},
+		remove: function(i) {
+			var arr = this.state.notes;
+			arr.splice(i, 1);
+			this.setState({notes: arr});
+		},
+		eachNote: function(note, i) {
+			return (
+					<Note key={note.id}	index={i} onChange={this.update} onRemove={this.remove}>{note.note}</Note>
+				);
+		},
+		render: function() {
+			return (<div className="board">
+						{this.state.notes.map(this.eachNote)}
+						<button className="btn btn-sm btn-success glyphicon glyphicon-plus"
+								onClick={this.add.bind(null, "New Note")}/>
+				</div>
+
+			);
+		}
+	});
+
+React.render(<Board count={5}/>, document.getElementById('react-container'));	
+</script>
+
+<style>
+@import url(http://fonts.googleapis.com/css?family=Shadows+Into+Light);
+
+body,
+html,
+div.board,
+div#react-container {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+div.board {
+    background-color: brown;
+    width: 100%;
+    background: #eab92d;
+    background: -moz-radial-gradient(center, ellipse cover, #eab92d 57%, #c79810 99%);
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(57%, #eab92d), color-stop(99%, #c79810));
+    background: -webkit-radial-gradient(center, ellipse cover, #eab92d 57%, #c79810 99%);
+    background: -o-radial-gradient(center, ellipse cover, #eab92d 57%, #c79810 99%);
+    background: -ms-radial-gradient(center, ellipse cover, #eab92d 57%, #c79810 99%);
+    background: radial-gradient(ellipse at center, #eab92d 57%, #c79810 99%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eab92d', endColorstr='#c79810', GradientType=1);
+
+}
+
+div.note {
+    height: 150px;
+    width: 150px;
+    background-color: yellow;
+    margin: 2px 0;
+    position: absolute;
+    cursor: -webkit-grab;
+    -webkit-box-shadow: 5px 5px 15px 0 rgba(0, 0, 0, .2);
+    box-shadow: 5px 5px 15px 0 rgba(0, 0, 0, .2);
+}
+
+div.note:active {
+    cursor: -webkit-grabbing;
+}
+
+div.note p {
+    font-size: 22px;
+    padding: 5px;
+    font-family: "Shadows Into Light", Arial;
+}
+
+div.note:hover > span {
+    opacity: 1;
+}
+
+div.note > span {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    opacity: 0;
+    transition: opacity .25s linear;
+}
+
+div.note button {
+    margin: 2px;
+}
+
+div.note > textarea {
+    height: 75%;
+    background: rgba(255, 255, 255, .5);
+}
+
+.glyphicon-plus {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+}
+</style>
+
+</body>
+</html>
