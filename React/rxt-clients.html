@@ -15,8 +15,7 @@ var Item = React.createClass({
 	render: function() {
 		return (
 			<div>
-				<h3>{this.props.id}</h3>
-				<h3>{this.props.name}</h3>
+				<h4>{this.props.id} - {this.props.name}</h4>
 				<hr/>
 			</div>
 		);
@@ -27,7 +26,7 @@ var App = React.createClass({
 	getInitialState: function() {
 		var clients = JSON.parse(localStorage.getItem('ui-warehouse.clients'));
 		return {
-			items: [{name:1}]
+			items: []
 		};
 	},
 	addItem: function() {
@@ -39,6 +38,7 @@ var App = React.createClass({
 		this.setState({items: items});
  	},
 	getClients: function() {
+		this.setState({items: []});
 		var that = this;
 		var request = new XMLHttpRequest(); 
 		var url = 'http://ui-warehouse.herokuapp.com/api/clients/get';
@@ -53,12 +53,18 @@ var App = React.createClass({
 		request.send(''); 
  	},	
 	render: function() {
-		var items = this.state.items.map(function(item) {
- 			return (<Item id={item.id} name={item.name} />);
-		});
-		return (
-			<div onClick={this.getClients}>{items}</div>
+ 		return (
+			<div >
+				<h1 onClick={this.getClients}> Clients  ({this.state.items.length})</h1>
+				<hr />
+				{this.showClients()}
+			</div>
 		);
+	},
+	showClients: function() {
+		return this.state.items.map(function(item) {
+ 			return <Item id={item.id} name={item.name} />
+		});
 	}
 });
 
