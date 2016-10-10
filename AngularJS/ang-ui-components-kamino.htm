@@ -1,0 +1,200 @@
+<script src="angular.1.5.7.min.js"></script>
+<script src="angular-ui-router.js"></script>
+<html ng-app="app">
+<div ui-view></div>
+</html>
+
+<script>
+//-------------------------------------------------------------------------------------
+(function() {
+	angular
+		.module('app', ['ui.router']);
+		
+//----------------------------------------		
+        angular
+            .module('app')
+            .config(routeConfig);
+
+        function routeConfig($stateProvider, $urlRouterProvider) {
+		
+			resolveHerokuClients.$inject = ['$http', '$q'];
+			
+			function resolveHerokuClients($http, $q) {
+				var url = 'http://ui-warehouse.herokuapp.com/api/clients/get';
+				return $http.get(url)
+					.then(function (result) {
+						return result.data;
+					})
+					.catch(function (reject) {
+						return $q.reject(reject);
+					});
+ 			}			
+			
+			function resolveHerokuGoods($http, $q) {
+				var url = 'http://ui-warehouse.herokuapp.com/api/goods/get';
+				return $http.get(url)
+					.then(function (result) {
+						return result.data;
+					})
+					.catch(function (reject) {
+						return $q.reject(reject);
+					});
+ 			}
+			
+			function resolveKaminoGetUser($http, $q) {
+				var url = 'https://qa1-auth.remotewd1.com/authservice/v1/user?email=kamino.web.team%40gmail.com';
+				var url = 'https://dev1-auth.remotewd1.com/authservice/v1/user?email=sirisha.codambakkam%40wdc.com';
+				return $http.get(url)
+					.then(function (result) {
+						return result.data;
+					})
+					.catch(function (reject) {
+						return $q.reject(reject);
+					});
+ 			}
+			
+			function resolveKaminoGetFiles($http, $q) {
+				var url = 'https://dev1-proxy1.wdtest1.com:9443/53f76651-1f9c-4083-85f0-dbf7f5e95326/sdk/v2/filesSearch/parents?ids=root&limit=1000';
+				return $http.get(url, 
+					{
+						headers: {'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJUVkJOalJDUVRBNFFqTTNNRU00UkRWQlJESTVRVEJHTmtVeFF6SXlRVGt6T0RjNE5EVkZOQSJ9.eyJzY29wZSI6InJlYWQtb25seSByZWFkLXdyaXRlIG5hc19yZWFkX29ubHkgbmFzX3JlYWRfd3JpdGUgbmFzX29mZmxpbmVfYWNjZXNzIiwiaXNzIjoiaHR0cHM6Ly93ZGMtZGV2MS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NTdmODMxM2MzYzAyZmRlNTRlNDdmNTZlIiwiYXVkIjoiclVmNElqUHY3VnA1dVhIRjdEaUR4azNGWjNBMVlmN20iLCJleHAiOjE0NzYxMjYzMTMsImlhdCI6MTQ3NjA5MDMxM30.g3n6yJFEAvQSo8LXCQAZYeZaebmqrJVz348qiPvo4c42VhjRyGcwv4udpLDDRq7YmRoHyU2b3Vx029S_JnGvd4hCtHM_bL78rTQRft_Ulvc0XPpeCjn33W4xrVz6aF8U7ST8NffDwxW8kuU7-MM7_gXqjoE0Je7x-Xg3FJE3NBF_cFks51mp4y-dWpMNHl6f4Z_basDfeN9bng__6tlfNnetezA0tmObep3ZdxEd5kYlGQdBtV3MXrx1ERlMvp7baD6l84VHyXrVoePNMfc0I8bc2cJ60qFa7k0DpUBp0gg2mi50YDAsFuCbjr2LvPYGzvXfowBxb_VaYy9M39239Q'
+					}
+				})
+ 
+					.then(function (result) {
+						console.log(result.data)
+						return result.data;
+					})
+					.catch(function (reject) {
+						return $q.reject(reject);
+					});
+ 			}
+			
+            $urlRouterProvider.otherwise('/home');	
+			
+			$stateProvider
+					.state('home', {
+                        url: '/home',
+ 						template: '<header title="Home"></header>'
+                     })	
+		  			 
+                    .state('clients', {
+                        url: '/clients',
+ 						template: '<header title="Clients"></header>' + 
+								  '<clients-component clients="$resolve.clients"></clients-component>',
+						resolve: {
+							clients: resolveHerokuClients
+						}
+                     })		 	
+					 
+                    .state('goods', {
+                        url: '/goods',
+ 						template: '<header title="Goods"></header>' + 
+								  '<goods-component goods="$resolve.goods"></goods-component>',
+						resolve: {
+							goods: resolveHerokuGoods
+						}
+                     })		
+
+                    .state('kamino-get-user', {
+                        url: '/kamino-get-user',
+ 						template: '<header title="Kamino Get User"></header>' + 
+								  '<kamino-component-get-user kamino="$resolve.kamino"></kamino-component-get-user>',
+						resolve: {
+							kamino: resolveKaminoGetUser
+						}
+                     })		
+					 
+                    .state('kamino-get-files', {
+                        url: '/kamino-get-files',
+ 						template: '<header title="Kamino Get Files"></header>' + 
+								  '<kamino-component-get-files files="$resolve.files.files"></kamino-component-get-files>',
+						resolve: {
+							files: resolveKaminoGetFiles
+						}
+                     })							 
+		 }
+		 
+//----------------------------------------	
+ 	angular
+		.module('app')
+		.component('header', {
+			template: '<div><hr>' +
+						'<a style="color:blue" ui-sref="home">Home</a>&nbsp&nbsp' +
+						//'<a style="color:blue" ui-sref="clients">Clients</a>&nbsp&nbsp' + 
+						'<a style="color:blue" ui-sref="goods">Goods</a>&nbsp&nbsp' +
+						'<a style="color:blue" ui-sref="kamino-get-user">Get user</a>&nbsp&nbsp' +
+						'<a style="color:blue" ui-sref="kamino-get-files">Get files</a>' +
+						'&nbsp&nbsp&nbsp&nbsp&nbsp <b>{{vm.title}}</b>' +
+					  '<hr></div>',
+
+			bindings: {title: '@'}, 
+			controllerAs: 'vm',
+			controller: controller
+		});
+		
+		function controller() {
+			var vm = this;
+		}		 
+//----------------------------------------	
+ 	angular
+		.module('app')
+		.component('clientsComponent', {
+			template: '<div ng-repeat="client in vm.clients">{{client.name}}</div>',
+			bindings: {clients: '<'}, 
+			controllerAs: 'vm',
+			controller: controller
+		});
+		
+		function controller() {
+			var vm = this;
+		}
+		
+//----------------------------------------	
+ 	angular
+		.module('app')
+		.component('goodsComponent', {
+			template: '<div ng-repeat="good in vm.goods">{{good.name}}</div>',
+			bindings: {goods: '<'}, 
+			controllerAs: 'vm',
+			controller: controller
+		});
+		
+		function controller() {
+			var vm = this;
+		}	
+
+//----------------------------------------	
+ 	angular
+		.module('app')
+		.component('kaminoComponentGetUser', {
+			template: '<div> {{vm.kamino.data.email}}<br>' +
+			'{{vm.kamino.data.userId}}<br>' +
+			'</div>',
+			bindings: {kamino: '<'}, 
+			controllerAs: 'vm',
+			controller: controller
+		});
+		
+		function controller() {
+			var vm = this;
+			console.log(vm.kamino);
+		}	
+		
+//----------------------------------------	
+ 	angular
+		.module('app')
+		.component('kaminoComponentGetFiles', {
+			template: '<div ng-repeat="file in vm.files">{{file.name}}</div>',
+			bindings: {files: '<'}, 
+			controllerAs: 'vm',
+			controller: controller
+		});
+		
+		function controller() {
+			var vm = this;
+			console.log(vm.files);
+		}			
+})();
+//-------------------------------------------------------------------------------------
+</script>
