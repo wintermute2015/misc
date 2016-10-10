@@ -53,7 +53,13 @@
 					});
  			}
 			
-			function resolveKaminoGetFiles($http, $q) {
+			function resolveKaminoGetFiles($http, $q, $rootScope) {
+				var deviceURI = 'https://dev1-proxy1.wdtest1.com:9443/53f76651-1f9c-4083-85f0-dbf7f5e95326';
+				$rootScope.deviceURI = deviceURI;
+				
+				var access_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJUVkJOalJDUVRBNFFqTTNNRU00UkRWQlJESTVRVEJHTmtVeFF6SXlRVGt6T0RjNE5EVkZOQSJ9.eyJzY29wZSI6InJlYWQtb25seSByZWFkLXdyaXRlIG5hc19yZWFkX29ubHkgbmFzX3JlYWRfd3JpdGUgbmFzX29mZmxpbmVfYWNjZXNzIiwiaXNzIjoiaHR0cHM6Ly93ZGMtZGV2MS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NTdmODMxM2MzYzAyZmRlNTRlNDdmNTZlIiwiYXVkIjoiclVmNElqUHY3VnA1dVhIRjdEaUR4azNGWjNBMVlmN20iLCJleHAiOjE0NzYxMjYzMTMsImlhdCI6MTQ3NjA5MDMxM30.g3n6yJFEAvQSo8LXCQAZYeZaebmqrJVz348qiPvo4c42VhjRyGcwv4udpLDDRq7YmRoHyU2b3Vx029S_JnGvd4hCtHM_bL78rTQRft_Ulvc0XPpeCjn33W4xrVz6aF8U7ST8NffDwxW8kuU7-MM7_gXqjoE0Je7x-Xg3FJE3NBF_cFks51mp4y-dWpMNHl6f4Z_basDfeN9bng__6tlfNnetezA0tmObep3ZdxEd5kYlGQdBtV3MXrx1ERlMvp7baD6l84VHyXrVoePNMfc0I8bc2cJ60qFa7k0DpUBp0gg2mi50YDAsFuCbjr2LvPYGzvXfowBxb_VaYy9M39239Q';
+				$rootScope.access_token = access_token;
+				
 				var url = 'https://dev1-proxy1.wdtest1.com:9443/53f76651-1f9c-4083-85f0-dbf7f5e95326/sdk/v2/filesSearch/parents?ids=root&limit=1000';
 				return $http.get(url, 
 					{
@@ -185,15 +191,34 @@
  	angular
 		.module('app')
 		.component('kaminoComponentGetFiles', {
-			template: '<div ng-repeat="file in vm.files">{{file.name}}</div>',
+			template: '<div ng-repeat="file in vm.files">' +
+			'<img ng-src="{{vm.getThumbnailURI(file.id)}}" width=100 height=100>' +
+			'{{file.name}}' +
+			'   -   {{file.size}} Kb' +
+			'<hr>' +
+			'</div>',
 			bindings: {files: '<'}, 
 			controllerAs: 'vm',
 			controller: controller
 		});
 		
-		function controller() {
+		function controller($rootScope) {
 			var vm = this;
+			angular.extend(vm, {
+				getThumbnailURI: getThumbnailURI
+			});
+					
 			console.log(vm.files);
+			console.log($rootScope.deviceURI);
+			
+			function getThumbnailURI(fileId, size = 400) {
+				var uri = $rootScope.deviceURI + 
+					'/sdk/v2/files/' + fileId + 
+					'/content?width=' + size + 
+					'&height=' + size + 
+					'&access_token=' + $rootScope.access_token;
+				return uri;
+			}
 		}			
 })();
 //-------------------------------------------------------------------------------------
