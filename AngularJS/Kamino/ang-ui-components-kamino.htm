@@ -30,7 +30,8 @@
 				var url = 'https://wdc-qa1.auth0.com/oauth/ro';
 					return $http.post(url, item)
 						.then(function (result) {
-							return result;
+							console.log(result.data)
+							return result.data;
 						})
 						.catch(function (reject) {
 							return $q.reject(reject);
@@ -42,7 +43,7 @@
 				var deviceURI = 'https://qa1-proxy1.wdtest2.com:9443/9ebfcfef-ed18-4c24-8499-44723bfa8560';
 				$rootScope.deviceURI = deviceURI;
 								
-				var access_token = 	'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1VWkdNVEJFTVRsQk56Z3hNVEF4UmtKRVFUVkdOMEZHTkVVNE1EUTJNVE15TUVORE9VSkNOUSJ9.eyJzY29wZSI6InJlYWQtb25seSByZWFkLXdyaXRlIG5hc19yZWFkX29ubHkgbmFzX3JlYWRfd3JpdGUgbmFzX29mZmxpbmVfYWNjZXNzIiwiaXNzIjoiaHR0cHM6Ly93ZGMtcWExLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1N2ZjMmM0NGY5ZTkzNGU3NTA5MDQ5OTIiLCJhdWQiOiJncFFlWWVaR2tlN2RhOWFnNmJZcHlKSVpjYVhJSnhGMiIsImV4cCI6MTQ3NjE4ODA0MCwiaWF0IjoxNDc2MTg0NDQwfQ.YF_VndNgeTkbjKRhlGy9IOmuMJMYH_Ak2QSvgEuL-2XG9yNWgdXy3csLqfp7sd_hkEoTyqZ7C4-wvc_8U2KKQtZbjEsdo5Sf-k4RoK64ow2p8dYr2AXtWKDBxN6WALXWdtL9IbLeUnZAPGXTSEb_Cp8OP5WF-_P1S5BnFpYa6MUYmtTrSOp5zNuOSnN97oSoUQ1A7UrnGRB5oy4I5Btgq3SyUMgFUSDl-CAbsVrprCidKVqtzbUOJKdTAeu51ErpP3hXOwau2uNwVsqz6VhMDhjm_KsRM3xNoXHa7w8Bhcwyp77QV2mJOU31pLBWIKnr9HOzFzTmfSzinXs79dtzxQ';
+				var access_token = 	'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1VWkdNVEJFTVRsQk56Z3hNVEF4UmtKRVFUVkdOMEZHTkVVNE1EUTJNVE15TUVORE9VSkNOUSJ9.eyJzY29wZSI6InJlYWQtb25seSByZWFkLXdyaXRlIG5hc19yZWFkX29ubHkgbmFzX3JlYWRfd3JpdGUgbmFzX29mZmxpbmVfYWNjZXNzIiwiaXNzIjoiaHR0cHM6Ly93ZGMtcWExLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1N2ZjMmM0NGY5ZTkzNGU3NTA5MDQ5OTIiLCJhdWQiOiJncFFlWWVaR2tlN2RhOWFnNmJZcHlKSVpjYVhJSnhGMiIsImV4cCI6MTQ3NjE5MTQyMSwiaWF0IjoxNDc2MTg3ODIxfQ.XFrZ6ptlABDxudrstvgDKDew2N0_XLXolug9xDRGHXImD-LocSc0A6vKFiJLRkKDU0AXI1paSRTIfzC96HRo5pKUUijR6V8I3JC2Xweo1CeOcpcxwfbjYrzPfC9agc0NcwiAu-m0rKI57K7598wVGDGfAQ2vKtb5RcufBlq9Fvzgq8pHACbdgheyrMueZ1qG0qDpVxW2mRBELRXkh3POyBfCpBseh8ouugjUhhNGq-eVhyGhhlbWd4qDSEf5PfLWuFVaHwZa2z925aUcbZNWA5deybcR9nXktHWpvNFcYm7xRgAcq3deJL0gSc1dOvrU21YvoMqbvcdzjX7vRLWWAA';
 				
 				$rootScope.access_token = access_token;
 				
@@ -113,8 +114,8 @@
  	angular
 		.module('app')
 		.component('kaminoComponentGetUser', {
-			template: '<div> {{vm.kamino.data.email}}<br>' +
-			'{{vm.kamino.data.userId}}<br>' +
+			template: '<div> {{vm.kamino.id_token}}<hr>' +
+			'{{vm.kamino.token_type}}<hr>' +
 			'</div>',
 			bindings: {kamino: '<'}, 
 			controllerAs: 'vm',
