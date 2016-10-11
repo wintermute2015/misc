@@ -1,7 +1,16 @@
+curl -H "Content-Type: application/json" -X POST -d  '{"client_id" : "gpQeYeZGke7da9ag6bYpyJIZcaXIJxF2",
+  "connection" : "Username-Password-Authentication",
+  "device" : "123456789",
+  "grant_type" : "password",
+  "password" : "Test1234",
+  "scope" : "openid offline_access",
+  "username" : "sergey.sydorenko@wdc.com"}' "https://wdc-qa1.auth0.com/oauth/ro"
+  
+--------------------------------------------------------------------------------------------------------------------------------
+
 https://qa1-proxy1.wdtest2.com:9443/9ebfcfef-ed18-4c24-8499-44723bfa8560/sdk/v2/filesSearch/parents?ids=root&limit=1000
 
 --------------------------------------------------------------------------------------------------------------------------------
-
 
 http://build-docs.wdmv.wdc.com/docs/restsdk.html#file-permission
 
