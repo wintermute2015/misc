@@ -27,8 +27,20 @@
 					scope: 'openid offline_access',
 					username: 'sergey.sydorenko@wdc.com'
 				};
+				
+				
+				var item1 = {
+					client_id: 'gpQeYeZGke7da9ag6bYpyJIZcaXIJxF2',
+					connection: 'Username-Password-Authentication',
+					device: '123456789',
+					grant_type: 'password',
+					password: 'Kamino1234',
+					scope: 'openid offline_access',
+					username: 'kamino.web.team@gmail.com'
+				};
+				
 				var url = 'https://wdc-qa1.auth0.com/oauth/ro';
-					return $http.post(url, item)
+					return $http.post(url, item1)
 						.then(function (result) {
 							console.log(result.data)
 							return result.data;
@@ -41,13 +53,18 @@
 			function resolveKaminoGetFiles($http, $q, $rootScope) {
 				var deviceURI = 'https://dev1-proxy1.wdtest1.com:9443/53f76651-1f9c-4083-85f0-dbf7f5e95326';
 				var deviceURI = 'https://qa1-proxy1.wdtest2.com:9443/9ebfcfef-ed18-4c24-8499-44723bfa8560';
+				
+				var deviceURI = 'https://qa1-proxy1.wdtest2.com:9443/1cfbaa2e-e2ea-463a-aaea-840a49a3ea8f'; //kamino.web.team@gmail.com
+				
 				$rootScope.deviceURI = deviceURI;
 								
-				var access_token = 	'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1VWkdNVEJFTVRsQk56Z3hNVEF4UmtKRVFUVkdOMEZHTkVVNE1EUTJNVE15TUVORE9VSkNOUSJ9.eyJzY29wZSI6InJlYWQtb25seSByZWFkLXdyaXRlIG5hc19yZWFkX29ubHkgbmFzX3JlYWRfd3JpdGUgbmFzX29mZmxpbmVfYWNjZXNzIiwiaXNzIjoiaHR0cHM6Ly93ZGMtcWExLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1N2ZjMmM0NGY5ZTkzNGU3NTA5MDQ5OTIiLCJhdWQiOiJncFFlWWVaR2tlN2RhOWFnNmJZcHlKSVpjYVhJSnhGMiIsImV4cCI6MTQ3NjE5MTQyMSwiaWF0IjoxNDc2MTg3ODIxfQ.XFrZ6ptlABDxudrstvgDKDew2N0_XLXolug9xDRGHXImD-LocSc0A6vKFiJLRkKDU0AXI1paSRTIfzC96HRo5pKUUijR6V8I3JC2Xweo1CeOcpcxwfbjYrzPfC9agc0NcwiAu-m0rKI57K7598wVGDGfAQ2vKtb5RcufBlq9Fvzgq8pHACbdgheyrMueZ1qG0qDpVxW2mRBELRXkh3POyBfCpBseh8ouugjUhhNGq-eVhyGhhlbWd4qDSEf5PfLWuFVaHwZa2z925aUcbZNWA5deybcR9nXktHWpvNFcYm7xRgAcq3deJL0gSc1dOvrU21YvoMqbvcdzjX7vRLWWAA';
+				var access_token = 	'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1VWkdNVEJFTVRsQk56Z3hNVEF4UmtKRVFUVkdOMEZHTkVVNE1EUTJNVE15TUVORE9VSkNOUSJ9.eyJzY29wZSI6InJlYWQtb25seSByZWFkLXdyaXRlIG5hc19yZWFkX29ubHkgbmFzX3JlYWRfd3JpdGUgbmFzX29mZmxpbmVfYWNjZXNzIiwiaXNzIjoiaHR0cHM6Ly93ZGMtcWExLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1N2ZkYTkzNDliZGZkMDZmNzljMDcxYTIiLCJhdWQiOiJncFFlWWVaR2tlN2RhOWFnNmJZcHlKSVpjYVhJSnhGMiIsImV4cCI6MTQ3NjI3NjgzMywiaWF0IjoxNDc2MjczMjMzfQ.6_6JPnQYjp54RjoYMye0kHd9YJrW-ABjEZd5JRPks-Y0ntEv9iVXGzAQKEMCOST7HY12mmiCtSK8HUwByHhaCI9TQsB2MGikE4jaoJTXAEERTmYZd_3j2uaf0cRp0NoIry4jUZxfUF9UgRgfYZCylCVSR5DWBR0-rg0QpwTpamF3tdc57ORVJ-hYRWRO2qF_T6FtvvTUARP7kYBkMgdPb13a3AKqmkW_kJ0rRxdG_-c8tzN-IZmrnIR48jVtoosgl-y5HyiG2FtHpvoIazyqar_98jVc0p6Yh0eQ1Nnu4m9QFiGk154iyILbdb5MmcxtMAnbTJsghV_qwQ1Bw91gjw';
 				
 				$rootScope.access_token = access_token;
 				
-				var getFilesURI = '/sdk/v2/filesSearch/parents?ids=root&limit=28';
+				var getFilesURI = '/sdk/v2/filesSearch/parents?ids=root&limit=1000';
+				var getFilesURI = '/sdk/v2/filesSearch/parents?ids=csGk6-3tumUe0_CdA9yC7DVJXyJy-lYzSR4Vd5j8&limit=1000';
+				//var getFilesURI = '/sdk/v2/files/';
 				
 				return $http.get(deviceURI + getFilesURI, 
 					{
