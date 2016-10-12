@@ -16,8 +16,30 @@
             .config(routeConfig);
 
         function routeConfig($stateProvider, $urlRouterProvider) {
+		
+			function resolveKaminoGetUser($http, $q, $rootScope) {
+				//var url = 'https://qa1-auth.remotewd1.com/authservice/v1/user?email=kamino.web.team%40gmail.com';
+				//var url = 'https://dev1-auth.remotewd1.com/authservice/v1/user?email=sirisha.codambakkam%40wdc.com';
+				//var url = 'https://dev1-auth.remotewd1.com/authservice/v1/user?email=sergey.sydorenko%40wdc.com';
 				
-			function resolveKaminoGetUser($http, $q) {
+				//var url = 'https://qa1-device.remotewd1.com/device/v1/user/auth0%7C57fda9349bdfd06f79c071a2';
+				
+				var url = 'https://wdc-qa1.auth0.com/userinfo';
+				var id_token = $rootScope.id_token;		
+				
+				return $http.get(url,
+					{
+						headers: {'Authorization': 'Bearer ' + id_token}
+					})
+					.then(function (result) {
+						return result.data;
+					})
+					.catch(function (reject) {
+						return $q.reject(reject);
+					});
+ 			}
+			
+			function resolveKaminoGetToken($http, $q, $rootScope) {
 				var item = {
 					client_id: 'gpQeYeZGke7da9ag6bYpyJIZcaXIJxF2',
 					connection: 'Username-Password-Authentication',
@@ -40,9 +62,10 @@
 				};
 				
 				var url = 'https://wdc-qa1.auth0.com/oauth/ro';
-					return $http.post(url, item1)
+					return $http.post(url, item)
 						.then(function (result) {
 							console.log(result.data)
+							$rootScope.id_token = result.data.access_token;
 							return result.data;
 						})
 						.catch(function (reject) {
@@ -86,13 +109,22 @@
                         url: '/home',
  						template: '<header title="Home"></header>'
                      })	
-
+					 
                     .state('kamino-get-user', {
                         url: '/kamino-get-user',
- 						template: '<header title="Kamino Get User"></header>' + 
+ 						template: '<header title="Kamino Get user"></header>' + 
 								  '<kamino-component-get-user kamino="$resolve.kamino"></kamino-component-get-user>',
 						resolve: {
 							kamino: resolveKaminoGetUser
+						}
+                     })	
+					 
+                    .state('kamino-get-token', {
+                        url: '/kamino-get-token',
+ 						template: '<header title="Kamino Get Token"></header>' + 
+								  '<kamino-component-get-token kamino="$resolve.kamino"></kamino-component-get-token>',
+						resolve: {
+							kamino: resolveKaminoGetToken
 						}
                      })		
 					 
@@ -113,6 +145,7 @@
 			template: '<div><hr>' +
 						'<a style="color:blue" ui-sref="home">Home</a>&nbsp&nbsp' +
 						'<a style="color:blue" ui-sref="kamino-get-user">Get user</a>&nbsp&nbsp' +
+						'<a style="color:blue" ui-sref="kamino-get-token">Get token</a>&nbsp&nbsp' +
 						'<a style="color:blue" ui-sref="kamino-get-files">Get files</a>' +
 						'&nbsp&nbsp&nbsp&nbsp&nbsp <b>{{vm.title}}</b>' +
 					  '<hr></div>',
@@ -126,11 +159,26 @@
 			var vm = this;
 		}		 
 	
-
 //----------------------------------------	
  	angular
 		.module('app')
 		.component('kaminoComponentGetUser', {
+			template: '<div> {{vm.kamino.data.email}}<br>' +
+			'{{vm.kamino.data.userId}}<br>' +
+			'</div>',
+			bindings: {kamino: '<'}, 
+			controllerAs: 'vm',
+			controller: controller
+		});
+		
+		function controller() {
+			var vm = this;
+			console.log(vm.kamino);
+		}
+//----------------------------------------	
+ 	angular
+		.module('app')
+		.component('kaminoComponentGetToken', {
 			template: '<div> {{vm.kamino.id_token}}<hr>' +
 			'{{vm.kamino.token_type}}<hr>' +
 			'</div>',
