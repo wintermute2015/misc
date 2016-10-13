@@ -71,8 +71,9 @@
  			}
 			
 			function resolveKaminoGetFiles($http, $q, $rootScope) {
-				var deviceURI = 'https://qa1-proxy1.wdtest2.com:9443/9ebfcfef-ed18-4c24-8499-44723bfa8560'; //sergey.sydorenko@wdc.com
+				var deviceURI0 = 'https://qa1-proxy1.wdtest2.com:9443/9ebfcfef-ed18-4c24-8499-44723bfa8560'; //sergey.sydorenko@wdc.com
 				var deviceURI1 = 'https://qa1-proxy1.wdtest2.com:9443/1cfbaa2e-e2ea-463a-aaea-840a49a3ea8f'; //kamino.web.team@gmail.com
+				var deviceURI = 'https://qa1-proxy1.wdtest2.com:9443/' + $rootScope.deviceId;
 				
 				$rootScope.deviceURI = deviceURI;
 				
@@ -87,7 +88,8 @@
 						headers: {'Authorization': 'Bearer ' + id_token}
 					})
 					.then(function (result) {
-						return result.data.files.slice(3, 100);
+						//return result.data.files.slice(3, 100);
+						return result.data.files;
 					})
 					.catch(function (reject) {
 						return $q.reject(reject);
@@ -165,10 +167,8 @@
 			controllerAs: 'vm',
 			controller: HomeCtrl
 		});
-		
-		//https://qa1-device.remotewd1.com/device/v1/user/
-		
-		function HomeCtrl($http, $q, $rootScope) {
+				
+		function HomeCtrl($http, $q, $rootScope, $state) {
 			var vm = this;
 		
 			angular.extend(vm, {
@@ -218,7 +218,10 @@
 												headers: {'Authorization': 'Bearer ' + $rootScope.id_token}
 											})
 											.then(function (result) {
-												return result.data;
+												$rootScope.deviceId = result.data.data[0].deviceId;
+
+												$state.go('kamino-get-files');
+												//return result.data;
 											})
 											.catch(function (reject) {
 												return $q.reject(reject);
