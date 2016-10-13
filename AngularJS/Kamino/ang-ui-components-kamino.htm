@@ -28,7 +28,10 @@
 					username: 'sergey.sydorenko@wdc.com'
 				};
 				
-				
+				//export const AUTHO_CLIENT_ID = 'gpQeYeZGke7da9ag6bYpyJIZcaXIJxF2';
+				//export const AUTHO_CLOUD_ID = '09f3d6a6-c783-458f-8cfb-bad6f97db7c0';
+				//export const AUTHO_SECURITY_CODE = 'JB2NODN4P';
+
 				var item1 = {
 					client_id: 'gpQeYeZGke7da9ag6bYpyJIZcaXIJxF2',
 					connection: 'Username-Password-Authentication',
@@ -83,12 +86,12 @@
 					{
 						headers: {'Authorization': 'Bearer ' + id_token}
 					})
-						.then(function (result) {
-							return result.data.files.slice(3, 100);
-						})
-						.catch(function (reject) {
-							return $q.reject(reject);
-						});
+					.then(function (result) {
+						return result.data.files.slice(3, 100);
+					})
+					.catch(function (reject) {
+						return $q.reject(reject);
+					});
  			}
 			
             $urlRouterProvider.otherwise('/home');	
@@ -96,7 +99,8 @@
 			$stateProvider
 					.state('home', {
                         url: '/home',
- 						template: '<header title="Home"></header>'
+ 						template: '<header title="Home"></header>' +
+								  '<home-component></home-component>',
                      })	
 				 
                     .state('kamino-get-token', {
@@ -132,12 +136,12 @@
 		.module('app')
 		.component('header', {
 			template: '<div><hr>' +
-						'<a style="color:blue" ui-sref="home">Home</a>&nbsp&nbsp' +
-						'<a style="color:blue" ui-sref="kamino-get-token">Get token</a>&nbsp&nbsp' +
-						'<a style="color:blue" ui-sref="kamino-get-user">Get user</a>&nbsp&nbsp' +
-						'<a style="color:blue" ui-sref="kamino-get-files">Get files</a>' +
-						'&nbsp&nbsp&nbsp&nbsp&nbsp <b>{{vm.title}}</b>' +
-					  '<hr></div>',
+				'<a style="color:blue" ui-sref="home">Home</a>&nbsp&nbsp' +
+				'<a style="color:blue" ui-sref="kamino-get-token">Get token</a>&nbsp&nbsp' +
+				'<a style="color:blue" ui-sref="kamino-get-user">Get user</a>&nbsp&nbsp' +
+				'<a style="color:blue" ui-sref="kamino-get-files">Get files</a>' +
+				'&nbsp&nbsp&nbsp&nbsp&nbsp <b>{{vm.title}}</b>' +
+				'<hr></div>',
 
 			bindings: {title: '@'}, 
 			controllerAs: 'vm',
@@ -147,16 +151,101 @@
 		function controller() {
 			var vm = this;
 		}		 
+
+//----------------------------------------	
+ 	angular
+		.module('app')
+		.component('homeComponent', {
+			template: '<div> <strong>Login</strong><hr>' +
+				'<form autocomplete="off">' +
+				'<input type="text" style="width: 200px;" ng-model="vm.login"><br><br>' +
+				'<input type="password" style="width: 200px;" ng-model="vm.pass"><br><br>' +
+				'<input type="button" value="Login" ng-click="vm.onClick()">' +
+				'</div>',
+			controllerAs: 'vm',
+			controller: HomeCtrl
+		});
+		
+		//https://qa1-device.remotewd1.com/device/v1/user/
+		
+		function HomeCtrl($http, $q, $rootScope) {
+			var vm = this;
+		
+			angular.extend(vm, {
+				init: init,
+				onClick: onClick
+			});
+			
+			init();		
+			
+			function init() {
+				vm.login = 'kamino.web.team@gmail.com';
+				vm.pass = 'Kamino1234';
+
+				//kamino.web.team@gmail.com - Kamino1234
+				//sergey.sydorenko@wdc.com - Test1234
+				//sirisha.codambakkam@wdc.com - Test1234
+			}
+			
+			function onClick() {
+				console.log(vm.login + ' - ' + vm.pass);
+				
+				var item = {
+					client_id: 'gpQeYeZGke7da9ag6bYpyJIZcaXIJxF2',
+					connection: 'Username-Password-Authentication',
+					device: '123456789',
+					grant_type: 'password',
+					password: vm.pass,
+					scope: 'openid offline_access',
+					username: vm.login
+				};
+								
+				var url = 'https://wdc-qa1.auth0.com/oauth/ro';
+					return $http.post(url, item)
+						.then(function (result) {
+							$rootScope.access_token = result.data.access_token;
+							$rootScope.id_token = result.data.id_token;
+								
+								return $http.get('https://wdc-qa1.auth0.com/userinfo',
+									{
+										headers: {'Authorization': 'Bearer ' + $rootScope.access_token}
+									})
+									.then(function (result) {
+										$rootScope.user_id = result.data.user_id;
+
+										return $http.get('https://qa1-device.remotewd1.com/device/v1/user/' + $rootScope.user_id, 
+											{
+												headers: {'Authorization': 'Bearer ' + $rootScope.id_token}
+											})
+											.then(function (result) {
+												return result.data;
+											})
+											.catch(function (reject) {
+												return $q.reject(reject);
+											});
+										//return result.data;
+									})
+									.catch(function (reject) {
+										return $q.reject(reject);
+									});
+																				
+							//return result.data;
+						})
+						.catch(function (reject) {
+							return $q.reject(reject);
+						});
+			}
+		}	
 		
 //----------------------------------------	
  	angular
 		.module('app')
 		.component('kaminoComponentGetToken', {
 			template: '<div> id_token: {{vm.token.id_token}}<hr>' +
-			'access_token: {{vm.token.access_token}}<hr>' +
-			'refresh_token: {{vm.token.refresh_token}}<hr>' +		
-			'token_type: {{vm.token.token_type}}<hr>' +						
-			'</div>',
+				'access_token: {{vm.token.access_token}}<hr>' +
+				'refresh_token: {{vm.token.refresh_token}}<hr>' +		
+				'token_type: {{vm.token.token_type}}<hr>' +						
+				'</div>',
 			bindings: {token: '<'}, 
 			controllerAs: 'vm',
 			controller: TokenCtrl
@@ -172,18 +261,18 @@
 		.module('app')
 		.component('kaminoComponentGetUser', {
 			template: '<div>' +
-			'<img ng-src="{{vm.user.picture}}" width=100 height=100><hr>' +
-			'Email: {{vm.user.email}}<br>' +
-			'Name: {{vm.user.name}}<br>' +
-			'Nickname: {{vm.user.nickname}}<br>' +
-			'ClientID: {{vm.user.clientID}}<br>' +
-			'Created_at: {{vm.user.created_at}}<br>' +
-			'Email_verified: {{vm.user.email_verified}}<br>' +
-			'Scope: {{vm.user.scope}}<br>' +
-			'Sub: {{vm.user.sub}}<br>' +
-			'Updated_at: {{vm.user.updated_at}}<br>' +
-			'User_id: {{vm.user.user_id}}<br>' +
-			'</div>',
+				'<img ng-src="{{vm.user.picture}}" width=100 height=100><hr>' +
+				'Email: {{vm.user.email}}<br>' +
+				'Name: {{vm.user.name}}<br>' +
+				'Nickname: {{vm.user.nickname}}<br>' +
+				'ClientID: {{vm.user.clientID}}<br>' +
+				'Created_at: {{vm.user.created_at}}<br>' +
+				'Email_verified: {{vm.user.email_verified}}<br>' +
+				'Scope: {{vm.user.scope}}<br>' +
+				'Sub: {{vm.user.sub}}<br>' +
+				'Updated_at: {{vm.user.updated_at}}<br>' +
+				'User_id: {{vm.user.user_id}}<br>' +
+				'</div>',
 			bindings: {user: '<'}, 
 			controllerAs: 'vm',
 			controller: UserCtrl
@@ -199,11 +288,11 @@
 		.module('app')
 		.component('kaminoComponentGetFiles', {
 			template: '<div ng-repeat="file in vm.files">' +
-			'<img ng-src="{{vm.getThumbnailURI(file)}}" width=100 height=100>' +
-			'{{file.name}}' +
-			'   -   {{file.size/1024 | number:2}} Kb' +
-			'<hr>' +
-			'</div>',
+				'<img ng-src="{{vm.getThumbnailURI(file)}}" width=100 height=100>' +
+				'{{file.name}}' +
+				'   -   {{file.size/1024 | number:2}} Kb' +
+				'<hr>' +
+				'</div>',
 			bindings: {files: '<'}, 
 			controllerAs: 'vm',
 			controller: FilesCtrl
