@@ -40,7 +40,7 @@
 				};
 				
 				var url = 'https://wdc-qa1.auth0.com/oauth/ro';
-					return $http.post(url, item1)
+					return $http.post(url, item)
 						.then(function (result) {
 							$rootScope.access_token = result.data.access_token;
 							$rootScope.id_token = result.data.id_token;
@@ -52,12 +52,6 @@
  			}
 			
 			function resolveKaminoGetUser($http, $q, $rootScope) {
-				//var url = 'https://qa1-auth.remotewd1.com/authservice/v1/user?email=kamino.web.team%40gmail.com';
-				//var url = 'https://dev1-auth.remotewd1.com/authservice/v1/user?email=sirisha.codambakkam%40wdc.com';
-				//var url = 'https://dev1-auth.remotewd1.com/authservice/v1/user?email=sergey.sydorenko%40wdc.com';
-				
-				//var url = 'https://qa1-device.remotewd1.com/device/v1/user/auth0%7C57fda9349bdfd06f79c071a2';
-				
 				var url = 'https://wdc-qa1.auth0.com/userinfo';
 				var access_token = $rootScope.access_token;		
 				
@@ -74,20 +68,16 @@
  			}
 			
 			function resolveKaminoGetFiles($http, $q, $rootScope) {
-				var deviceURI = 'https://dev1-proxy1.wdtest1.com:9443/53f76651-1f9c-4083-85f0-dbf7f5e95326';
-				var deviceURI = 'https://qa1-proxy1.wdtest2.com:9443/9ebfcfef-ed18-4c24-8499-44723bfa8560';
-				
-				var deviceURI = 'https://qa1-proxy1.wdtest2.com:9443/1cfbaa2e-e2ea-463a-aaea-840a49a3ea8f'; //kamino.web.team@gmail.com
+				var deviceURI = 'https://qa1-proxy1.wdtest2.com:9443/9ebfcfef-ed18-4c24-8499-44723bfa8560'; //sergey.sydorenko@wdc.com
+				var deviceURI1 = 'https://qa1-proxy1.wdtest2.com:9443/1cfbaa2e-e2ea-463a-aaea-840a49a3ea8f'; //kamino.web.team@gmail.com
 				
 				$rootScope.deviceURI = deviceURI;
-								
-				var id_token = 	'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1VWkdNVEJFTVRsQk56Z3hNVEF4UmtKRVFUVkdOMEZHTkVVNE1EUTJNVE15TUVORE9VSkNOUSJ9.eyJzY29wZSI6InJlYWQtb25seSByZWFkLXdyaXRlIG5hc19yZWFkX29ubHkgbmFzX3JlYWRfd3JpdGUgbmFzX29mZmxpbmVfYWNjZXNzIiwiaXNzIjoiaHR0cHM6Ly93ZGMtcWExLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1N2ZkYTkzNDliZGZkMDZmNzljMDcxYTIiLCJhdWQiOiJncFFlWWVaR2tlN2RhOWFnNmJZcHlKSVpjYVhJSnhGMiIsImV4cCI6MTQ3NjI4MDc5NSwiaWF0IjoxNDc2Mjc3MTk1fQ.BC8REJenBra90uELhuZt1DbRVTzJoB7WTR-ftcEyP1Rw7_N-TSE-_gztny0nfS3_iLZEAi3UWnLNrKIdb98KI5XxQbiKzhQC2pKQbb0dZEVGVyH4wEdwTAC175j5MoOIOQ9cDe0FE0e8ctJ1GkCadf8JOh6LglGTivOxijCKu1DuSSew-88vhD_kGlpLS_jQiZ_XuRaydFmUZdxDZ1zIlCrDARSOpokIOVT-mbxTRLqSt3gYaHQnWOjPDUxwIvaXUTiMmUALF7irzX1s1jEznq4wJ4o0Dg8umcwU022e3x4LjJpLmu_NpzeWc-Sm0hAJ81PNrTIMXtiRFR2s0TV1YA';
 				
 				var id_token = $rootScope.id_token;
 				
-				var getFilesURI = '/sdk/v2/filesSearch/parents?ids=root&limit=1000';
-				var getFilesURI = '/sdk/v2/filesSearch/parents?ids=csGk6-3tumUe0_CdA9yC7DVJXyJy-lYzSR4Vd5j8&limit=1000';
-				//var getFilesURI = '/sdk/v2/files/';
+				var getFilesURI = '/sdk/v2/filesSearch/parents?ids=root&limit=1000'; //sergey.sydorenko@wdc.com
+				var getFilesURI1 = '/sdk/v2/filesSearch/parents?ids=csGk6-3tumUe0_CdA9yC7DVJXyJy-lYzSR4Vd5j8&limit=1000'; //kamino.web.team@gmail.com
+
 				
 				return $http.get(deviceURI + getFilesURI, 
 					{
@@ -181,8 +171,18 @@
  	angular
 		.module('app')
 		.component('kaminoComponentGetUser', {
-			template: '<div> {{vm.user | json}}<br>' +
-			'{{vm.user.email}}<br>' +
+			template: '<div>' +
+			'<img ng-src="{{vm.user.picture}}" width=100 height=100><hr>' +
+			'Email: {{vm.user.email}}<br>' +
+			'Name: {{vm.user.name}}<br>' +
+			'Nickname: {{vm.user.nickname}}<br>' +
+			'ClientID: {{vm.user.clientID}}<br>' +
+			'Created_at: {{vm.user.created_at}}<br>' +
+			'Email_verified: {{vm.user.email_verified}}<br>' +
+			'Scope: {{vm.user.scope}}<br>' +
+			'Sub: {{vm.user.sub}}<br>' +
+			'Updated_at: {{vm.user.updated_at}}<br>' +
+			'User_id: {{vm.user.user_id}}<br>' +
 			'</div>',
 			bindings: {user: '<'}, 
 			controllerAs: 'vm',
