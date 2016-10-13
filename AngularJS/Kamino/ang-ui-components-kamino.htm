@@ -77,15 +77,13 @@
 				
 				$rootScope.deviceURI = deviceURI;
 				
-				var id_token = $rootScope.id_token;
-				
-				var getFilesURI = '/sdk/v2/filesSearch/parents?ids=root&limit=1000'; //sergey.sydorenko@wdc.com
 				var getFilesURI1 = '/sdk/v2/filesSearch/parents?ids=csGk6-3tumUe0_CdA9yC7DVJXyJy-lYzSR4Vd5j8&limit=1000'; //kamino.web.team@gmail.com
-
+				var getFilesURI2 = '/sdk/v2/filesSearch/parents?ids=cIXlzl1WJ7G5JTGE3-OYPfDeqAbe4c-R-ebtjyLP&limit=1000'; //sirisha.codambakkam@wdc.com
+				var getFilesURI = '/sdk/v2/filesSearch/parents?ids=root&limit=1000';
 				
 				return $http.get(deviceURI + getFilesURI, 
 					{
-						headers: {'Authorization': 'Bearer ' + id_token}
+						headers: {'Authorization': 'Bearer ' + $rootScope.id_token}
 					})
 					.then(function (result) {
 						//return result.data.files.slice(3, 100);
@@ -179,8 +177,8 @@
 			init();		
 			
 			function init() {
-				vm.login = 'kamino.web.team@gmail.com';
-				vm.pass = 'Kamino1234';
+				vm.login = 'sergey.sydorenko@wdc.com';
+				vm.pass = 'Test1234';
 
 				//kamino.web.team@gmail.com - Kamino1234
 				//sergey.sydorenko@wdc.com - Test1234
