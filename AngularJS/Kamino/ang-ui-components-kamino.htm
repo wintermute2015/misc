@@ -79,14 +79,24 @@
 				
 				var getFilesURI1 = '/sdk/v2/filesSearch/parents?ids=csGk6-3tumUe0_CdA9yC7DVJXyJy-lYzSR4Vd5j8&limit=1000'; //kamino.web.team@gmail.com
 				var getFilesURI2 = '/sdk/v2/filesSearch/parents?ids=cIXlzl1WJ7G5JTGE3-OYPfDeqAbe4c-R-ebtjyLP&limit=1000'; //sirisha.codambakkam@wdc.com
+
+				var getFilesURI = '/sdk/v2/filesSearch/parents?ids=QQMou0b-hYhQVewOA4GmT3QO_tdV0YV7_WzJRw_0&limit=1000';
 				var getFilesURI = '/sdk/v2/filesSearch/parents?ids=root&limit=1000';
+
+				if ($rootScope.rootID) {
+					getFilesURI = '/sdk/v2/filesSearch/parents?ids=' + $rootScope.rootID + '&limit=1000';
+					$rootScope.rootID = null;
+				}
 				
 				return $http.get(deviceURI + getFilesURI, 
 					{
 						headers: {'Authorization': 'Bearer ' + $rootScope.id_token}
 					})
 					.then(function (result) {
-						//return result.data.files.slice(3, 100);
+						//console.log(result.data.files.sort(sort));
+						if (result.data.files) {
+							result.data.files.sort(sort);
+						}
 						return result.data.files;
 					})
 					.catch(function (reject) {
@@ -94,6 +104,17 @@
 					});
  			}
 			
+			function sort(a, b) {
+				var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+				if (nameA < nameB) {
+					return -1
+				}
+				if (nameA > nameB) {
+					return 1
+				}
+				return 0;
+			}	
+		
             $urlRouterProvider.otherwise('/home');	
 			
 			$stateProvider
@@ -128,14 +149,21 @@
 						resolve: {
 							files: resolveKaminoGetFiles
 						}
-                     })							 
+                     })	
+					 
+                    .state('kamino-file-details', {
+                        url: '/kamino-file-details',
+						params: {file: {}},
+ 						template: '<header title="Kamino File Details"></header>' + 
+								  '<kamino-component-file-details></kamino-component-file-details>'
+                     })						 
 		 }
 		 
 //----------------------------------------	
  	angular
 		.module('app')
 		.component('header', {
-			template: '<div><hr>' +
+			template: '<div ng-click="vm.fileDetails()"><hr>' +
 				'<a style="color:blue" ui-sref="home">Home</a>&nbsp&nbsp' +
 				'<a style="color:blue" ui-sref="kamino-get-token">Get token</a>&nbsp&nbsp' +
 				'<a style="color:blue" ui-sref="kamino-get-user">Get user</a>&nbsp&nbsp' +
@@ -148,8 +176,16 @@
 			controller: controller
 		});
 		
-		function controller() {
+		function controller($state) {
 			var vm = this;
+		
+			angular.extend(vm, {
+				fileDetails: fileDetails
+			});
+			
+			function fileDetails(item) {
+				$state.go('kamino-file-details', {file: {name:'xxx'}});
+			}
 		}		 
 
 //----------------------------------------	
@@ -177,8 +213,11 @@
 			init();		
 			
 			function init() {
-				vm.login = 'sergey.sydorenko@wdc.com';
-				vm.pass = 'Test1234';
+				//vm.login = 'sergey.sydorenko@wdc.com';
+				//vm.pass = 'Test1234';				
+				
+				vm.login = 'kamino.web.team@gmail.com';
+				vm.pass = 'Kamino1234';
 
 				//kamino.web.team@gmail.com - Kamino1234
 				//sergey.sydorenko@wdc.com - Test1234
@@ -288,29 +327,41 @@
  	angular
 		.module('app')
 		.component('kaminoComponentGetFiles', {
-			template: '<div ng-repeat="file in vm.files">' +
-				'<img ng-src="{{vm.getThumbnailURI(file)}}" width=100 height=100>' +
-				'{{file.name}}' +
-				'   -   {{file.size/1024 | number:2}} Kb' +
-				'<hr>' +
+			template: '<div ng-if="!vm.files">' +
+				'Folder is empty' +
+				'</div>' + 
+			'<div ng-repeat="file in vm.files">' +
+				'<div ng-if="file.mimeType != \'application/octet-stream\'" ' +
+				'<div ng-click="vm.fileDetails(file)">' +
+					'<img ng-src="{{vm.getThumbnailURI(file)}}" width=100 height=100>' +
+					'{{file.name}}' +
+					'   -   {{file.size/1024 | number:2}} Kb' +
+					'<hr>' +
+				'</div>' +
+				'</div>' +
 				'</div>',
 			bindings: {files: '<'}, 
 			controllerAs: 'vm',
 			controller: FilesCtrl
 		});
 		
-		function FilesCtrl($rootScope) {
+		function FilesCtrl($rootScope, $state) {
 			var vm = this;
 			angular.extend(vm, {
-				getThumbnailURI: getThumbnailURI
+				getThumbnailURI: getThumbnailURI,
+				fileDetails: fileDetails
 			});
 					
 			console.log(vm.files);
 			
+			function fileDetails(item) {
+				$state.go('kamino-file-details', {file: item});
+			}
+			
 			function getThumbnailURI(item, size = 400) {
 				var fileId = item.id;
 				var uri;
-				if (!item.extension || item.extension == '.txt') {
+				if (!item.extension || item.extension == '.txt' || item.extension == ".pptx") {
 					uri = './no-img.png';
 					return uri;
 				}
@@ -322,6 +373,73 @@
 					'&access_token=' + $rootScope.id_token;
 				return uri;
 			}
+		}			
+//----------------------------------------	
+ 	angular
+		.module('app')
+		.component('kaminoComponentFileDetails', {
+			template: '<div ng-if="!vm.size">' +
+				'Loading...' +
+				'</div>' +
+				
+				'<div ng-if="vm.size">' +
+					'<div ng-if="vm.extension == \'.jpg\'">' +
+						'<img ng-src="{{vm.getThumbnailURI()}}" width=300 height=300><hr>' +
+					'</div>' +		
+					
+					'<div ng-if="vm.extension != \'.jpg\'">' +
+						'<img ng-src="./no-img.png" width=300 height=300><hr>' +
+					'</div>' +		
+					
+					'<div>' +
+						'<b>Name:</b> {{vm.name}}<br>' +
+						'<b>Extension:</b> {{vm.extension}}<br>' +		
+						'<b>MimeType:</b> {{vm.mimeType}}<br>' +		
+						'<b>mTime:</b> {{vm.mTime}}<br>' +		
+						'<b>Size:</b> {{vm.size}}<hr>' +				
+						'<b>ID:</b> {{vm.id}}<br>' +
+						'<b>ParentID:</b> {{vm.parentID}}<br>' +				
+						'<b>eTag:</b> {{vm.eTag}}<br>' +
+						'<b>PrivatelyShared:</b> {{vm.privatelyShared}}<br>' +
+						'<b>PubliclyShared:</b> {{vm.publiclyShared}}<br>' +
+					'</div>' +
+ 				'</div>',
+			controllerAs: 'vm',
+			controller: FileDetailsCtrl
+		});
+		
+		function FileDetailsCtrl($rootScope, $stateParams, $state) {
+			var vm = this;
+			angular.extend(vm, {
+				init: init,
+				getThumbnailURI: getThumbnailURI
+			});
+			
+			angular.extend(vm, $stateParams.file);			
+			
+			init();		
+			
+			function init() {
+			console.log(vm);
+				if (!vm.mimeType || vm.mimeType == 'application/x.wd.dir') {
+					$rootScope.rootID = vm.id;
+					$state.go('kamino-get-files');
+				}
+			}
+			
+			function getThumbnailURI(item, size = 400) {
+				var fileId = vm.id;
+				var uri;
+ 
+				uri = $rootScope.deviceURI + 
+					'/sdk/v2/files/' + fileId + 
+					'/content?width=' + size + 
+					'&height=' + size + 
+					'&access_token=' + $rootScope.id_token;
+				console.log(uri);	
+				return uri;
+			}	
+			
 		}			
 })();
 //-------------------------------------------------------------------------------------
