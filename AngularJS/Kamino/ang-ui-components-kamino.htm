@@ -85,7 +85,8 @@
 
 				if ($rootScope.rootID) {
 					getFilesURI = '/sdk/v2/filesSearch/parents?ids=' + $rootScope.rootID + '&limit=1000';
-					$rootScope.rootID = null;
+					console.log($rootScope.parentID)
+					//$rootScope.rootID = $rootScope.parentID;
 				}
 				
 				return $http.get(deviceURI + getFilesURI, 
@@ -361,11 +362,17 @@
 			function getThumbnailURI(item, size = 400) {
 				var fileId = item.id;
 				var uri;
-				if (!item.extension || item.extension == '.txt' || item.extension == ".pptx") {
-					uri = './no-img.png';
+				
+				if (item.mimeType == 'application/x.wd.dir') {
+					uri = './folder.png';
 					return uri;
 				}
 				
+				if (!item.extension || item.extension == '.txt' || item.extension == ".pptx") {
+					uri = './no-img.png';
+					return uri;
+				}				
+								
 				uri = $rootScope.deviceURI + 
 					'/sdk/v2/files/' + fileId + 
 					'/content?width=' + size + 
@@ -383,14 +390,20 @@
 				'</div>' +
 				
 				'<div ng-if="vm.size">' +
-					'<div ng-if="vm.extension == \'.jpg\'">' +
+					'<div ng-if="(vm.extension == \'.jpg\') || (vm.extension == \'.avi\') ' +
+						'|| (vm.extension == \'.mp4\') || (vm.extension == \'.m4v\') ' +						
+						'|| (vm.extension == \'.mov\') || (vm.extension == \'.mkv\') ' +
+						'">' +
 						'<img ng-src="{{vm.getThumbnailURI()}}" width=300 height=300><hr>' +
 					'</div>' +		
-					
-					'<div ng-if="vm.extension != \'.jpg\'">' +
+
+					'<div ng-if="(vm.extension != \'.jpg\') && (vm.extension != \'.avi\') ' +
+						'&& (vm.extension != \'.mp4\') && (vm.extension != \'.m4v\') ' +
+						'&& (vm.extension != \'.mov\') && (vm.extension != \'.mkv\') ' +
+						'">' +
 						'<img ng-src="./no-img.png" width=300 height=300><hr>' +
 					'</div>' +		
-					
+				
 					'<div>' +
 						'<b>Name:</b> {{vm.name}}<br>' +
 						'<b>Extension:</b> {{vm.extension}}<br>' +		
@@ -423,6 +436,7 @@
 			console.log(vm);
 				if (!vm.mimeType || vm.mimeType == 'application/x.wd.dir') {
 					$rootScope.rootID = vm.id;
+					$rootScope.parentID = vm.parentID;
 					$state.go('kamino-get-files');
 				}
 			}
