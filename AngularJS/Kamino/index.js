@@ -6,8 +6,8 @@ app.listen(process.env.PORT || 8080, function () {
 });
 
 app.get('/', function (req, res) {
-	res.sendFile(__dirname + '/ang-ui-components-kamino.htm');
+	res.sendFile(__dirname + '/perlyna/perlyna.html');
     //res.send('It is just API Server...');
 });
 
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + '/perlyna'));
