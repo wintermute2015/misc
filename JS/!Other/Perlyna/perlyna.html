@@ -23,7 +23,8 @@
 
   <div id="map" style="width: 100%; height: 350px; float: left; margin-right: 25px; color: black">
   </div>
-  <script type="text/javascript">
+  
+<script type="text/javascript">
     var locations = [
       ['Привет Саня - это Перлина Резорт', 49.5443047,31.8691583, 1],
       ['А это - ЛЕС', 49.5444189, 31.8661804, 2],
@@ -39,11 +40,40 @@
 
     var infowindow = new google.maps.InfoWindow();
 
-    var marker, i;
-
+    var marker, marker1, i;
+	
+	var goldStar = {
+		path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
+		fillColor: 'yellow',
+		fillOpacity: 0.8,
+		scale: 2,
+		strokeColor: 'gold',
+		strokeWeight: 14
+	};
+	
+	var symbolOne = {
+		path: 'M -2,0 0,-2 2,0 0,2 z',
+		strokeColor: 'gold',
+		fillColor: 'gold',
+		fillOpacity: 1,
+		scale: 3,
+	};
+	
+	var image = 'no-img.png';
+	
     for (i = 0; i < locations.length; i++) {  
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+		    icon: {
+			  //path: google.maps.SymbolPath.CIRCLE,
+			  //path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+			  //path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+			  //scale: 3
+			},
+			//draggable: true,
+			//animation: google.maps.Animation.BOUNCE,
+			//icon: image,
+			//icon: symbolOne,
         map: map
       });
 
@@ -56,25 +86,30 @@
     }
 	
 	function getPos() {
-	  if (navigator.geolocation) {
-	  
-		navigator.geolocation.getCurrentPosition(showPosition);
-	  } else {
-		alert("Geolocation is not supported by this browser.");
-	  }
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(showPosition);
+		} else {
+			alert("Geolocation is not supported by this browser.");
+		}
 	}
 	
 	function showPosition(position) {
-	console.log(111)
-  var lat = position.coords.latitude;
-  var lng = position.coords.longitude;
-  console.log(lat)
-  map.setCenter(new google.maps.LatLng(lat, lng));
-        marker = new google.maps.Marker({
-        position: new google.maps.LatLng(lat, lng),
-        map: map
-      });
-}
-  </script>
+		if (marker1) {
+			marker1.setMap(null);
+		}
+		
+		var lat = position.coords.latitude;
+		var lng = position.coords.longitude;
+
+			map.setCenter(new google.maps.LatLng(lat, lng));
+			marker1 = new google.maps.Marker({
+				position: new google.maps.LatLng(lat, lng),
+				draggable: true,
+				animation: google.maps.Animation.BOUNCE,
+				icon: symbolOne,
+				map: map
+			});
+	}
+</script>
 </body>
 </html>
