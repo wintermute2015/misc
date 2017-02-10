@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<!--[if IE 9]>
+<html class="ie ie9" lang="ru-RU" xmlns:fb="http://ogp.me/ns/fb#" xmlns:addthis="http://www.addthis.com/help/api-spec" >
+<![endif]-->
+<html lang="ru-RU" xmlns:fb="http://ogp.me/ns/fb#" xmlns:addthis="http://www.addthis.com/help/api-spec" >
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="https://rav.pw/xmlrpc.php">
+
+<title>Что такое $apply и $digest в AngularJS? &#8212; Antenko</title>
+<link rel="alternate" type="application/rss+xml" title="Antenko &raquo; Лента" href="https://rav.pw/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Antenko &raquo; Лента комментариев" href="https://rav.pw/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Antenko &raquo; Лента комментариев к &laquo;Что такое $apply и $digest в AngularJS?&raquo;" href="https://rav.pw/angularjs-apply-and-digest/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/72x72\/","ext":".png","source":{"concatemoji":"https:\/\/rav.pw\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.4.2"}};
+			!function(a,b,c){function d(a){var c,d=b.createElement("canvas"),e=d.getContext&&d.getContext("2d"),f=String.fromCharCode;return e&&e.fillText?(e.textBaseline="top",e.font="600 32px Arial","flag"===a?(e.fillText(f(55356,56806,55356,56826),0,0),d.toDataURL().length>3e3):"diversity"===a?(e.fillText(f(55356,57221),0,0),c=e.getImageData(16,16,1,1).data.toString(),e.fillText(f(55356,57221,55356,57343),0,0),c!==e.getImageData(16,16,1,1).data.toString()):("simple"===a?e.fillText(f(55357,56835),0,0):e.fillText(f(55356,57135),0,0),0!==e.getImageData(16,16,1,1).data[0])):!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g;c.supports={simple:d("simple"),flag:d("flag"),unicode8:d("unicode8"),diversity:d("diversity")},c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.simple&&c.supports.flag&&c.supports.unicode8&&c.supports.diversity||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='genericons-css'  href='https://rav.pw/wp-content/themes/toivo-lite/fonts/genericons/genericons/genericons.min.css?ver=3.3' type='text/css' media='all' />
+<link rel='stylesheet' id='toivo-lite-parent-style-css'  href='https://rav.pw/wp-content/themes/toivo-lite/style.min.css?ver=1.0.8' type='text/css' media='all' />
+<link rel='stylesheet' id='toivo-lite-style-css'  href='https://rav.pw/wp-content/themes/eemeli/style.css?ver=4.4.2' type='text/css' media='all' />
+<style id='toivo-lite-style-inline-css' type='text/css'>
+
+			.site-header,
+			.custom-header-image .site-header > .wrap::before {
+				background-color: rgba( 53, 73, 93, 0.8);
+			}
+</style>
+<link rel='stylesheet' id='highlightJS.css-css'  href='https://rav.pw/wp-includes//components/highlight/styles/sunbirst.css' type='text/css' media='all' />
+<link rel='stylesheet' id='myCustom-css'  href='https://rav.pw/wp-includes//css/my-custom.css' type='text/css' media='all' />
+<link rel='stylesheet' id='eemeli-fonts-css'  href='https://fonts.googleapis.com/css?family=Open+Sans%3A300italic%2C400italic%2C700italic%2C400%2C700%2C300%7CNunito%3A400%2C700%2C300&#038;subset=latin%2Clatin-ext' type='text/css' media='all' />
+<script type='text/javascript' src='https://rav.pw/wp-includes/js/jquery/jquery.js?ver=1.11.3'></script>
+<script type='text/javascript' src='https://rav.pw/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<script type='text/javascript' src='https://rav.pw/wp-includes//components/highlight/highlight.pack.js'></script>
+<script type='text/javascript' src='https://rav.pw/wp-includes//components/highlight/highlight.pack.js'></script>
+<link rel='https://api.w.org/' href='https://rav.pw/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://rav.pw/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://rav.pw/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='WordPress. Как отобразить анонс записи?' href='https://rav.pw/wordpress-display-post-excerpt/' />
+<link rel='next' title='Организация зависимостей RequireJS' href='https://rav.pw/requirejs-dependencies-organazing/' />
+<meta name="generator" content="WordPress 4.4.2" />
+<link rel="canonical" href="https://rav.pw/angularjs-apply-and-digest/" />
+<link rel='shortlink' href='https://rav.pw/?p=217' />
+<link rel="alternate" type="application/json+oembed" href="https://rav.pw/wp-json/oembed/1.0/embed?url=https%3A%2F%2Frav.pw%2Fangularjs-apply-and-digest%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://rav.pw/wp-json/oembed/1.0/embed?url=https%3A%2F%2Frav.pw%2Fangularjs-apply-and-digest%2F&#038;format=xml" />
+		<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+		
+<style type="text/css" id="custom-header-css">@media screen and (min-width: 1px) { body.custom-header-image .site-header { background: url(https://rav.pw/wp-content/themes/eemeli/images/header-image.jpg) no-repeat 50% 50%; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; } }.site-title, .site-title a, .site-description, .site-description a { color: #f2f2f2 }.site-title a { border-color: #f2f2f2 }</style>
+	<style type="text/css" id="custom-background-css">body.custom-background { background: #eef2f5; }</style>
+	<link rel="icon" href="https://rav.pw/wp-content/uploads/2015/09/cropped-8bit_avatar-32x32.png" sizes="32x32" />
+<link rel="icon" href="https://rav.pw/wp-content/uploads/2015/09/cropped-8bit_avatar-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon-precomposed" href="https://rav.pw/wp-content/uploads/2015/09/cropped-8bit_avatar-180x180.png" />
+<meta name="msapplication-TileImage" content="https://rav.pw/wp-content/uploads/2015/09/cropped-8bit_avatar-270x270.png" />
+<script>
+	hljs.initHighlightingOnLoad();
+</script>
+</head>
+
+<body class="single single-post postid-217 single-format-standard custom-header-image top-menus-disabled layout-1c custom-background" itemscope itemtype="http://schema.org/Blog">
+<div id="page" class="site">
+
+	<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+		
+		
+	<header id="masthead" class="site-header" role="banner" aria-labelledby="site-title" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
+		
+		<div class="wrap">
+		
+				
+			<div class="site-branding">
+			
+											<div id="site-title" class="site-title" itemprop="headline">
+								<a href="https://rav.pw/" rel="home">Antenko</a>
+							</div>
+						
+										
+						<div id="site-description" class="site-description" itemprop="description">Ratenko Anton | Web-разработчик в первом поколении</div>
+			
+							
+			</div><!-- .site-branding -->
+			
+		</div><!-- .wrap -->
+			
+	</header><!-- #masthead -->
+	
+		
+	
+	<button id="nav-toggle">Menu</button>
+	
+	<nav id="menu-primary" class="menu main-navigation" role="navigation" aria-label="Primary Menu" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+		<h2 class="screen-reader-text">Primary Menu</h2>
+		
+		<div class="wrap">
+			
+			<div class="menu-%d0%b3%d0%bb%d0%b0%d0%b2%d0%bd%d0%be%d0%b5-%d0%bc%d0%b5%d0%bd%d1%8e-container"><ul id="menu-primary-items" class="menu-items"><li id="menu-item-48" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48"><a href="https://rav.pw/">Обо мне</a></li>
+<li id="menu-item-47" class="menu-item menu-item-type-post_type menu-item-object-page current_page_parent menu-item-47"><a href="https://rav.pw/blog/">Блог</a></li>
+</ul></div>		
+		</div><!-- .wrap -->
+	</nav><!-- #menu-primary -->
+	
+	<div id="content" class="site-content">
+		<div class="wrap">
+			<div class="wrap-inside">
+				
+				<nav role="navigation" aria-label="Breadcrumbs" class="breadcrumb-trail breadcrumbs" itemprop="breadcrumb"><h2 class="screen-reader-text">Breadcrumbs</h2><div class="wrap"><ul class="trail-items" itemscope itemtype="http://schema.org/BreadcrumbList"><meta name="numberOfItems" content="3" /><meta name="itemListOrder" content="Ascending" /><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" class="trail-item trail-begin"><a href="https://rav.pw" rel="home"><span itemprop="name">Главная</span></a><meta itemprop="position" content="1" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" class="trail-item"><a href="https://rav.pw/topics/development/"><span itemprop="name">Разработка</span></a><meta itemprop="position" content="2" /></li><li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" class="trail-item trail-end"><span itemprop="name">Что такое $apply и $digest в AngularJS?</span><meta itemprop="position" content="3" /></li></ul></div></nav>				
+				<div id="primary" class="content-area">
+					<main id="main" class="site-main" role="main" itemprop="mainContentOfPage">
+
+	
+		
+<article id="post-217" class="post-217 post type-post status-publish format-standard category-development tag-angularjs tag-frontend tag-javascript entry" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" itemprop="blogPost">
+
+		
+	<div class="entry-inner">
+
+		<header class="entry-header">
+	
+			
+	<div class="entry-meta">
+		<span class="entry-date"><span class="screen-reader-text">Posted on </span><a href="https://rav.pw/angularjs-apply-and-digest/" rel="bookmark"><time class="entry-date" datetime="2015-11-02T23:18:43+00:00"itemprop="datePublished">02.11.2015</time></a></span><span class="byline"><span class="entry-author" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person"><span class="screen-reader-text">Author </span><a class="entry-author-link" href="https://rav.pw/author/antenko/" rel="author" itemprop="url"><span itemprop="name">antenko</span></a></span></span>					<span class="comments-link"><a href="https://rav.pw/angularjs-apply-and-digest/#comments" class="comments-link" itemprop="discussionURL"><span class="dsq-postid" data-dsqidentifier="217 http://rav.pw/?p=217">9 комментариев<span class="screen-reader-text"> к записи Что такое $apply и $digest в AngularJS?</span></span></a></span>
+			</div><!-- .entry-meta -->
+		
+			<h1 class="entry-title" itemprop="headline">Что такое $apply и $digest в AngularJS?</h1>		
+		</header><!-- .entry-header -->
+		
+		<div class="entry-content" itemprop="articleBody">
+			<!-- AddThis Sharing Buttons above --><p>В <b>AngularJS</b> есть два основополагающих понятия, которые многие недопонимают и путают, &#8212; <code>$apply</code> и <code>$digest</code>. Чтобы прояснить, как фрэймворк работает, каждый должен понимать, <b>что из себя представляют <code>$apply</code> и <code>$digest</code></b>, и как они могут помочь <b>AngularJS-разработчику</b> в ежедневной разработке пользовательских интерфейсов.</p>
+<h2>Исследование $apply и $digest</h2>
+<p>Одной из самых полезных возможностей AngularJS из коробки является <b>двустороннее связывание данных</b> (<b>two-way data binding</b>), так сильно упрощающее жизнь <b>front-end разработчиков</b>. Двустороннее связывание данных подразумевает, что при изменении чего-либо в <b>представлении</b> (<b>view</b>), scope-модель автоматически изменится. Обратное также верно: когда меняется scope-модель, отображение показывает новое значение без нашего вмешательства. Возникает вопрос: <b>Как же AngularJS это делает?</b> Когда мы в представлении пишем выражение <code>{{myModel}}</code>, под капотом у Angular устанавливается <b>наблюдатель</b> (<b>watcher</b>) за <b>scope-моделью</b>, который в свою очередь при изменении модели отражает новые данные в представлении. Этот watcher ничем не отличается от тех, которые создаются в контроллерах и директивах, когда развешиваем наблюдателей.</p>
+<pre><code class="javascript">$scope.$watch('myModel', function(newValue, oldValue) {
+  // изменение DOM-дерева с новым значением myModel
+});</code></pre>
+<p><code>$watch()</code> вторым аргументом ожидает <b>функцию-слушателя</b> (<b>listener function</b>) и вызывается при каждом изменении <code>myModel</code>. Для нашего понимания всё просто: когда <code>myModel</code> меняется, вызывается эта функция-слушатель, меняющая значение выражения в HTML. Но если смотреть глубже, то можно задуматься, <b>в какой момент AngularJS  вычисляет, поменяло <code>myModel</code> свое значение или нет</b>, и нужно ли вызывать соответствующий <code>listener</code>? Может быть, он вызывает с определённым интервалом проверяющую функцию? И вот на этом вопросе давайте узнаем, что из себя представляет <b><code>$digest</code>-цикл</b>.</p>
+<p>Итак, <b><code>$digest</code>-цикл</b> &#8212; это место, где вызываются watcher&#8217;ы. В момент вызова наблюдателя фрэймворк вычисляет scope-модель и, если она поменялась, вызывает своих слушателей. Теперь рассмотрим, <b>когда и как <code>$digest</code>-цикл запускается</b>.</p>
+<p><code>$digest</code>-цикл стартует при вызове <code>$scope.$digest()</code>. Представим, что вы поменяли scope-модель в функции-обработчике клика по элементу в директиве <code>ng-click</code>. В таком случае, умный фрэймворк автоматически запускает <code>$digest</code>-цикл через вызов <b><code>$digest()</code></b>. После старта <code>$digest</code>-цикл стартует всех наблюдателей. Эти наблюдатели проверяют, изменилось ли текущее значение <code>scope</code>-модели, за которыми они следят, по сравнению  с последним вычисленным значением. Если да, то будет вызваны соответствующие слушатели. Результат следующий &#8212; если у вас выводятся выражения в вашей view&#8217;хе, они будут обновлены. В дополнение к <code>ng-click</code> есть ещё несколько встроенных директив и сервисов (например, <code>ng-model</code>, <code>$timeout</code> и т. д.), позволяющих менять модели и запускающие автоматически <code>$digest</code>-цикл.</p>
+<p>Итак, кое в чём мы уже разобрались! Но дальше будет ещё интереснее! Есть небольшой <b>нюанс</b> &#8212; в случаях, описанных выше, нами любимый фрэймворк не вызывает <code>$digest()</code> напрямую. Вместо этого, он вызывает <code>$scope.$apply()</code>, вызывающий <code>$rootScope.$digest()</code>. Как результат этого, digest-цикл запускается на <b><code>$rootScope</code></b>, и затем обходит все дочерние <code>scope</code>, вызывая по пути все их наблюдатели.</p>
+<p>Теперь давайте вообразим, что у кнопки имеется директива <code>ng-click</code> с переданным ей обработчиком клика. При возникновении события AngularJS обернёт вызов переданной функции в <b><code>$scope.$apply()</code></b>. Поэтому после вполне обычного выполнения вашей функции-обработчика клика и изменения модели (если оно имело место быть в обработчике), вызовется <code>$scope.$apply()</code>, и в $rootScope запустится <code>$digest</code>-цикл, чтобы убедиться, что новые изменения отобразились в пользовательском интерфейсе.</p>
+<p><b>На заметку:</b> <code>$scope.$apply()</code> автоматически вызывает <code>$rootScope.$digest()</code>. Функцию <code>$apply()</code> можно использовать в <b>двух вариациях</b>. В первой мы передаём функцию-аргумент, после выполнения которой запустится <code>$digest</code>-цикл. Во второй вариации аргументы при вызове не передаются вообще, сразу запускается <code>$digest</code>-цикл. Скоро мы узнаем, почему <b>первый вариант предпочтительнее</b>.</p>
+<h2>В каких случаях вызывать $apply() вручную?</h2>
+<p>Это вполне логичный вопрос после того, как мы узнали, что AngularJS во многих случаях оборачивает наш код в <code>$apply()</code> своими силами. На самом деле, фрэймворк самостоятельно видит только изменения модели, <b>совершённые внутри контекста AngularJS</b> (т.е. код, меняющий модель, обёрнутый в <code>$apply()</code>). Встроенные в фрэймворк директивы уже оснащены такой обёрткой, так что любое изменение модели через них сразу же отразится в <b>UI</b>. Но, если вы меняете какую-нибудь модель <b>извне Angular-контекста</b>, то вам нужно сообщить фрэймворку о своих изменениях путём вызова <code>$apply()</code> вручную. Тем самым вы просите Angular отработать всех наблюдателей, что гарантирует правильное распространение измененной модели по системе.</p>
+<p>К примеру, если вы вдруг для изменения scope используете всем известную функцию <code>setTimeout()</code>, фрэймворк об этом ничего не узнает. В таком случае ручной вызов <code>$apply()</code>, запускающий цикл digest, на вашей совести. Аналогично, если вы создали директиву, вешающую обработчик события на DOM-элемент и меняющую scope из своего обработчика, вам необходимо вызвать $apply(), информирующую систему о новых изменениях и применяющую их.</p>
+<p>Давайте потренируемся. Предположим, вы создали страницу, которая должна показывать сообщение пользователю в GUI через заданный таймаут после загрузки. Ваша реализация может выглядеть примерно так:</p>
+<p><iframe width="100%" height="300" src="//jsfiddle.net/antenko/fm3hrqsx/4/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe></p>
+<p>Запустив пример, в консоли видно, как отложенная функция стартует через 2 секунды и меняет <code>scope.message</code>. Но в пользовательском интерфейсе никаких изменений не отобразилось. Причина, как вы уже могли понять, в том, что мы <b>забыли вызвать <code>$apply()</code></b>. Поэтому нам нужно немного отредактировать функцию <code>getMessage()</code>:</p>
+<p><iframe width="100%" height="300" src="//jsfiddle.net/antenko/fm3hrqsx/6/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe></p>
+<p>Запустив изменённый пример, можно наблюдать результат работы функции не только в консоли, но и в интерфейсе пользователя. </p>
+<p><b>На заметку:</b> Несмотря на использование в примере <code>setTimeout()</code>, для этих целей в реальных задачах вам следует использовать встроенный в фрэймворк сервис <code>$timeout</code> с автоматическим вызовом <code>$apply()</code> (если это не отключено соответствующим параметром при вызове сервиса). С ним вам не придётся вручную вызывать метод <code>$apply()</code>, как в примере выше.</p>
+<p>И ещё, код выше можно было написать немного иначе, просто добавив в отложенной функции последней строкой вызов функции <code>$apply()</code> без аргументов. Получилось бы вот так:</p>
+<p><code class="javascript">
+<pre>$scope.getMessage = function() {
+	setTimeout(function() {
+		$scope.message = 'Получено через 2 секунды'; 
+		console.log('Сообщение: ' + $scope.message);
+		$scope.$apply(); // вызываем $digest вручную
+	}, 2000);
+};</pre>
+<p></code></p>
+<p>Этот код использует версию <code>$apply()</code> без аргументов и работает с первого взгляда абсолютно одинаково. Но глаза вас обманывают! Помните, что вам <b>следует всегда использовать функцию <code>$apply()</code>, принимающую первым аргументом функцию, т.к. в таком случае исполняемый код будет обёрнут в <code>try...catch</code>-блок</b>. Выброшенные в ходе выполнения исключения попадут в сервис <code>$exceptionHandler</code> и <code>$apply()</code> отработает даже в случае исключения, а, значит, модель и представление останутся консистентными. Если же использовать необёрнутый вариант, то рискуем после изменения модели где-нибудь получить исключение, которое не позволит запустить digest-цикл, что приведёт к неконсистентному состоянию.</p>
+<p>Для большей ясности функцию <code>$apply()</code> с аргументом можно показать следующим псевдокодом, взятым из документации:</p>
+<pre><code class="javascript">function $apply(expr) {
+  try {
+    return $eval(expr);
+  } catch (e) {
+    $exceptionHandler(e);
+  } finally {
+    $root.$digest();
+  }
+}</code></pre>
+<p>Здесь всё, о чём мы с вами говорили выше, я думаю, видно. Комментарии излишни.</p>
+<h2>Сколько раз запускается $digest()?</h2>
+<p>При старте <code>$digest</code>-цикла выполняются все наблюдатели и вычисляется, изменились ли модели? Если да &#8212; запускается соответствующий <code>listener</code>. Но может получиться и так, что <b>функция-слушатель изменяет scope</b>. Как AngularJS отнесётся к такому?</p>
+<p>Очень просто! Дело в том, что <code>$digest</code>-цикл <b>вызывается несколько раз</b>. После каждого цикла, он запускает ту же самую проверку ещё раз, чтобы проверить, были ли изменения в ходе выполнения <code>listener</code>&#8216;ов. Этот подход называется <b>&#171;dirty checking&#187;</b>, определяющий возможные изменения в ходе выполнения функций-слушателей. Таким образом, цикл будет работать до тех пор, пока <b>не закончатся изменения</b> в scope или пока количество запусков цикла <b>не достигнет 10</b>. Поэтому <b>хорошей практикой</b> является сведение к минимуму изменений модели в <code>listener</code>&#8216;ах и стремление к идемпотентности (сколько бы раз <code>listener</code> с текущим состоянием не запустился, конечное состояние будет одним и тем же).</p>
+<p><b>На заметку:</b> <b><code>$digest</code>-цикл всегда запускается не менее двух раз</b>, даже если ваши функции-слушатели ничего не поменяли в модели. Как говорилось выше, цикл запускается второй раз, чтобы убедиться, что модели в консистентном состоянии и изменения отсутствуют.</p>
+<h2>$scope.$digest() vs $scope.$apply(). Демонстрация.</h2>
+<p>В конце я решил сделать для вас небольшую демонстрацию, пример, явно демонстрирующий, что делает каждая из изучаемых нами функций. В <code>$rootScope</code> я разместил объект со счётчиком, сделал две ветки контроллеров &#8212; ветка чёрного и ветка красного. У красного внутри есть ещё два вложенных друг в друга контроллера, код в них практически одинаковый. Все они знают про объект-счётчик за счёт <b>прототипного наследования scope</b>.</p>
+<p><iframe width="100%" height="300" src="https://jsfiddle.net/antenko/gswohn7r/1/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe></p>
+<p>Я специально не использовал <code>ng-click</code>, а сделал директиву <code>testClick</code>, чтобы запустить код вне контекста AngularJS и не вызывать <code>$apply()</code> автоматически после обработчика клика. Из примера видно, что <b><code>$scope.$digest()</code> запускает наблюдатели в своём и всех дочерних scope</b>, тогда как <b><code>$scope.$apply()</code> запускает абсолютно все наблюдатели, начиная с <code>$rootScope</code></b>. Обязательно понажимайте по кнопкам! Запомните разницу между двумя понятиями ещё и визуально. </p>
+<h2>Подытожим</h2>
+<p><b>Вот и всё!</b> Ты дочитал эту статью, разобрал примеры, и, я искренне надеюсь, у тебя в голове прояснилось, что из себя представляют <code>$apply</code> и <code>$digest</code>. Всегда думайте о том, сможет ли AngularJS в данном месте кода обнаружить ваши изменения в $scope. Если нет, то вызывайте <code>$apply()</code> вручную.</p>
+<p>Спасибо тебе за то, что так усердно прочёл эту статью до последнего абзаца. Хочется, чтоб она оказалась тебе полезной, и моё время было потрачено не даром. Не забывай <b>делиться ссылкой</b> на статью со всеми неравнодушными к данной теме, пусть они тоже прочтут и выскажут своё мнение. И, конечно же, оставляй отзывы, сообщай о неточностях, опечатках и задавай вопросы о том, что осталось непонятным, в комментариях ниже.</p>
+<p><b>До новых статей!</b></p>
+<!-- AddThis Sharing Buttons below -->
+                <div class="addthis_toolbox addthis_default_style addthis_32x32_style" addthis:url='https://rav.pw/angularjs-apply-and-digest/' addthis:title='Что такое $apply и $digest в AngularJS?' >
+                    <a class="addthis_button_preferred_1"></a>
+                    <a class="addthis_button_preferred_2"></a>
+                    <a class="addthis_button_preferred_3"></a>
+                    <a class="addthis_button_preferred_4"></a>
+                    <a class="addthis_button_compact"></a>
+                    <a class="addthis_counter addthis_bubble_style"></a>
+                </div>		</div><!-- .entry-content -->
+
+		<footer class="entry-footer">
+			<span class="entry-terms category" itemprop="articleSection">Posted in <a href="https://rav.pw/topics/development/" rel="tag">Разработка</a></span>			<br /><span class="entry-terms post_tag" itemprop="keywords">Tagged <a href="https://rav.pw/labels/angularjs/" rel="tag">angularjs</a>, <a href="https://rav.pw/labels/frontend/" rel="tag">frontend</a>, <a href="https://rav.pw/labels/javascript/" rel="tag">javascript</a></span>		</footer><!-- .entry-footer -->
+		
+	</div><!-- .entry-inner -->
+	
+</article><!-- #post-## -->
+		
+	<nav class="navigation post-navigation" role="navigation">
+		<h2 class="screen-reader-text">Навигация по записям</h2>
+		<div class="nav-links"><div class="nav-previous"><a href="https://rav.pw/wordpress-display-post-excerpt/" rel="prev"><span class="meta-nav" aria-hidden="true">Previous</span> <span class="screen-reader-text">Previous:</span> <span class="post-title">WordPress. Как отобразить анонс записи?</span></a></div><div class="nav-next"><a href="https://rav.pw/requirejs-dependencies-organazing/" rel="next"><span class="meta-nav" aria-hidden="true">Next</span> <span class="screen-reader-text">Next:</span> <span class="post-title">Организация зависимостей RequireJS</span></a></div></div>
+	</nav>
+		
+<div id="disqus_thread">
+            <div id="dsq-content">
+
+
+            <ul id="dsq-comments">
+                    <li class="comment even thread-even depth-1" id="dsq-comment-366">
+        <div id="dsq-comment-header-366" class="dsq-comment-header">
+            <cite id="dsq-cite-366">
+                <span id="dsq-author-user-366">Viacheslav Babai</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-366" class="dsq-comment-body">
+            <div id="dsq-comment-message-366" class="dsq-comment-message"><p>Премного благодарен! Легко читается и усваивается.</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment byuser comment-author-antenko bypostauthor odd alt depth-2" id="dsq-comment-367">
+        <div id="dsq-comment-header-367" class="dsq-comment-header">
+            <cite id="dsq-cite-367">
+                <a id="dsq-author-user-367" href="http://rav.pw" target="_blank" rel="nofollow">antenko</a>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-367" class="dsq-comment-body">
+            <div id="dsq-comment-message-367" class="dsq-comment-message"><p>Вячеслав, благодарю за отзыв!</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+    <li class="comment even depth-2" id="dsq-comment-368">
+        <div id="dsq-comment-header-368" class="dsq-comment-header">
+            <cite id="dsq-cite-368">
+                <a id="dsq-author-user-368" href="http://rav.pw" target="_blank" rel="nofollow">Anton</a>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-368" class="dsq-comment-body">
+            <div id="dsq-comment-message-368" class="dsq-comment-message"><p>@viacheslavbabai:disqus  благодарю за отзыв! <img src="https://rav.pw/wp-includes/images/smilies/simple-smile.png" alt=":)" class="wp-smiley" style="height: 1em; max-height: 1em;" /></p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-369">
+        <div id="dsq-comment-header-369" class="dsq-comment-header">
+            <cite id="dsq-cite-369">
+                <a id="dsq-author-user-369" href="https://github.com/arsenykonohov" target="_blank" rel="nofollow">arsenykonohov</a>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-369" class="dsq-comment-body">
+            <div id="dsq-comment-message-369" class="dsq-comment-message"><p>Статья класс! Последовательно. Примеры тоже норм.<br />
+Запили уже wrapper для disqus-a какой. А то тянется на всю ширину страницы)<br />
+Peace!</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment even depth-2" id="dsq-comment-370">
+        <div id="dsq-comment-header-370" class="dsq-comment-header">
+            <cite id="dsq-cite-370">
+                <a id="dsq-author-user-370" href="http://rav.pw" target="_blank" rel="nofollow">Anton</a>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-370" class="dsq-comment-body">
+            <div id="dsq-comment-message-370" class="dsq-comment-message"><p>Спасибо за оценку моих трудов! <img src="https://rav.pw/wp-includes/images/smilies/simple-smile.png" alt=":)" class="wp-smiley" style="height: 1em; max-height: 1em;" /><br />
+Disqus подпилил, всё руки не доходили)</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment odd alt thread-even depth-1" id="dsq-comment-371">
+        <div id="dsq-comment-header-371" class="dsq-comment-header">
+            <cite id="dsq-cite-371">
+                <span id="dsq-author-user-371">Игорь Лапицкий</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-371" class="dsq-comment-body">
+            <div id="dsq-comment-message-371" class="dsq-comment-message"><p>Спасибо за статью! Всё очень понятно написано.<br />
+Только у меня остался один вопрос, стоит ли вообще использовать $scope.$digest() в реальном приложении? Если да, то в каких случаях?<br />
+Или в реальном приложении лучше всегда использовать $scope.$apply? А $scope.$digest() например в юнит тестах сгодится?</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment even depth-2" id="dsq-comment-372">
+        <div id="dsq-comment-header-372" class="dsq-comment-header">
+            <cite id="dsq-cite-372">
+                <a id="dsq-author-user-372" href="http://rav.pw" target="_blank" rel="nofollow">Anton</a>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-372" class="dsq-comment-body">
+            <div id="dsq-comment-message-372" class="dsq-comment-message"><p>Привет!<br />
+Использование $scope.$digest() распространяет изменение значения только дочерним $scope&#8217;ам.  Но минус такого способа, например, в том, что в случае ошибки в предшествующей вызову $scope.$digest() строке, $digest вызван так и не будет (если не обернуть в try/catch самостоятельно). А это значит, что дочерние $scope&#8217;ы о новых данных так и не узнают.</p>
+<p>В случае использования $scope.$apply() мы сообщаем ВСЕМ $scope&#8217;ам приложения об изменении, но проблема с возможным исключением перед вызовом $apply(), как и в $digest(), остаётся.</p>
+<p>Другое дело, $scope.$apply( ( ) =&gt; *someCode*) (именно с передачей функции в $apply). В этом варианте запустятся все вотчеры, начиная с $rootScope, а в случае ошибки в вызывающем изменения коде *someCode*, изменения в других $scope&#8217;ах все равно применятся, а ошибка прилетит и без нашего лишнего кода в единую точку обработки ошибок &#8212; <a href="https://docs.angularjs.org/api/ng/service/$exceptionHandler" rel="nofollow">$exceptionHandler</a>. Такой способ уменьшает количество возможных проблем с неконсистентностью данных в разных $scope&#8217;ах.</p>
+<p>Конечно, вызов полного $digest-цикла в приложениях с очень большим количеством $watcher&#8217;ов &#8212; операция ресурсоёмкая и использовать её нужно только при необходимости. Поэтому однозначного ответа на такой вопрос дать, на мой взгляд, нельзя. Всё зависит от приложения.<br />
+А в unit-ах обычно можно и $digest&#8217;ом обойтись.</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-3" id="dsq-comment-373">
+        <div id="dsq-comment-header-373" class="dsq-comment-header">
+            <cite id="dsq-cite-373">
+                <span id="dsq-author-user-373">Игорь Лапицкий</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-373" class="dsq-comment-body">
+            <div id="dsq-comment-message-373" class="dsq-comment-message"><p>понял, спасибо за ответ!</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-374">
+        <div id="dsq-comment-header-374" class="dsq-comment-header">
+            <cite id="dsq-cite-374">
+                <span id="dsq-author-user-374">Артем Чунихин</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-374" class="dsq-comment-body">
+            <div id="dsq-comment-message-374" class="dsq-comment-message"><p>Спасибо большое за доходчивую статью и хорошие советы!</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+            </ul>
+
+
+        </div>
+
+    </div>
+
+
+	
+
+					</main><!-- #main -->
+				</div><!-- #primary -->
+
+			
+			
+			</div><!-- .wrap-inside -->
+		</div><!-- .wrap -->
+	</div><!-- #content -->
+	
+	
+	<aside id="sidebar-subsidiary" class="sidebar-subsidiary sidebar" role="complementary" aria-labelledby="sidebar-subsidiary-header" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
+		<h2 class="screen-reader-text" id="sidebar-subsidiary-header">Subsidiary Sidebar</h2>
+		
+		<div class="wrap">
+			<div class="wrap-inside">
+			
+					
+						<section class="widget widget_recent_entries">		<h3 class="widget-title">Свежие записи</h3>		<ul>
+					<li>
+				<a href="https://rav.pw/makefile-web/">Makefile спешит на помощь</a>
+						</li>
+					<li>
+				<a href="https://rav.pw/webpack-introduction/">Знакомство с Webpack</a>
+						</li>
+					<li>
+				<a href="https://rav.pw/unit-testing-angularjs-applications/">Unit-тестирование AngularJS-приложений</a>
+						</li>
+					<li>
+				<a href="https://rav.pw/html5-canvas-draw-and-animate-tutorial/">HTML5 Canvas. Рисуй и анимируй!</a>
+						</li>
+					<li>
+				<a href="https://rav.pw/jasmine-async-unit-tests/">Unit-тесты с асинхронностью в Jasmine</a>
+						</li>
+				</ul>
+		</section>						
+				<section class="widget widget_recent_comments"><h3 class="widget-title">Свежие комментарии</h3><ul id="recentcomments"><li class="recentcomments"><span class="comment-author-link">Артем Чунихин</span> к записи <a href="https://rav.pw/angularjs-apply-and-digest/#comment-374">Что такое $apply и $digest в AngularJS?</a></li><li class="recentcomments"><span class="comment-author-link">Игорь Лапицкий</span> к записи <a href="https://rav.pw/angularjs-apply-and-digest/#comment-373">Что такое $apply и $digest в AngularJS?</a></li><li class="recentcomments"><span class="comment-author-link"><a href='http://rav.pw' rel='external nofollow' class='url'>Anton</a></span> к записи <a href="https://rav.pw/angularjs-apply-and-digest/#comment-372">Что такое $apply и $digest в AngularJS?</a></li><li class="recentcomments"><span class="comment-author-link">Игорь Лапицкий</span> к записи <a href="https://rav.pw/angularjs-apply-and-digest/#comment-371">Что такое $apply и $digest в AngularJS?</a></li><li class="recentcomments"><span class="comment-author-link"><a href='http://rav.pw' rel='external nofollow' class='url'>Anton</a></span> к записи <a href="https://rav.pw/angularjs-apply-and-digest/#comment-370">Что такое $apply и $digest в AngularJS?</a></li></ul></section>				
+				<section class="widget widget_categories"><h3 class="widget-title">Рубрики</h3>		<ul>
+	<li class="cat-item cat-item-1"><a href="https://rav.pw/topics/development/" title="Мой профессиональный опыт, успешный и не очень, излитый в статьях">Разработка</a>
+</li>
+	<li class="cat-item cat-item-2"><a href="https://rav.pw/topics/hobby/" >Хобби</a>
+</li>
+		</ul>
+</section>				
+				<section class="widget widget_search"><h3 class="widget-title">Search</h3><form role="search" method="get" class="search-form" action="https://rav.pw/">
+				<label>
+					<span class="screen-reader-text">Найти:</span>
+					<input type="search" class="search-field" placeholder="Поиск&hellip;" value="" name="s" title="Найти:" />
+				</label>
+				<input type="submit" class="search-submit" value="Поиск" />
+			</form></section>				
+						
+			</div><!-- .wrap-inside -->	
+		</div><!-- .div -->
+
+	</aside><!-- #sidebar-subsidiary .sidebar -->
+	<footer id="colophon" class="site-footer" role="contentinfo" itemscope="itemscope" itemtype="http://schema.org/WPFooter">		
+		<div class="site-info">
+			<p>При использовании материалов сайта <a href="//rav.pw">ссылка на rav.pw</a> обязательна.</p>
+			<noindex>
+				<a href="http://wordpress.org/" rel="nofollow">Proudly powered by WordPress</a>
+				<span class="sep">&middot;</span>
+				Theme Toivo Lite by <a href="https://foxland.fi" rel="nofollow">Foxland</a>			</noindex>
+		</div><!-- .site-info -->
+		
+	</footer><!-- #colophon -->
+	
+		
+</div><!-- #page -->
+
+<script data-cfasync="false" type="text/javascript">
+var addthis_config = {"data_track_clickback":true,"ui_atversion":300,"ignore_server_config":true};
+var addthis_share = {};
+</script>
+                <!-- AddThis Settings Begin -->
+                <script data-cfasync="false" type="text/javascript">
+                    var addthis_product = "wpp-5.3.4";
+                    var wp_product_version = "wpp-5.3.4";
+                    var wp_blog_version = "4.4.2";
+                    var addthis_plugin_info = {"info_status":"enabled","cms_name":"WordPress","plugin_name":"Share Buttons by AddThis","plugin_version":"5.3.4","anonymous_profile_id":"wp-1462ad2086daa4ad87f84636fec02537","plugin_mode":"WordPress","select_prefs":{"addthis_per_post_enabled":true,"addthis_above_enabled":false,"addthis_below_enabled":true,"addthis_sidebar_enabled":true,"addthis_mobile_toolbar_enabled":true,"addthis_above_showon_home":true,"addthis_above_showon_posts":true,"addthis_above_showon_pages":true,"addthis_above_showon_archives":true,"addthis_above_showon_categories":true,"addthis_above_showon_excerpts":true,"addthis_below_showon_home":true,"addthis_below_showon_posts":true,"addthis_below_showon_pages":true,"addthis_below_showon_archives":true,"addthis_below_showon_categories":true,"addthis_below_showon_excerpts":true,"addthis_sidebar_showon_home":true,"addthis_sidebar_showon_posts":true,"addthis_sidebar_showon_pages":true,"addthis_sidebar_showon_archives":true,"addthis_sidebar_showon_categories":true,"addthis_mobile_toolbar_showon_home":true,"addthis_mobile_toolbar_showon_posts":true,"addthis_mobile_toolbar_showon_pages":true,"addthis_mobile_toolbar_showon_archives":true,"addthis_mobile_toolbar_showon_categories":true,"sharing_enabled_on_post_via_metabox":true},"page_info":{"template":"posts","post_type":""}};
+                    if (typeof(addthis_config) == "undefined") {
+                        var addthis_config = {"data_track_clickback":true,"ui_atversion":300,"ignore_server_config":true};
+                    }
+                    if (typeof(addthis_share) == "undefined") {
+                        var addthis_share = {};
+                    }
+                    if (typeof(addthis_layers) == "undefined") {
+                        var addthis_layers = {"share":{"theme":"transparent","position":"left","numPreferredServices":5,"mobile":false},"sharedock":{"counts":true,"position":"bottom","numPreferredServices":5}};
+                    }
+                </script>
+                <script
+                    data-cfasync="false"
+                    type="text/javascript"
+                    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5620e77b259ebf6f "
+                    async="async"
+                >
+                </script>
+                <script data-cfasync="false" type="text/javascript">
+                    (function() {
+                        var at_interval = setInterval(function () {
+                            if(window.addthis) {
+                                clearInterval(at_interval);
+                                addthis.layers(addthis_layers);
+                            }
+                        },1000)
+                    }());
+                </script>
+                <link rel='stylesheet' id='addthis_output-css'  href='https://rav.pw/wp-content/plugins/addthis/css/output.css?ver=4.4.2' type='text/css' media='all' />
+<script type='text/javascript' src='https://rav.pw/wp-content/themes/toivo-lite/js/responsive-nav.min.js?ver=1.0.8'></script>
+<script type='text/javascript' src='https://rav.pw/wp-content/themes/toivo-lite/js/settings.min.js?ver=1.0.8'></script>
+<script type='text/javascript' src='https://rav.pw/wp-content/themes/toivo-lite/js/functions.min.js?ver=1.0.8'></script>
+<script type='text/javascript' src='https://rav.pw/wp-includes/js/comment-reply.min.js?ver=4.4.2'></script>
+<script type='text/javascript' src='https://rav.pw/wp-includes/js/wp-embed.min.js?ver=4.4.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var embedVars = {"disqusConfig":{"platform":"wordpress@4.4.2","language":""},"disqusIdentifier":"217 http:\/\/rav.pw\/?p=217","disqusShortname":"rav-pw","disqusTitle":"\u0427\u0442\u043e \u0442\u0430\u043a\u043e\u0435 $apply \u0438 $digest \u0432 AngularJS?","disqusUrl":"https:\/\/rav.pw\/angularjs-apply-and-digest\/","options":{"manualSync":false},"postId":"217"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://rav.pw/wp-content/plugins/disqus-comment-system/media/js/disqus.js?ver=4.4.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var countVars = {"disqusShortname":"rav-pw"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://rav.pw/wp-content/plugins/disqus-comment-system/media/js/count.js?ver=4.4.2'></script>
+<!--wp_footer-->
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter28729248 = new Ya.Metrika({
+                    id:28729248,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/28729248" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60191837-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+
+up vote
+144
+down vote
+accepted
+In Angular 2, change detection is automatic... $scope.$watch() and $scope.$digest() R.I.P.
+
+Unfortunately, the Change Detection section of the dev guide is not written yet (there is a placeholder near the bottom of the Architecture Overview page, in section "The Other Stuff").
+
+Here's my understanding of how change detection works:
+
+Zone.js "monkey patches the world" -- it intercepts all of the asynchronous APIs in the browser (when Angular runs). This is why we can use setTimeout() inside our components rather than something like $timeout... because setTimeout() is monkey patched.
+Angular builds and maintains a tree of "change detectors". There is one such change detector (class) per component/directive. (You can get access to this object by injecting ChangeDetectorRef.) These change detectors are created when Angular creates components. They keep track of the state of all of your bindings, for dirty checking. These are, in a sense, similar to the automatic $watches() that Angular 1 would set up for {{}} template bindings.
+Unlike Angular 1, the change detection graph is a directed tree and cannot have cycles (this makes Angular 2 much more performant, as we'll see below).
+When an event fires (inside the Angular zone), the code we wrote (the event handler callback) runs. It can update whatever data it wants to -- the shared application model/state and/or the component's view state.
+After that, because of the hooks Zone.js added, it then runs Angular's change detection algorithm. By default (i.e., if you are not using the onPush change detection strategy on any of your components), every component in the tree is examined once (TTL=1)... from the top, in depth-first order. (Well, if you're in dev mode, change detection runs twice (TTL=2). See ApplicationRef.tick() for more about this.) It performs dirty checking on all of your bindings, using those change detector objects.
+Lifecycle hooks are called as part of change detection. 
+If the component data you want to watch is a primitive input property (String, boolean, number), you can implement ngOnChanges() to be notified of changes. 
+If the input property is a reference type (object, array, etc.), but the reference didn't change (e.g., you added an item to an existing array), you'll need to implement ngDoCheck() (see this SO answer for more on this). 
+You should only change the component's properties and/or properties of descendant components (because of the single tree walk implementation -- i.e., unidirectional data flow). Here's a plunker that violates that. Stateful pipes can also trip you up here.
+For any binding changes that are found, the Components are updated, and then the DOM is updated. Change detection is now finished.
+The browser notices the DOM changes and updates the screen.
+Other references to learn more:
+
+Change Detection Explained - Thoughtram blog Feb 22, 2016 - probably the best reference out there
+Savkin's Change Detection Reinvented video - definitely watch this one
+How does Angular 2 Change Detection Really Work?- jhade's blog Feb 24, 2016
+Brian's video and Misko's video about Zone.js. Brian's is about Zone.js. Misko's is about how Angular 2 uses Zone.js to implement change detection. He also talks about change detection in general, and a little bit about onPush.
+Victor Savkins blog posts: Change Detection in Angular 2, Two phases of Angular 2 applications, Angular, Immutability and Encapsulation. He covers a lot of ground quickly, but he can be terse at times, and you're left scratching your head, wondering about the missing pieces.
+Ultra Fast Change Detection (Google doc) - very technical, very terse, but it describes/sketches the ChangeDetection classes that get built as part of the tree

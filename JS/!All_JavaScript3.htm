@@ -286,6 +286,7 @@ a = [];
 typeof a; //"object"
 Object.prototype.toString.call(a).split('object ')[1].split(']')[0]; //"Array"
 
+//------------------------------------
 function closure() {
 	var obj = {};
 	for (var i = 1; i <= 3; i++) {
@@ -298,6 +299,12 @@ function closure() {
 	}
 	return obj;
 }
+
+//------------------------------------
+document.querySelector('div');
+document.querySelectorAll('div.text');
+
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
