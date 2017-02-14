@@ -304,7 +304,15 @@ function closure() {
 document.querySelector('div');
 document.querySelectorAll('div.text');
 
+//------------------------------------
+var foo = function bar () {};
+bar(); //ReferenceError: bar is not defined
 
+var f = function() {}
+typeof f //"function"
+
+//------------------------------------
+cache:false //ionic .state
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
