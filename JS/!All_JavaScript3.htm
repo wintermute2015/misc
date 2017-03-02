@@ -288,17 +288,20 @@ Object.prototype.toString.call(a).split('object ')[1].split(']')[0]; //"Array"
 
 //------------------------------------
 function closure() {
-	var obj = {};
-	for (var i = 1; i <= 3; i++) {
-	obj['x'+i] = function(x) {
+var obj = {};
+	for (var i = 1; i < 10; i++) {
+	obj['x' + i] = function(x) {
 			return function() {
-				alert("This is button: " + x);
+				console.log("This is button: " + x);
 			}
 		}(i)
 	   console.log(i)
 	}
 	return obj;
 }
+var test = closure();
+test.x2();
+test.x5();
 
 //------------------------------------
 document.querySelector('div');
@@ -313,6 +316,22 @@ typeof f //"function"
 
 //------------------------------------
 cache:false //ionic .state
+
+//-------------------------------------------------------------------------------------02.03.17
+function makeArmy() {
+  let shooters = [];
+  for (let i = 0; i < 10; i++) {
+    shooters.push(function() {
+      console.log(i); // выводит свой номер
+    });
+  }
+  return shooters;
+}
+
+var army = makeArmy();
+
+army[0](); // 0
+army[5](); // 5
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
