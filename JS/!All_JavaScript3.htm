@@ -332,6 +332,21 @@ var army = makeArmy();
 
 army[0](); // 0
 army[5](); // 5
+
+//------------------------------------
+function letClosure() {
+var obj = {};
+	for (let i = 1; i < 10; i++) {
+	obj['x' + i] = function() {
+			console.log("This is button: " + i); 
+		}
+	   console.log(i)
+	}
+	return obj;
+}
+var test = letClosure();
+test.x2();
+test.x5();
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
