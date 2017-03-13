@@ -363,6 +363,16 @@ a.push(...b); //[1, 2, 3, 4]
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
+
+//------------------------------------
+function dateCheck(dateFrom, dateTo, dateCheck) {
+	var from = Date.parse(dateFrom);
+	var to   = Date.parse(dateTo);
+	var check = Date.parse(dateCheck );
+	if((check <= to && check >= from)) {
+		return true;
+	}
+}
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
