@@ -59,7 +59,7 @@
 	const Audit = { template: '<div><audit-items></audit-items></div>' }
 
 	Vue.component('phones-items', {
-		template: '<ul><li v-for="item in items">{{ item.name }} - {{ item.phone }}</li></ul>',
+		template: '<ul class="list-group"><li class="list-group-item" v-for="item in items">{{ item.name }} - {{ item.phone }}</li></ul>',
 		data: function () {
 		  return {
 			items: []
@@ -83,7 +83,7 @@
 	})
 	
 	Vue.component('users-items', {
-		template: '<ul><li v-for="item in items">{{ item.name }} - {{ item.pass }}</li></ul>',
+		template: '<ul class="list-group"><li class="list-group-item" v-for="item in items">{{ item.name }} - {{ item.pass }}</li></ul>',
 		data: function () {
 		  return {
 			items: []
@@ -107,7 +107,7 @@
 	})
 	
 	Vue.component('audit-items', {
-		template: '<ul><li v-for="item in items">{{ item.name }} - {{ item.date }}</li></ul>',
+		template: '<ul class="list-group"><li class="list-group-item" v-for="item in items">{{ item.name }} - {{ item.date }}</li></ul>',
 		data: function () {
 		  return {
 			items: []
@@ -124,7 +124,7 @@
 						console.log(result);
 						this.items = result.data;
 						this.loading = false;
-						appConfig.message = 'Users';
+						appConfig.message = 'Audit';
 					})
 			}
 		}
