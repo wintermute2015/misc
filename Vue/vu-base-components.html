@@ -1,0 +1,171 @@
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/css/bootstrap.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/js/bootstrap.min.js"></script>
+	
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
+<div id="app">
+		<nav class="navbar navbar-default navbar-static-top">
+		  <div class="container">
+			<div class="navbar-header">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+			  <a class="navbar-brand" href="#">VU-Base</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+			  <ul class="nav navbar-nav">
+				<li v-on:click="changeRoute"><router-link to="/phones">Phones</router-link></li>
+				<li v-on:click="changeRoute"><router-link to="/users">Users</router-link></li>
+				<li v-on:click="changeRoute"><router-link to="/audit">Audit</router-link></li>
+			  </ul>
+			</div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+		
+		<div class="container">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title" style="text-align: center; font-size: x-large;">
+						{{appConfig.message}}
+					</h3>
+				</div>
+				
+				<div class="panel-body">
+					<router-view></router-view>
+				</div>
+			</div>
+		</div>
+   
+
+</div>
+
+<script>
+	const appConfig = {
+	  message: 'Loading...'
+	}
+	
+	const Foo = { template: '<div>foo</div>' }
+	const Bar = { template: '<div>bar</div>' }
+	const Child = { template: '<div><child message="привет!"></child>Пользовательский компонент! <todo-item></todo-item></div>'	}
+	
+	const Phones = { template: '<div><phones-items></phones-items></div>' }
+	const Users = { template: '<div><users-items></users-items></div>' }
+	const Audit = { template: '<div><audit-items></audit-items></div>' }
+
+	Vue.component('phones-items', {
+		template: '<ul><li v-for="item in items">{{ item.name }} - {{ item.phone }}</li></ul>',
+		data: function () {
+		  return {
+			items: []
+		  }
+		},
+		created() {
+			this.fetchData();
+		},
+		methods: {
+			fetchData() {
+				appConfig.message = 'Loading...'
+				this.$http.get('https://ui-base.herokuapp.com/api/items/get')
+					.then(result => { 
+						console.log(result);
+						this.items = result.data;
+						this.loading = false;
+						appConfig.message = 'Phones';
+					})
+			}
+		}
+	})
+	
+	Vue.component('users-items', {
+		template: '<ul><li v-for="item in items">{{ item.name }} - {{ item.pass }}</li></ul>',
+		data: function () {
+		  return {
+			items: []
+		  }
+		},
+		created() {
+			this.fetchData();
+		},
+		methods: {
+			fetchData() {
+				appConfig.message = 'Loading...'
+				this.$http.get('https://ui-base.herokuapp.com/api/users/get')
+					.then(result => { 
+						console.log(result);
+						this.items = result.data;
+						this.loading = false;
+						appConfig.message = 'Users';
+					})
+			}
+		}
+	})
+	
+	Vue.component('audit-items', {
+		template: '<ul><li v-for="item in items">{{ item.name }} - {{ item.date }}</li></ul>',
+		data: function () {
+		  return {
+			items: []
+		  }
+		},
+		created() {
+			this.fetchData();
+		},
+		methods: {
+			fetchData() {
+				appConfig.message = 'Loading...'
+				this.$http.get('https://ui-base.herokuapp.com/api/audit/get')
+					.then(result => { 
+						console.log(result);
+						this.items = result.data;
+						this.loading = false;
+						appConfig.message = 'Users';
+					})
+			}
+		}
+	})
+
+	Vue.component('my-counter', {
+		template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+		data: function () {
+		  console.log(window.appConfig.title)
+		  return {
+			counter: window.appConfig.title
+		  }
+		}
+	})
+
+	Vue.component('child', {
+	  props: ['message'],
+	  template: '<span>{{ message }}</span>'
+	})
+
+	const routes = [
+	  { path: '/', component: Users },
+	  { path: '/phones', component: Phones },
+	  { path: '/users', component: Users },
+	  { path: '/audit', component: Audit },
+	]
+	 
+	const router = new VueRouter({
+	  routes // сокращение от `routes: routes`
+	})
+
+	const app = new Vue({
+		router,
+		data: { 
+			appConfig
+		},
+		methods: {
+			changeRoute() {
+				$('#navbar').collapse('hide');
+			}
+		}
+	}).$mount('#app')
+
+</script>

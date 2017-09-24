@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>VU-Base</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
+	<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+</head>
+
+<body>
+<div id="app">
+	<p v-if="loading">Loading...</p>
+	
+	<todo-item
+		v-for="item in groceryList"
+		v-bind:todo="item"
+		v-bind:key="item.id">
+	</todo-item>	
+	<hr>
+	<todo-item :todo="test"></todo-item>
+	
+	<p>{{ message }}</p>
+	<input v-model="message">
+	
+	<ul>
+		<li v-for="item in items">
+			{{ item.name }} - {{ item.phone }}
+		</li>
+	</ul>
+</div>
+  
+
+<script>
+	Vue.component('todo-item', {
+		props: ['todo'],
+		template: '<li>{{ todo.text }}</li>'
+	})
+	
+	new Vue({
+		el: '#app',
+	  
+		data: { 
+			items: [],
+			loading: false,
+			message: '',
+			test: {text: 'VueJS'},
+			groceryList: [
+				{ id: 0, text: 'Овощи' },
+				{ id: 1, text: 'Сыр' },
+				{ id: 2, text: 'Что там ещё люди едят?' }
+			]
+		},
+	  
+		created() {
+			//this.fetchData();
+		},
+
+		methods: {
+			fetchData() {
+				this.$http.get('https://ui-base.herokuapp.com/api/items/get')
+					.then(result => { 
+						console.log(result);
+						this.items = result.data;
+						this.loading = false;
+					})
+			}
+		}
+	  
+	})
+
+</script>
+</html>

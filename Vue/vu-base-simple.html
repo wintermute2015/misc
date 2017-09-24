@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VU-Base</title>
+	
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>	
+  </head>
+  
+  <body>
+	<div id="app">
+		<nav class="navbar navbar-default navbar-static-top">
+		  <div class="container">
+			<div class="navbar-header">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+			  <a class="navbar-brand" href="#">VU-Base</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+			  <ul class="nav navbar-nav">
+				<li v-on:click="changeRoute('phones')"><a href="#phones">Phones</a></li>
+				<li v-on:click="changeRoute('users')"><a href="#users">Users</a></li>
+				<li v-on:click="changeRoute('audit')"><a href="#audit">Audit</a></li>
+			  </ul>
+			</div><!--/.nav-collapse -->
+		  </div>
+		</nav>
+
+		<div class="container">
+		  
+		<!--
+			<div v-if="loading">
+				Loading...	
+			</div> 
+		-->
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title" style="text-align: center; font-size: x-large;">
+						{{title}}
+					</h3>
+				</div>
+				
+				<div class="panel-body">
+					<template v-if="phones">
+						<ul>
+							<li v-for="item in items" v-on:click="showData(item.name)">
+								{{ item.name }} - {{ item.phone }}
+							</li>
+						</ul>
+					</template>
+					
+					<template v-if="users">
+						<ul>
+							<li v-for="item in items" v-on:click="showData(item.name)">
+								{{ item.name }} - {{ item.pass }}
+							</li>
+						</ul>
+					</template>				
+					
+					<template v-if="audit">
+						<ul>
+							<li v-for="item in items" v-on:click="showData(item.name)">
+								{{ item.name }} - {{ item.date }}
+							</li>
+						</ul>
+					</template>			
+				</div>
+				
+			</div>
+		</div> <!-- /container -->
+	</div> <!-- /app -->
+
+
+	<script>
+		new Vue({
+			el: '#app',
+		  
+			data: { 
+				title: 'Loading...',
+				items: [],
+				loading: true,
+				show: false,
+				phones: false,
+				users: false,
+				audit: false,
+			},
+		  
+			created() {
+				this.fetchData('users');
+			},
+
+			methods: {
+				hideAll() {
+					this.phones = false; 
+					this.users = false; 
+					this.audit = false;
+				},
+				changeRoute(data) {
+					this.hideAll();
+					switch (data) {
+						case 'phones': this.fetchData('items');  break;
+						case 'users': this.fetchData('users');   break;
+						case 'audit': this.fetchData('audit');  break;
+					}
+					$('#navbar').collapse('hide');
+				},				
+				showData(data) {
+					alert(data)
+				},				
+				fetchData(value) {
+					this.title = 'Loading...';
+					let route = value;
+					if (value == 'items') {route = 'phones'}
+					this.$http.get('https://ui-base.herokuapp.com/api/' + value + '/get')
+						.then(result => { 
+							this.items = result.data;
+							this.loading = false;
+							this[route] = true;
+							this.title = route.substr(0, 1).toUpperCase() + route.substr(1);
+						})
+				}
+			}
+		  
+		})
+
+	</script>	
+  </body>
+</html>
