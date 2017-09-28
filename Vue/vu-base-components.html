@@ -63,6 +63,8 @@
 		
 		const Phones = { template: '<div><phones-items></phones-items></div>' }
 		const Users = { template: '<div><users-items></users-items></div>' }
+		const UserEdit = { template: '<div><user-edit></user-edit></div>' }
+		const UserItem = { template: '<div><user-item></user-item></div>' }
 		const Audit = { template: '<div><audit-items></audit-items></div>' }
 
 		Vue.component('phones-items', {
@@ -90,7 +92,8 @@
 		})
 		
 		Vue.component('users-items', {
-			template: '<ul class="list-group"><li class="list-group-item" v-for="item in items">{{ item.name }} - {{ item.pass }}</li></ul>',
+			//template: '<ul class="list-group"><li class="list-group-item" v-for="item in items"><router-link to="/user-edit">{{ item.name }} - {{ item.pass }}</router-link></li></ul>',
+			template: '<ul class="list-group"><li class="list-group-item" v-for="item in items" v-on:click="showItem(item)">{{ item.name }} - {{ item.pass }}</li></ul>',
 			data: function () {
 			  return {
 				items: []
@@ -105,12 +108,59 @@
 					this.$http.get('https://ui-base.herokuapp.com/api/users/get')
 						.then(result => { 
 							console.log(result);
-							this.items = result.data;
+							this.items = result.data.sort(this.sort);
 							this.loading = false;
 							appConfig.message = 'Users';
 						})
+				},
+				showItem(item){
+					this.$router.push({ path: '/user-item/' + item.id + '/' + item.name + '/' + item.pass });
+				},				
+				showDetails(item){
+					appConfig.user = item;
+					this.$router.push('user-edit');
+					console.log("hello");
+				},
+				sort(a, b) {
+					let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+					if (nameA < nameB) {
+						return -1
+					}
+					if (nameA > nameB) {
+						return 1
+					}
+					return 0;
+				}				
+			}
+		})
+		
+		Vue.component('user-item', {
+			props: ['item'],
+			template: '<div v-on:click="goBack">{{ id }} - {{ name }} - {{ pass}}</div>',
+			data: function () {
+				return {
+					id: this.$route.params.id,
+					name: this.$route.params.name,
+					pass: this.$route.params.pass
+				}
+			},
+			methods: {
+				goBack() {
+					this.$router.push('/users');
 				}
 			}
+		})		
+		
+		Vue.component('user-edit', {
+			props: ['item'],
+			template: '<div>{{ id }} - {{ name }} - {{ pass}}</div>',
+			data: function () {
+				return {
+					id: appConfig.user.id,
+					name: appConfig.user.name,
+					pass: appConfig.user.pass
+				}
+			},
 		})
 		
 		Vue.component('audit-items', {
@@ -156,6 +206,8 @@
 		  { path: '/', component: Users },
 		  { path: '/phones', component: Phones },
 		  { path: '/users', component: Users },
+		  { path: '/user-edit', component: UserEdit },
+		  { path: '/user-item/:id/:name/:pass', component: UserItem, props: true },
 		  { path: '/audit', component: Audit },
 		]
 		 
