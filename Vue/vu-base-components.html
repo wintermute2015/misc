@@ -107,14 +107,14 @@
 					appConfig.message = 'Loading...'
 					this.$http.get('https://ui-base.herokuapp.com/api/users/get')
 						.then(result => { 
-							console.log(result);
+							//console.log(result);
 							this.items = result.data.sort(this.sort);
 							this.loading = false;
 							appConfig.message = 'Users';
 						})
 				},
 				showItem(item){
-					this.$router.push({ path: '/user-item/' + item.id + '/' + item.name + '/' + item.pass });
+					this.$router.push({ path: '/user-item/' + item.id + '/' + item.name + '/' + item.pass + '/' + item.description });
 				},				
 				showDetails(item){
 					appConfig.user = item;
@@ -136,18 +136,42 @@
 		
 		Vue.component('user-item', {
 			props: ['item'],
-			template: '<div v-on:click="goBack">{{ id }} - {{ name }} - {{ pass}}</div>',
+			template: '<div style="text-align: center;">' + 
+						'' + 
+						'<input v-model="id" readonly><br>' +
+						'<input v-model="name"><br>' +
+						'<input v-model="pass"><br>' +
+						'<input v-model="description"><br><br>' +
+						'<button v-on:click="updateItem">Submit</button>' +
+						'</div>',
 			data: function () {
-				return {
-					id: this.$route.params.id,
-					name: this.$route.params.name,
-					pass: this.$route.params.pass
-				}
+					return {
+						message: '',
+						id: this.$route.params.id,
+						name: this.$route.params.name,
+						pass: this.$route.params.pass,
+						description: this.$route.params.description
+					}
+			},
+			created() {
+				appConfig.message = this.name;
 			},
 			methods: {
 				goBack() {
 					this.$router.push('/users');
-				}
+				},
+				updateItem() {
+					appConfig.message = 'Loading...'
+					this.$http.post('https://ui-base.herokuapp.com/api/users/update', {                
+							id: this.id,
+							name: this.name,
+							pass: this.pass,
+							description: this.description})
+						.then(result => { 
+							//console.log(result);
+							this.$router.push('/users');
+						})
+				},
 			}
 		})		
 		
@@ -207,7 +231,7 @@
 		  { path: '/phones', component: Phones },
 		  { path: '/users', component: Users },
 		  { path: '/user-edit', component: UserEdit },
-		  { path: '/user-item/:id/:name/:pass', component: UserItem, props: true },
+		  { path: '/user-item/:id/:name/:pass/:description', component: UserItem, props: true },
 		  { path: '/audit', component: Audit },
 		]
 		 
