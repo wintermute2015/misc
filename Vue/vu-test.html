@@ -35,7 +35,26 @@
 <script>
 	Vue.component('todo-item', {
 		props: ['todo'],
-		template: '<li>{{ todo.text }}</li>'
+		template: '<li>{{ todo.text }} - {{this.city}}</li>',
+		data: function () {
+			return { 
+				counter: this.todo.text,
+				city: 'Kiev'
+			}
+		},		
+		created() {
+			this.setCity(this.todo.city);
+		},
+		methods: {
+			setCity(city) {
+				if (city == 1) {
+					this.city = 'NYC'
+				}
+				if (city == 2) {
+					this.city = 'LA'
+				}
+			}
+		}
 	})
 	
 	new Vue({
@@ -45,7 +64,7 @@
 			items: [],
 			loading: false,
 			message: '',
-			test: {text: 'VueJS'},
+			test: {text: 'VueJS', city: 2},
 			groceryList: [
 				{ id: 0, text: 'Овощи' },
 				{ id: 1, text: 'Сыр' },
