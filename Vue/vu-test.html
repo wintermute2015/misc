@@ -22,7 +22,7 @@
 	<todo-item :todo="test"></todo-item>
 	
 	<p>{{ message }}</p>
-	<input v-model="message">
+	<input v-model="message" v-on:blur="fetchData">
 	
 	<ul>
 		<li v-for="item in items">
