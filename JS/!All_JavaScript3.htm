@@ -502,6 +502,139 @@ function bind(func, context) {
   };
 }
 
+//-------------------------------------------------------------------------------------15.03.18
+flexbox --> flexWrap: 'wrap'
+
+
+//-------------------------------------------------------------------------------------16.03.18
+
+a() // ??? 
+b() // ??? 
+
+var a = function c(){return 1}
+function b() {return 2}
+
+console.log(c) // ??? 
+-------------------------
+[1,2,3,4,5].duplicator() // => [1,2,3,4,5,1,2,3,4,5]
+Array.prototype.dublicator = function () {
+	return this.concat(this)
+}
+
+
+-------------------------
+closure
+---------------------
+function gеtObj(){
+    var a = 0;
+    return {
+        getA: function() {
+            return a += 1;
+        }
+    }
+}
+var obj1 = getObj();
+var obj2 = getObj();
+obj1.getA() /// ??? 
+obj1.getA() /// ??? 
+obj2.getA() /// ??? 
+
+--------------------------------------
+
+var a = {
+       b: 5,
+       getB: () =>  {
+           return this.b;
+       }
+   };
+console.log(a.getB()) // ?? 
+var fn = a.getB;
+console.log(fn()) // ?? 
+
+---------------------------------------------
+setTimeout(function(){
+    console.log('a');
+}, 100);
+.......
+10000 ms
+countFibio();
+
+
+
+function doSomеthing() {
+    return Promise.resolve('1');
+}
+
+function doSomеthingElse(result2) {
+    return Promise.resolve('2');
+}
+
+function finalHandlеr(result3) {
+    console.log(result3)
+}
+
+1)
+doSomething().then(function () {
+    return doSomethingElse();
+}).then(finalHandler);
+
+  
+  -----------------------------------
+2)
+doSomething().then(function () {
+    doSomethingElse();
+}).then(finalHandler);
+
+ --------------------------------------
+3)
+doSomething().then(doSomethingElse())
+.then(finalHandler);
+  
+  -------------------------------
+4)
+doSomething().then(doSomethingElse)
+.then(finalHandler);
+
+
+
+-----------------------------------------------
+var a = {aa: 5};
+var b = Object.create(a);
+delete b.aa;  
+console.log(b.aa); // ??
+console.log(b.aa); // ??
+-----------------------------------------
+
+// Что будет в консоли?
+var i = 10;
+var array = [];
+
+function foo(i) {
+    array.push(function() {
+        return i + i;
+    });
+}
+
+while (i--) {
+    foo(i);
+}
+console.log([
+    array[0](),
+    array[1](),
+])
+
+
+
+
+
+--------------------------------------------
+
+
+for (let i = 0; i < 10; i++){
+ setTimeout(function(){
+   console.log(i);
+ }, 1000);
+}
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
