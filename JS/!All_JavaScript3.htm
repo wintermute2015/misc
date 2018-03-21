@@ -508,23 +508,21 @@ flexbox --> flexWrap: 'wrap'
 
 //-------------------------------------------------------------------------------------16.03.18
 
-a() // ??? 
-b() // ??? 
+a()   
+b()  
 
 var a = function c(){return 1}
 function b() {return 2}
 
-console.log(c) // ??? 
+console.log(c)  
 -------------------------
-[1,2,3,4,5].duplicator() // => [1,2,3,4,5,1,2,3,4,5]
+// => [1,2,3,4,5,1,2,3,4,5]
+[1,2,3,4,5].dublicator() 
 Array.prototype.dublicator = function () {
 	return this.concat(this)
 }
 
-
 -------------------------
-closure
----------------------
 function gеtObj(){
     var a = 0;
     return {
@@ -533,14 +531,13 @@ function gеtObj(){
         }
     }
 }
-var obj1 = getObj();
-var obj2 = getObj();
-obj1.getA() /// ??? 
-obj1.getA() /// ??? 
-obj2.getA() /// ??? 
+var obj1 = gеtObj();
+var obj2 = gеtObj();
+obj1.getA() /// 1
+obj1.getA() /// 2
+obj2.getA() /// 1
 
 --------------------------------------
-
 var a = {
        b: 5,
        getB: () =>  {
@@ -559,8 +556,7 @@ setTimeout(function(){
 10000 ms
 countFibio();
 
-
-
+---------------------------------------------
 function doSomеthing() {
     return Promise.resolve('1');
 }
@@ -577,35 +573,27 @@ function finalHandlеr(result3) {
 doSomething().then(function () {
     return doSomethingElse();
 }).then(finalHandler);
-
-  
-  -----------------------------------
+-----------------------------------
 2)
 doSomething().then(function () {
     doSomethingElse();
 }).then(finalHandler);
-
- --------------------------------------
+--------------------------------------
 3)
 doSomething().then(doSomethingElse())
 .then(finalHandler);
-  
-  -------------------------------
+-------------------------------
 4)
 doSomething().then(doSomethingElse)
 .then(finalHandler);
-
-
-
 -----------------------------------------------
 var a = {aa: 5};
 var b = Object.create(a);
 delete b.aa;  
-console.log(b.aa); // ??
-console.log(b.aa); // ??
------------------------------------------
+console.log(b.aa);  
+console.log(b.aa);  
 
-// Что будет в консоли?
+-----------------------------------------
 var i = 10;
 var array = [];
 
@@ -623,18 +611,13 @@ console.log([
     array[1](),
 ])
 
-
-
-
-
 --------------------------------------------
-
-
 for (let i = 0; i < 10; i++){
  setTimeout(function(){
    console.log(i);
  }, 1000);
 }
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
