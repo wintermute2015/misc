@@ -618,6 +618,37 @@ for (let i = 0; i < 10; i++){
  }, 1000);
 }
 
+
+//-------------------------------------------------------------------------------------16.03.18
+class EventEmitter {
+  constructor() {
+    this.events = {};
+  }
+	on( eventName, fn ) {
+	  if( !this.events[eventName] ) {
+		 this.events[eventName] = [];
+	  }
+		
+	  this.events[eventName].push(fn);
+	}
+
+	emit(eventName, data) {
+	  const event = this.events[eventName];
+	  if( event ) {
+		event.forEach(fn => {
+		   fn.call(null, data);
+		 });
+	   }
+	}
+}
+
+let ee = new EventEmitter();
+
+ee.on('cool', ()=> console.log('cccoool'));
+ee.emit('cool');
+
+
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
