@@ -647,6 +647,30 @@ ee.emit('cool');
 
 
 //-------------------------------------------------------------------------------------07.05.18
+class Stack0 {
+    constructor() {
+        this.count = 0;
+        this.storage = {};
+    }
+
+    push(value) {
+        this.storage[this.count] = value;
+        this.count++;
+    }
+
+    pop() {
+        if (this.count === 0) {
+            return undefined;
+        }
+
+        this.count--;
+        var result = this.storage[this.count];
+        delete this.storage[this.count];
+        return result;
+    }
+}
+
+--------------------------------------------
 var Stack = function(){
     this.top = null;
     this.size = 0;
@@ -684,28 +708,91 @@ st.push('x3');
 st.pop();
 
 --------------------------------------------
-class Stack1 {
-    constructor() {
-        this.count = 0;
-        this.storage = {};
+var Queue0 = function() {
+    this.first = null;
+    this.size = 0;
+};
+
+var Node = function(data) {
+    this.data = data;
+    this.next = null;
+};
+
+Queue.prototype.push = function(data) {
+    var node = new Node(data);
+
+    if (!this.first){
+        this.first = node;
+    } else {
+        n = this.first;
+        while (n.next) {
+        n = n.next;
+    }
+        n.next = node;
     }
 
-    push(value) {
-        this.storage[this.count] = value;
-        this.count++;
+    this.size += 1;
+    return node;
+};
+
+Queue.prototype.shift = function() {
+    if (!this.first) {
+        return undefined;
     }
 
-    pop() {
-        if (this.count === 0) {
+    var temp = this.first;
+    this.first = this.first.next;
+    this.size -= 1;
+    return temp;
+};
+
+--------------------------------------------
+class Queue {
+    constructor(data) {
+        this.first = null;
+        this.size = 0;
+    }
+
+    push(data) {
+        let node = new LinkedList(data);
+
+        if (!this.first){
+            this.first = node;
+        } else {
+            let n = this.first;
+            while (n.next) {
+                n = n.next;
+            }
+            n.next = node;
+        }
+
+        this.size += 1;
+    }
+
+    shift() {
+        if (!this.first) {
             return undefined;
         }
 
-        this.count--;
-        var result = this.storage[this.count];
-        delete this.storage[this.count];
-        return result;
+        let temp = this.first;
+        this.first = this.first.next;
+        this.size -= 1;
+        return temp.data;
     }
 }
+
+class LinkedList {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+qq = new Queue();
+
+qq.push('x1');
+qq.shift();
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
