@@ -793,6 +793,30 @@ qq = new Queue();
 qq.push('x1');
 qq.shift();
 
+--------------------------------------------
+class Queue {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+    }
+
+    push(value) {
+        const item = { value, next: null };
+        if (this.tail) {
+            this.tail.next = item;
+        }
+        this.tail = item;
+        this.head = this.head || this.tail;
+    }
+
+    shift() {
+        if (this.head == null) return null;
+        const { value } = this.head;
+        this.head = this.head.next;
+        this.tail = this.head && this.tail;
+        return value;
+    }
+}
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
