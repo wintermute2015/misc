@@ -817,6 +817,27 @@ class Queue {
         return value;
     }
 }
+
+//-------------------------------------------------------------------------------------28.05.18
+const createStore = redux.createStore;
+
+const initialState = {
+	counter: 0
+}
+
+// Reducer
+const rootReducer = (state = initialState, action) => {
+	return state;
+}
+
+// Store
+const store = createStore(rootReducer);
+console.log(store.getState());
+
+// Subscription
+store.subscribe(() => {
+    console.log(store.getState());
+});
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
