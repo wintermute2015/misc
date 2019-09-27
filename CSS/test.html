@@ -1,3 +1,7 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <style>
@@ -7,6 +11,7 @@
 
     html {
         background: #f6f6f6;
+        overflow: hidden;
     }
 
     body {
@@ -32,7 +37,7 @@
 
     .middle {
         background: #f6f6f6;
-        margin-top: 50px;
+        /*margin-top: 50px;*/
         width: 100%;
         height: 100%;
         color: #ef835d;
@@ -100,7 +105,7 @@
     .sidenav .closebtn {
         position: absolute;
         top: 0;
-        right: 25px;
+        right: 5px;
         font-size: 36px;
         margin-left: 50px;
     }
@@ -119,78 +124,232 @@
             font-size: 18px;
         }
     }
+
+    ul {
+        padding-inline-start: 0;
+        font-size: 25px;
+        /*text-shadow: #000 0.15em 0.15em 0.15em;*/
+    }
+
+    li {
+        list-style-type: none;
+        color: white;
+        padding: 20px;
+        border-bottom: solid 1px black;
+    }
+
+    li:hover {
+        background: whitesmoke;
+        color: black;
+    }
+
+    .active {
+        background: white;
+        color: black;
+    }
 </style>
 
-<div id="mySidenav" class="sidenav">
-    <div style="
+<div id="app">
+    <div id="mySidenav" class="sidenav">
+        <div style="
         color: white;
         margin-top: -48px;
         padding-bottom: 25px;
         margin-left: 12px;
         font-size: 30px;">
-        Coolworld
+            Coolworld
+        </div>
+        <ul>
+            <a href="" class="closebtn" onclick="event.preventDefault();closeNav()"> &times;</a>
+
+            <!--<li v-on:click="changeRoute('')" class="active">
+                <i class="fa fa-fw fa-home"></i><span style="margin: 15px;">Home</span></li>-->
+
+            <li v-on:click="changeRoute('users')" v-bind:class="{ active: users }">
+                <i class="fa fa-fw fa-user"></i><span style="margin: 15px;">Users</span></li>
+
+            <li v-on:click="changeRoute('phones')" v-bind:class="{ active: phones }">
+                <i class="fa fa-fw fa-phone"></i><span style="margin: 15px;">Phones</span></li>
+
+            <!--        <a href="#services"><i class="fa fa-fw fa-wrench"></i> Services</a>
+                    <a href="#clients"><i class="fa fa-fw fa-user"></i> Clients</a>
+                    <a href="#contact"><i class="fa fa-fw fa-envelope"></i> Contact</a>-->
+        </ul>
     </div>
-    <a href="" class="closebtn" onclick="event.preventDefault();closeNav()"> &times;</a>
-    <a href="#home"><i class="fa fa-fw fa-home"></i> Home</a>
-    <a href="#services"><i class="fa fa-fw fa-wrench"></i> Services</a>
-    <a href="#clients"><i class="fa fa-fw fa-user"></i> Clients</a>
-    <a href="#contact"><i class="fa fa-fw fa-envelope"></i> Contact</a>
-</div>
 
-<div class="top">
-    <div style="float: left; margin: 20px">
-        <span style="font-size:30px;cursor:pointer; color: black" onclick="openNav()">&#9776;</span>
-    </div>
-    <div style="margin-top: 15px; color: red; font-size: 50px;margin-right: 100px;">
-        <span>CoolWorld</span>
-    </div>
-</div>
-
-<div class="bottom">Copyright CoolWorld 2019</div>
-
-<div id="main">
-    <div class="middle">
-        <div style="margin-top: 100px; color: black">
-            Компания CoolWorld разрабатывает приложения Android и iOS
+    <div class="top">
+        <div style="float: left; margin: 20px">
+            <span style="font-size:30px;cursor:pointer; color: black" onclick="openNav()">&#9776;</span>
         </div>
-
-        <div style="margin-top: 0px; color: black">
-            любого уровня сложности для работы
-        </div>
-
-        <div style="margin-top: 0px; color: black">
-            с базами данных и готовыми учетными системами.
-        </div>
-
-        <div style="margin-top: 30px; color: black">
-            Примеры работ для Android:
-            <a href="https://play.google.com/store/apps/details?id=com.rnbox1" target="_blank" style="color: blue;">Google
-                play market</a>
-        </div>
-
-        <div style="margin-top: 10px; color: black">
-            Примеры работ для iOS:
-            <a href="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1154030318&mt=8" target="_blank"
-               style="color: blue;">App store</a>
-        </div>
-
-        <div style="margin-top: 30px; color: black">
-            Наши контакты:
-        </div>
-
-        <div style="margin-top: 10px; color: black">
-            E-mail: wintermute2009@ukr.net
-        </div>
-
-        <div style="margin-top: 10px; color: black">
-            Будем рады сотрудничать!
+        <div style="margin-top: 15px; color: red; font-size: 50px;margin-right: 100px;">
+            <span>CoolWorld</span>
         </div>
     </div>
 
+    <div class="bottom">Copyright CoolWorld 2019</div>
 
+    <div id="main">
+        <div class="middle">
+            <!--<div style="margin-top: 100px; color: black">
+                Компания CoolWorld разрабатывает приложения Android и iOS
+            </div>
+
+            <div style="margin-top: 0px; color: black">
+                любого уровня сложности для работы
+            </div>
+
+            <div style="margin-top: 0px; color: black">
+                с базами данных и готовыми учетными системами.
+            </div>
+
+            <div style="margin-top: 30px; color: black">
+                Примеры работ для Android:
+                <a href="https://play.google.com/store/apps/details?id=com.rnbox1" target="_blank" style="color: blue;">Google
+                    play market</a>
+            </div>
+
+            <div style="margin-top: 10px; color: black">
+                Примеры работ для iOS:
+                <a href="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1154030318&mt=8"
+                   target="_blank"
+                   style="color: blue;">App store</a>
+            </div>
+
+            <div style="margin-top: 30px; color: black">
+                Наши контакты:
+            </div>
+
+            <div style="margin-top: 10px; color: black">
+                E-mail: wintermute2009@ukr.net
+            </div>
+
+            <div style="margin-top: 10px; color: black">
+                Будем рады сотрудничать!
+            </div>-->
+            <router-view></router-view>
+        </div>
+
+    </div>
 </div>
 
 <script>
+    const appConfig = {
+        message: 'Loading...',
+        route: 'users'
+    };
+
+    const Users = {template: '<div><users-items></users-items></div>'};
+    const Phones = {template: '<div><phones-items></phones-items></div>'}
+
+    Vue.component('users-items', {
+        template: '<ul><li style="color: black;" v-for="item in items" v-on:click="showItem(item)">{{ item.name }} - {{ item.pass }}</li></ul>',
+        data: function() {
+            return {
+                items: []
+            }
+        },
+        created() {
+            this.fetchData();
+        },
+        methods: {
+            fetchData() {
+                appConfig.message = 'Loading...'
+                this.$http.get('https://ui-base.herokuapp.com/api/users/get')
+                    .then(result => {
+                        //console.log(result);
+                        this.items = result.data.sort(this.sort);
+                        this.loading = false;
+                        appConfig.message = 'Users';
+                    })
+            },
+            showItem(item) {
+                this.$router.push({path: '/user-item/' + item.id + '/' + item.name + '/' + item.pass + '/' + item.description});
+            },
+            showDetails(item) {
+                appConfig.user = item;
+                this.$router.push('user-edit');
+                console.log('hello');
+            },
+            sort(a, b) {
+                let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                if (nameA < nameB) {
+                    return -1
+                }
+                if (nameA > nameB) {
+                    return 1
+                }
+                return 0;
+            }
+        }
+    });
+
+    Vue.component('phones-items', {
+        template: '<ul><li style="color: black;" v-for="item in items">{{ item.name }} - {{ item.phone }}</li></ul>',
+        data: function() {
+            return {
+                items: []
+            }
+        },
+        created() {
+            this.fetchData();
+        },
+        methods: {
+            fetchData() {
+                appConfig.message = 'Loading...'
+                this.$http.get('https://ui-base.herokuapp.com/api/items/get')
+                    .then(result => {
+                        console.log(result);
+                        this.items = result.data;
+                        this.loading = false;
+                        appConfig.message = 'Phones';
+                    })
+            }
+        }
+    });
+
+    const routes = [
+        {path: '/', component: Users},
+        {path: '/users', component: Users},
+        {path: '/phones', component: Phones}
+    ];
+
+    const router = new VueRouter({
+        routes
+    });
+
+    new Vue({
+        el: '#app',
+        router,
+        data: {
+            title: 'Loading...',
+            items: [],
+            loading: true,
+            show: false,
+            route: appConfig.route,
+            phones: false,
+            users: false,
+            audit: false
+        },
+        created() {
+            this.init();
+        },
+        methods: {
+            init() {
+                this.users = appConfig.route === 'users';
+                this.phones = appConfig.route === 'phones';
+                this.audits = appConfig.route === 'audits';
+            },
+            changeRoute(route) {
+                closeNav();
+                appConfig.route = route;
+                this.init();
+                this.$router.push('/' + route);
+                return false
+            }
+        }
+
+    });
+
     function openNav() {
         document.getElementById('mySidenav').style.width = '250px';
         document.getElementById('main').style.marginLeft = '250px';
