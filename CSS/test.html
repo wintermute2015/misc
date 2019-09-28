@@ -162,8 +162,8 @@
         <ul>
             <a href="" class="closebtn" onclick="event.preventDefault();closeNav()"> &times;</a>
 
-            <!--<li v-on:click="changeRoute('')" class="active">
-                <i class="fa fa-fw fa-home"></i><span style="margin: 15px;">Home</span></li>-->
+            <li v-on:click="changeRoute('')" v-bind:class="{ active: home }">
+                <i class="fa fa-fw fa-home"></i><span style="margin: 15px;">Home</span></li>
 
             <li v-on:click="changeRoute('users')" v-bind:class="{ active: users }">
                 <i class="fa fa-fw fa-user"></i><span style="margin: 15px;">Users</span></li>
@@ -171,9 +171,9 @@
             <li v-on:click="changeRoute('phones')" v-bind:class="{ active: phones }">
                 <i class="fa fa-fw fa-phone"></i><span style="margin: 15px;">Phones</span></li>
 
-            <!--        <a href="#services"><i class="fa fa-fw fa-wrench"></i> Services</a>
-                    <a href="#clients"><i class="fa fa-fw fa-user"></i> Clients</a>
-                    <a href="#contact"><i class="fa fa-fw fa-envelope"></i> Contact</a>-->
+            <li v-on:click="changeRoute('audits')" v-bind:class="{ active: audits }">
+                <i class="fa fa-fw fa-history"></i><span style="margin: 15px;">Audits</span></li>
+
         </ul>
     </div>
 
@@ -190,56 +190,68 @@
 
     <div id="main">
         <div class="middle">
-            <!--<div style="margin-top: 100px; color: black">
-                Компания CoolWorld разрабатывает приложения Android и iOS
-            </div>
-
-            <div style="margin-top: 0px; color: black">
-                любого уровня сложности для работы
-            </div>
-
-            <div style="margin-top: 0px; color: black">
-                с базами данных и готовыми учетными системами.
-            </div>
-
-            <div style="margin-top: 30px; color: black">
-                Примеры работ для Android:
-                <a href="https://play.google.com/store/apps/details?id=com.rnbox1" target="_blank" style="color: blue;">Google
-                    play market</a>
-            </div>
-
-            <div style="margin-top: 10px; color: black">
-                Примеры работ для iOS:
-                <a href="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1154030318&mt=8"
-                   target="_blank"
-                   style="color: blue;">App store</a>
-            </div>
-
-            <div style="margin-top: 30px; color: black">
-                Наши контакты:
-            </div>
-
-            <div style="margin-top: 10px; color: black">
-                E-mail: wintermute2009@ukr.net
-            </div>
-
-            <div style="margin-top: 10px; color: black">
-                Будем рады сотрудничать!
-            </div>-->
             <router-view></router-view>
         </div>
-
     </div>
 </div>
 
 <script>
     const appConfig = {
         message: 'Loading...',
-        route: 'users'
+        route: 'home'
     };
 
-    const Users = {template: '<div><users-items></users-items></div>'};
-    const Phones = {template: '<div><phones-items></phones-items></div>'}
+    const Home = {template: '<home></home>'};
+    const Users = {template: '<users-items></users-items>'};
+    const Phones = {template: '<phones-items></phones-items>'};
+    const Audits = {template: '<audits-items></audits-items>'};
+
+    Vue.component('home', {
+        template: `<div>
+                        <div style="margin-top: 100px; color: black">
+                            Компания CoolWorld разрабатывает приложения Android и iOS
+                        </div>
+
+                        <div style="margin-top: 0px; color: black">
+                            любого уровня сложности для работы
+                        </div>
+
+                        <div style="margin-top: 0px; color: black">
+                            с базами данных и готовыми учетными системами.
+                        </div>
+
+                        <div style="margin-top: 30px; color: black">
+                        Примеры работ для Android:
+                        <a href="https://play.google.com/store/apps/details?id=com.rnbox1" target="_blank" style="color: blue;">Google
+                        play market</a>
+                        </div>
+
+                        <div style="margin-top: 10px; color: black">
+                        Примеры работ для iOS:
+                        <a href="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1154030318&mt=8"
+                        target="_blank"
+                        style="color: blue;">App store</a>
+                        </div>
+
+                        <div style="margin-top: 30px; color: black">
+                        Наши контакты:
+                        </div>
+
+                        <div style="margin-top: 10px; color: black">
+                        E-mail: wintermute2009@ukr.net
+                        </div>
+
+                        <div style="margin-top: 10px; color: black">
+                        Будем рады сотрудничать!
+                        </div>
+                    </div>`,
+        data: function() {
+            return {}
+        },
+        created() {
+        },
+        methods: {}
+    });
 
     Vue.component('users-items', {
         template: '<ul><li style="color: black;" v-for="item in items" v-on:click="showItem(item)">{{ item.name }} - {{ item.pass }}</li></ul>',
@@ -253,7 +265,7 @@
         },
         methods: {
             fetchData() {
-                appConfig.message = 'Loading...'
+                appConfig.message = 'Loading...';
                 this.$http.get('https://ui-base.herokuapp.com/api/users/get')
                     .then(result => {
                         //console.log(result);
@@ -295,7 +307,7 @@
         },
         methods: {
             fetchData() {
-                appConfig.message = 'Loading...'
+                appConfig.message = 'Loading...';
                 this.$http.get('https://ui-base.herokuapp.com/api/items/get')
                     .then(result => {
                         console.log(result);
@@ -307,10 +319,49 @@
         }
     });
 
+    Vue.component('audits-items', {
+        template: `<div style="margin-top: 95px;">
+                        <div v-if="loading">
+                            <div
+                              style="position: relative; top: 50px; -webkit-box-align:center; -webkit-box-pack:center; display:-webkit-box; font-size:54px">
+                              <img src="./loading.gif" alt="">
+                            </div>
+                      </div>
+                      <div v-if="!loading">
+                            <div style="color: black;border: solid 1px; height: 70px;padding-top: 20px;" v-for="item in items">
+                                {{ item.name }} - {{ item.date }} - {{ item.description }}
+                            </div>
+                        </div>
+        </div>`,
+        data: function() {
+            return {
+                items: [],
+                loading: true
+            }
+        },
+        created() {
+            this.fetchData();
+        },
+        methods: {
+            fetchData() {
+                appConfig.message = 'Loading...';
+                this.$http.get('https://ui-base.herokuapp.com/api/audit/get')
+                    .then(result => {
+                        console.log(result);
+                        this.items = result.data;
+                        this.loading = false;
+                        appConfig.message = 'audit';
+                    })
+            }
+        }
+    });
+
     const routes = [
-        {path: '/', component: Users},
+        {path: '/', component: Home},
+        {path: '/home', component: Home},
         {path: '/users', component: Users},
-        {path: '/phones', component: Phones}
+        {path: '/phones', component: Phones},
+        {path: '/audits', component: Audits}
     ];
 
     const router = new VueRouter({
@@ -322,6 +373,7 @@
         router,
         data: {
             title: 'Loading...',
+
             items: [],
             loading: true,
             show: false,
@@ -335,6 +387,7 @@
         },
         methods: {
             init() {
+                this.home = appConfig.route === 'home';
                 this.users = appConfig.route === 'users';
                 this.phones = appConfig.route === 'phones';
                 this.audits = appConfig.route === 'audits';
