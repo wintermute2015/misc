@@ -242,13 +242,17 @@
                 </div>
             </div>
         </div>
+        <div v-if="error">
+            Server error - try again
+        </div>
       </div>`,
         data: function () {
             return {
                 items: [],
                 searchQuery: '',
                 filteredItems: [],
-                loading: true
+                loading: true,
+                error: false
             }
         },
         created() {
@@ -275,29 +279,14 @@
                         appConfig.items = this.filteredItems;
                         this.loading = false;
                         appConfig.$emit('itemsCount', this.items.length);
+                    })
+                    .catch(error =>{
+                        this.error = true;
+                        this.loading = false;
                     });
             },
-            showDetails(item) {
-                appConfig.item = item;
-                this.$router.push('item-edit');
-            },
             updateItem(item) {
-                if (item.employee_name === '') {
-                    this.invalidValue = true
-                }
-
-                if (this.employee_age === '') {
-                    this.invalidValue = true
-                }
-
-                if (this.employee_salary === '') {
-                    this.invalidValue = true
-                }
-
-                if (this.invalidValue) {
-                    return
-                }
-
+                this.loading = true;
                 this.$http.put('http://dummy.restapiexample.com/api/v1/update/' + item.id,
                     {
                         name: item.employee_name,
@@ -308,13 +297,22 @@
                         this.loading = true;
                         this.fetchData();
                     })
+                    .catch(error =>{
+                        this.error = true;
+                        //this.loading = false;
+                    });
             },
             deleteItem(item) {
+                this.loading = true;
                 this.$http.delete('http://dummy.restapiexample.com/api/v1/delete/' + item.id)
                     .then(result => {
                         this.loading = true;
                         this.fetchData();
                     })
+                    .catch(error =>{
+                        this.error = true;
+                        //this.loading = false;
+                    });
             },
             cancel() {
                 this.loading = true;
@@ -335,13 +333,17 @@
                 <ul><li style="color: black;" v-for="item in items" v-on:click="showDetails(item)">{{ item.id }} - {{ item.employee_name }} - {{ item.employee_age }} - {{ item.employee_salary }}</li></ul>
             </div>
         </div>
+        <div v-if="error">
+            Server error - try again
+        </div>
         </div>`,
         data: function () {
             return {
                 items: [],
                 searchQuery: '',
                 filteredItems: [],
-                loading: true
+                loading: true,
+                error: false
             }
         },
         created() {
@@ -369,6 +371,10 @@
                         appConfig.items = this.filteredItems;
                         this.loading = false;
                         appConfig.$emit('itemsCount', this.items.length);
+                    })
+                    .catch(error =>{
+                        this.error = true;
+                        this.loading = false;
                     });
             },
             showDetails(item) {
@@ -431,6 +437,16 @@
             v-on:click="goBack">
                 Back
             </button>
+
+            <div v-if="loading">
+                <div style="margin-top: -55px;-webkit-box-align:center; -webkit-box-pack:center; display:-webkit-box; font-size:54px">
+                    <img src="./loading.gif" alt="">
+                </div>
+            </div>
+
+            <div v-if="error" style="margin-top: 25px;">
+                Server error - try again
+            </div>
         </div>`,
         data: function () {
             return {
@@ -439,7 +455,9 @@
                 employee_name: '',
                 employee_age: '',
                 employee_salary: '',
-                invalidValue: false
+                invalidValue: false,
+                error: false,
+                loading: false
             }
         },
         created() {
@@ -478,7 +496,7 @@
                     return
                 }
 
-                appConfig.message = 'Loading...';
+                this.loading = true;
                 this.$http.put('http://dummy.restapiexample.com/api/v1/update/' + this.id,
                     {
                         name: this.employee_name,
@@ -488,13 +506,21 @@
                     .then(result => {
                         this.$router.push('/home');
                     })
+                    .catch(error =>{
+                        this.error = true;
+                        this.loading = false;
+                    });
             },
             deleteItem() {
-                appConfig.message = 'Loading...';
+                this.loading = true;
                 this.$http.delete('http://dummy.restapiexample.com/api/v1/delete/' + this.id)
                     .then(result => {
                         this.$router.push('/home');
                     })
+                    .catch(error =>{
+                        this.error = true;
+                        this.loading = false;
+                    });
             },
             clearWarning() {
                 this.invalidValue = false;
@@ -553,6 +579,16 @@
                             background: red;
                             color: white;outline:none;margin-top: 20px;"
             v-on:click="goBack">Back</button>
+
+            <div v-if="loading">
+                <div style="margin-top: -55px;-webkit-box-align:center; -webkit-box-pack:center; display:-webkit-box; font-size:54px">
+                    <img src="./loading.gif" alt="">
+                </div>
+            </div>
+
+            <div v-if="error" style="margin-top: 25px;">
+                Server error - try again
+            </div>
         </div>`,
         data: function () {
             return {
@@ -561,7 +597,9 @@
                 employee_name: '',
                 employee_age: '',
                 employee_salary: '',
-                invalidValue: false
+                invalidValue: false,
+                error: false,
+                loading: false
             }
         },
         created() {
@@ -591,7 +629,7 @@
                     return
                 }
 
-                appConfig.message = 'Loading...';
+                this.loading = true;
                 this.$http.post('http://dummy.restapiexample.com/api/v1/create',
                     {
                         name: this.employee_name,
@@ -601,6 +639,10 @@
                     .then(result => {
                         this.$router.push('/home');
                     })
+                    .catch(error =>{
+                        this.error = true;
+                        this.loading = false;
+                    });
             },
             clearWarning() {
                 this.invalidValue = false;
