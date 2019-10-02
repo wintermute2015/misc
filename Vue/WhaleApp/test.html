@@ -137,26 +137,17 @@
 
 <div id="app">
     <div id="mySidenav" class="sidenav">
-        <div style="
-        color: white;
-        margin-top: -48px;
-        margin-left: 12px;
-        font-size: 30px;
-        width: 200px;">
+        <div style="color: white;margin-top: -48px;margin-left: 12px;font-size: 30px;width: 200px;">
             Test for WhaleApp by Eduard Tkachuk
         </div>
         <ul>
             <a href="" class="closebtn" onclick="event.preventDefault();closeNav()"> &times;</a>
-
             <li v-on:click="changeRoute('home')" v-bind:class="{ active: home }">
                 <i class="fa fa-fw fa-home"></i><span style="margin: 15px;">Home</span></li>
-
             <li v-on:click="changeRoute('item-add')" v-bind:class="{ active: add }">
                 <i class="fa fa-fw fa-plus"></i><span style="margin: 15px;">Add</span></li>
-
             <li v-on:click="changeRoute('inline')" v-bind:class="{ active: inline }">
                 <i class="fa fa-fw fa-plus"></i><span style="margin: 15px;">Inline</span></li>
-
         </ul>
     </div>
 
@@ -177,7 +168,6 @@
 
 <script>
     const appConfig = new Vue();
-
     appConfig.route = 'home';
 
     const Dummy = {template: '<dummy-items></dummy-items>'};
@@ -186,24 +176,18 @@
     const DummyAdd = {template: '<dummy-add></dummy-add>'};
 
     Vue.component('top', {
-        template: `<div><div style="float: left; margin: 20px; margin-top: 4px;">
-            <span style="font-size:30px;cursor:pointer; color: black" onclick="openNav()">&#9776;</span>
+        template: `<div>
+        <div style="float: left; margin: 20px; margin-top: 4px;">
+                <span style="font-size:30px;cursor:pointer; color: black" onclick="openNav()">&#9776;</span>
         </div>
         <div style="margin-top: 15px; color: red; font-size: 50px;margin-right: 100px;">
             <form class="search-form" id="search" style="">
                 <label>
-                    <input type="text" style="font-size: 24px;
-                    height: 50px; width1: 400px;padding: 20px;border-radius: 7px;
-                    border: 1px solid rgba(0,0,0,.15);margin-top: 2px;outline:none;"
-                    placeholder="Search by name"
-                           v-model="searchQuery" v-on:click="searchClear" v-on:keyup="changeView">
-
+                    <input type="text" style="font-size: 24px;height: 50px; width1: 400px;padding: 20px;border-radius: 7px;border: 1px solid rgba(0,0,0,.15);margin-top: 2px;outline:none;"
+                        placeholder="Search by name"
+                        v-model="searchQuery" v-on:click="searchClear" v-on:keyup="changeView">
                 </label>
-<div style="margin-top: -39px;
-    font-size: 30px;
-    margin-left: 230px;
-    color: black;
-    margin-right: -60px;"><i class="fa fa-fw fa-search"></i></div>
+                <div style="margin-top: -39px;font-size: 30px;margin-left: 230px;color: black;margin-right: -60px;"><i class="fa fa-fw fa-search"></i></div>
             </form>
         </div>
         </div>`,
@@ -224,9 +208,7 @@
     });
 
     Vue.component('bottom', {
-        template: `<div>
-            Records: {{count}}
-        </div>`,
+        template: `<div>Records: {{count}}</div>`,
         data() {
             return {
                 count: 0
@@ -237,18 +219,13 @@
                 this.count = itemsCount
             })
         },
-        methods: {
-            addItem() {
-                this.$router.push('user-add')
-            }
-        }
+        methods: {}
     });
 
     Vue.component('dummy-items-inline', {
         template: `<div>
         <div v-if="loading">
-            <div
-            style="position: relative; top: 250px; -webkit-box-align:center; -webkit-box-pack:center; display:-webkit-box; font-size:54px">
+            <div style="position: relative; top: 250px; -webkit-box-align:center; -webkit-box-pack:center; display:-webkit-box; font-size:54px">
                 <img src="./loading.gif" alt="">
             </div>
         </div>
@@ -266,7 +243,7 @@
             </div>
         </div>
       </div>`,
-        data: function() {
+        data: function () {
             return {
                 items: [],
                 searchQuery: '',
@@ -291,7 +268,6 @@
         },
         methods: {
             fetchData() {
-                appConfig.message = 'Loading...';
                 this.$http.get('http://dummy.restapiexample.com/api/v1/employees')
                     .then(result => {
                         this.items = JSON.parse(result.data);
@@ -300,15 +276,12 @@
                         this.loading = false;
                         appConfig.$emit('itemsCount', this.items.length);
                     });
-
             },
             showDetails(item) {
                 appConfig.item = item;
                 this.$router.push('item-edit');
-                console.log('hello');
             },
             updateItem(item) {
-                console.log(item)
                 if (item.employee_name === '') {
                     this.invalidValue = true
                 }
@@ -325,7 +298,6 @@
                     return
                 }
 
-                appConfig.message = 'Loading...';
                 this.$http.put('http://dummy.restapiexample.com/api/v1/update/' + item.id,
                     {
                         name: item.employee_name,
@@ -333,7 +305,6 @@
                         salary: item.employee_salary,
                     })
                     .then(result => {
-                        console.log(result);
                         this.loading = true;
                         this.fetchData();
                     })
@@ -341,12 +312,11 @@
             deleteItem(item) {
                 this.$http.delete('http://dummy.restapiexample.com/api/v1/delete/' + item.id)
                     .then(result => {
-                        console.log(result);
                         this.loading = true;
                         this.fetchData();
                     })
             },
-            cancel(){
+            cancel() {
                 this.loading = true;
                 this.fetchData();
             }
@@ -355,19 +325,18 @@
 
     Vue.component('dummy-items', {
         template: `<div>
-                        <div v-if="loading">
-                            <div
-                              style="position: relative; top: 250px; -webkit-box-align:center; -webkit-box-pack:center; display:-webkit-box; font-size:54px">
-                              <img src="./loading.gif" alt="">
-                            </div>
-                        </div>
-                      <div v-if="!loading">
-                        <div style="margin-top: 100px;margin-bottom: 50px;">
-                            <ul><li style="color: black;" v-for="item in items" v-on:click="showDetails(item)">{{ item.id }} - {{ item.employee_name }} - {{ item.employee_age }} - {{ item.employee_salary }}</li></ul>
-                        </div>
-                       </div>
-                      </div>`,
-        data: function() {
+        <div v-if="loading">
+            <div style="position: relative; top: 250px; -webkit-box-align:center; -webkit-box-pack:center; display:-webkit-box; font-size:54px">
+                <img src="./loading.gif" alt="">
+            </div>
+        </div>
+        <div v-if="!loading">
+            <div style="margin-top: 100px;margin-bottom: 50px;">
+                <ul><li style="color: black;" v-for="item in items" v-on:click="showDetails(item)">{{ item.id }} - {{ item.employee_name }} - {{ item.employee_age }} - {{ item.employee_salary }}</li></ul>
+            </div>
+        </div>
+        </div>`,
+        data: function () {
             return {
                 items: [],
                 searchQuery: '',
@@ -401,12 +370,10 @@
                         this.loading = false;
                         appConfig.$emit('itemsCount', this.items.length);
                     });
-
             },
             showDetails(item) {
                 appConfig.item = item;
                 this.$router.push('item-edit');
-                console.log('hello');
             },
         }
     });
@@ -414,37 +381,34 @@
     Vue.component('dummy-edit', {
         props: ['item'],
         template: `<div style="text-align: center;margin-top: 120px;">
-            <div style="font-size: 40px;
-                        color: black;
-                        font-weight: bolder;
-                        margin: 20px;">{{ title }}</div>
+            <div style="font-size: 40px;color: black;font-weight: bolder;margin: 20px;">
+                {{ title }}
+            </div>
 
             <span style="font-size: 24px; color: black;">ID:</span>
-            <input style="font-size: 24px;height: 50px;padding: 20px;border-radius: 7px;
-            border: 1px solid rgba(0,0,0,.15);margin-top: 2px; margin-bottom: 20px;
-            width: 450px;outline:none;margin-right: 40px;"
-            v-model="id" readonly><br>
+            <input readonly style="font-size: 24px;height: 50px;padding: 20px;border-radius: 7px;border: 1px solid rgba(0,0,0,.15);margin-top: 2px; margin-bottom: 20px;width: 450px;outline:none;margin-right: 40px;"
+            v-model="id"><br>
 
-            <span style="font-size: 24px; color: black;margin-left: -33px;">Name:</span>
-            <input style="font-size: 24px;height: 50px;padding: 20px;border-radius: 7px;
-            border: 1px solid rgba(0,0,0,.15);margin-top: 2px; margin-bottom: 20px;
-            width: 450px;outline:none;margin-right: 40px;"
+            <span style="font-size: 24px; color: black;margin-left: -33px;">
+                Name:
+            </span>
+            <input style="font-size: 24px;height: 50px;padding: 20px;border-radius: 7px;border: 1px solid rgba(0,0,0,.15);margin-top: 2px; margin-bottom: 20px;width: 450px;outline:none;margin-right: 40px;"
             placeholder="Name"
             v-on:keypress="clearWarning"
             v-model="employee_name" ><br>
 
-            <span style="font-size: 24px; color: black;margin-left: -19px;">Age:</span>
-            <input style="font-size: 24px;height: 50px;padding: 20px;border-radius: 7px;
-            border: 1px solid rgba(0,0,0,.15);margin-top: 2px; margin-bottom: 20px;
-            width: 450px;outline:none;margin-right: 40px;"
+            <span style="font-size: 24px; color: black;margin-left: -19px;">
+                Age:
+            </span>
+            <input style="font-size: 24px;height: 50px;padding: 20px;border-radius: 7px;border: 1px solid rgba(0,0,0,.15);margin-top: 2px; margin-bottom: 20px;width: 450px;outline:none;margin-right: 40px;"
             placeholder="Age"
             v-on:keypress="clearWarning"
             v-model="employee_age" ><br>
 
-            <span style="font-size: 24px; color: black;margin-left: -41px;">Salary:</span>
-            <input style="font-size: 24px;height: 50px;padding: 20px;border-radius: 7px;
-            border: 1px solid rgba(0,0,0,.15);margin-top: 2px; margin-bottom: 20px;
-            width: 450px;outline:none;margin-right: 40px;"
+            <span style="font-size: 24px; color: black;margin-left: -41px;">
+                Salary:
+            </span>
+            <input style="font-size: 24px;height: 50px;padding: 20px;border-radius: 7px;border: 1px solid rgba(0,0,0,.15);margin-top: 2px; margin-bottom: 20px;width: 450px;outline:none;margin-right: 40px;"
             placeholder="Salary"
             v-on:keypress="clearWarning"
             v-model="employee_salary" ><br>
@@ -453,31 +417,22 @@
                 <span v-show="invalidValue" style="margin-left: 0px;">Value required - please provide.</span>
             </div>
 
-            <button style="font-size: 24px;
-                            height: 50px;
-                            width: 150px;
-                            border-radius: 5px;
-                            background: red;
-                            color: white;outline:none;"
-            v-on:click="updateItem">Update</button>
+            <button style="font-size: 24px;height: 50px;width: 150px;border-radius: 5px;background: red;color: white;outline:none;"
+            v-on:click="updateItem">
+                Update
+            </button>
 
-            <button style="font-size: 24px;
-                            height: 50px;
-                            width: 150px;
-                            border-radius: 5px;
-                            background: red;
-                            color: white;outline:none;"
-            v-on:click="deleteItem">Delete</button><br>
+            <button style="font-size: 24px;height: 50px;width: 150px;border-radius: 5px;background: red;color: white;outline:none;"
+            v-on:click="deleteItem">
+                Delete
+            </button><br>
 
-            <button style="font-size: 24px;
-                            height: 50px;
-                            width: 150px;
-                            border-radius: 5px;
-                            background: red;
-                            color: white;outline:none;margin-top: 20px;"
-            v-on:click="goBack">Back</button>
-            </div>`,
-        data: function() {
+            <button style="font-size: 24px;height: 50px;width: 150px;border-radius: 5px;background: red;color: white;outline:none;margin-top: 20px;"
+            v-on:click="goBack">
+                Back
+            </button>
+        </div>`,
+        data: function () {
             return {
                 id: '',
                 title: '',
@@ -531,7 +486,6 @@
                         salary: this.employee_salary,
                     })
                     .then(result => {
-                        console.log(result);
                         this.$router.push('/home');
                     })
             },
@@ -539,11 +493,10 @@
                 appConfig.message = 'Loading...';
                 this.$http.delete('http://dummy.restapiexample.com/api/v1/delete/' + this.id)
                     .then(result => {
-                        console.log(result);
                         this.$router.push('/home');
                     })
             },
-            clearWarning () {
+            clearWarning() {
                 this.invalidValue = false;
             }
         }
@@ -552,7 +505,7 @@
     Vue.component('dummy-add', {
         props: ['item'],
         template: `<div style="text-align: center;margin-top: 120px;">
-            <div style="font-size: 40px;
+        <div style="font-size: 40px;
                         color: black;
                         font-weight: bolder;
                         margin: 20px;">New record</div>
@@ -600,10 +553,8 @@
                             background: red;
                             color: white;outline:none;margin-top: 20px;"
             v-on:click="goBack">Back</button>
-
-
-            </div>`,
-        data: function() {
+        </div>`,
+        data: function () {
             return {
                 id: '',
                 title: '',
@@ -648,11 +599,10 @@
                         salary: this.employee_salary,
                     })
                     .then(result => {
-                        console.log(result);
                         this.$router.push('/home');
                     })
             },
-            clearWarning () {
+            clearWarning() {
                 this.invalidValue = false;
             }
         }
@@ -670,21 +620,10 @@
         routes
     });
 
-
     new Vue({
         el: '#app',
         router,
-        data: {
-            title: 'Loading...',
-
-            items: [],
-            loading: true,
-            show: false,
-            route: appConfig.route,
-            phones: false,
-            users: false,
-            audit: false
-        },
+        data: {},
         created() {
             this.init();
         },
@@ -702,21 +641,16 @@
                 return false
             }
         }
-
     });
 
     function openNav() {
         document.getElementById('mySidenav').style.width = '250px';
-        //document.getElementById('main').style.marginLeft = '250px';
     }
 
     function closeNav() {
         document.getElementById('mySidenav').style.width = '0';
-        document.getElementById('main').style.marginLeft = '0';
         return false;
     }
 </script>
-
-<!--https://www.w3schools.com/howto/howto_js_sidenav.asp-->
 
  
