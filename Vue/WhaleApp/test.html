@@ -154,6 +154,9 @@
             <li v-on:click="changeRoute('item-add')" v-bind:class="{ active: add }">
                 <i class="fa fa-fw fa-plus"></i><span style="margin: 15px;">Add</span></li>
 
+            <li v-on:click="changeRoute('inline')" v-bind:class="{ active: inline }">
+                <i class="fa fa-fw fa-plus"></i><span style="margin: 15px;">Inline</span></li>
+
         </ul>
     </div>
 
@@ -177,57 +180,10 @@
 
     appConfig.route = 'home';
 
-    const Home = {template: '<dummy-items></dummy-items>'};
     const Dummy = {template: '<dummy-items></dummy-items>'};
+    const DummyInline = {template: '<dummy-items-inline></dummy-items-inline>'};
     const DummyEdit = {template: '<dummy-edit></dummy-edit>'};
     const DummyAdd = {template: '<dummy-add></dummy-add>'};
-
-    Vue.component('home', {
-        template: `<div>
-                        <div style="margin-top: 100px; color: black">
-                            Компания CoolWorld разрабатывает приложения Android и iOS
-                        </div>
-
-                        <div style="margin-top: 0px; color: black">
-                            любого уровня сложности для работы
-                        </div>
-
-                        <div style="margin-top: 0px; color: black">
-                            с базами данных и готовыми учетными системами.
-                        </div>
-
-                        <div style="margin-top: 30px; color: black">
-                        Примеры работ для Android:
-                        <a href="https://play.google.com/store/apps/details?id=com.rnbox1" target="_blank" style="color: blue;">Google
-                        play market</a>
-                        </div>
-
-                        <div style="margin-top: 10px; color: black">
-                        Примеры работ для iOS:
-                        <a href="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1154030318&mt=8"
-                        target="_blank"
-                        style="color: blue;">App store</a>
-                        </div>
-
-                        <div style="margin-top: 30px; color: black">
-                        Наши контакты:
-                        </div>
-
-                        <div style="margin-top: 10px; color: black">
-                        E-mail: wintermute2009@ukr.net
-                        </div>
-
-                        <div style="margin-top: 10px; color: black">
-                        Будем рады сотрудничать!
-                        </div>
-                    </div>`,
-        data: function() {
-            return {}
-        },
-        created() {
-        },
-        methods: {}
-    });
 
     Vue.component('top', {
         template: `<div><div style="float: left; margin: 20px; margin-top: 4px;">
@@ -284,6 +240,115 @@
         methods: {
             addItem() {
                 this.$router.push('user-add')
+            }
+        }
+    });
+
+    Vue.component('dummy-items-inline', {
+        template: `<div>
+        <div v-if="loading">
+            <div
+            style="position: relative; top: 250px; -webkit-box-align:center; -webkit-box-pack:center; display:-webkit-box; font-size:54px">
+                <img src="./loading.gif" alt="">
+            </div>
+        </div>
+        <div v-if="!loading">
+            <div style="margin-top: 100px;margin-bottom: 50px;">
+                <div style="color: black;border:solid 1px;height: 80px;" v-for="item in items" v-on:click1="showDetails(item)">
+                    <input v-model="item.id" style="height: 40px;margin: 20px;font-size: 20px;width: 100px;outline:none;" readonly/>
+                    <input v-model="item.employee_name" style="height: 40px;margin: 20px;font-size: 20px;width: 400px;"/>
+                    <input v-model="item.employee_age" style="height: 40px;margin: 20px;font-size: 20px;width: 100px;"/>
+                    <input v-model="item.employee_salary" style="height: 40px;margin: 20px;font-size: 20px;width: 100px;"/>
+                    <button style="height: 40px;border-radius: 5px;width:100px;font-size:20px;" v-on:click="updateItem(item)">Update</button>
+                    <button style="height: 40px;border-radius: 5px;width:100px;font-size:20px;" v-on:click="deleteItem(item)">Delete</button>
+                    <button style="height: 40px;border-radius: 5px;width:100px;font-size:20px;" v-on:click="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+      </div>`,
+        data: function() {
+            return {
+                items: [],
+                searchQuery: '',
+                filteredItems: [],
+                loading: true
+            }
+        },
+        created() {
+            this.fetchData();
+            appConfig.$on('searchQuery', searchQuery => {
+                let arr = [].concat(appConfig.items);
+                let items = arr.filter((el) => el.employee_name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1);
+                this.filteredItems = items;
+                this.items = items;
+
+                appConfig.$emit('itemsCount', items.length);
+                if (searchQuery === '') {
+                    this.items = appConfig.items;
+                    this.filteredItems = appConfig.items
+                }
+            })
+        },
+        methods: {
+            fetchData() {
+                appConfig.message = 'Loading...';
+                this.$http.get('http://dummy.restapiexample.com/api/v1/employees')
+                    .then(result => {
+                        this.items = JSON.parse(result.data);
+                        this.filteredItems = JSON.parse(result.data);
+                        appConfig.items = this.filteredItems;
+                        this.loading = false;
+                        appConfig.$emit('itemsCount', this.items.length);
+                    });
+
+            },
+            showDetails(item) {
+                appConfig.item = item;
+                this.$router.push('item-edit');
+                console.log('hello');
+            },
+            updateItem(item) {
+                console.log(item)
+                if (item.employee_name === '') {
+                    this.invalidValue = true
+                }
+
+                if (this.employee_age === '') {
+                    this.invalidValue = true
+                }
+
+                if (this.employee_salary === '') {
+                    this.invalidValue = true
+                }
+
+                if (this.invalidValue) {
+                    return
+                }
+
+                appConfig.message = 'Loading...';
+                this.$http.put('http://dummy.restapiexample.com/api/v1/update/' + item.id,
+                    {
+                        name: item.employee_name,
+                        age: item.employee_age,
+                        salary: item.employee_salary,
+                    })
+                    .then(result => {
+                        console.log(result);
+                        this.loading = true;
+                        this.fetchData();
+                    })
+            },
+            deleteItem(item) {
+                this.$http.delete('http://dummy.restapiexample.com/api/v1/delete/' + item.id)
+                    .then(result => {
+                        console.log(result);
+                        this.loading = true;
+                        this.fetchData();
+                    })
+            },
+            cancel(){
+                this.loading = true;
+                this.fetchData();
             }
         }
     });
@@ -596,6 +661,7 @@
     const routes = [
         {path: '/', component: Dummy},
         {path: '/home', component: Dummy},
+        {path: '/inline', component: DummyInline},
         {path: '/item-edit', component: DummyEdit},
         {path: '/item-add', component: DummyAdd}
     ];
@@ -625,6 +691,7 @@
         methods: {
             init() {
                 this.home = appConfig.route === 'home';
+                this.inline = appConfig.route === 'inline';
                 this.add = appConfig.route === 'item-add';
             },
             changeRoute(route) {
