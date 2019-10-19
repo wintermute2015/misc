@@ -5,7 +5,7 @@
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 var d1 = document.getElementById("d1");
 
-function Callback1(data) 
+function Callback1(data)
 {
 document.body.removeChild(tempscript);
 tempscript = null;
@@ -17,36 +17,36 @@ d1.innerHTML += res.Results[i].Title+'\n';
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function Callback2(data) 
+function Callback2(data)
 {
 document.body.removeChild(tempscript);
 tempscript = null;
 res = data;
-for (i=0;i<10;i++)
+for (i=0;i<100;i++)
 {
 d1.innerHTML +=  res.data.children[i].data.title+'<br>'+'<img src='+res.data.children[i].data.thumbnail+'>'+'<br>';
 }
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function Callback3(data) 
+function Callback3(data)
 {
 document.body.removeChild(tempscript);
 tempscript = null;
 res = data;
-for (i=0;i<10;i++)
+for (i=0;i<100;i++)
 {
 d1.innerHTML += res.items[i].description;
 }
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function Callback4(data) 
+function Callback4(data)
 {
 document.body.removeChild(tempscript);
 tempscript = null
 res = data;
-d1.innerHTML = 
+d1.innerHTML =
 res.postalcodes[0].adminName1+'<br>'+
 res.postalcodes[0].adminName2+'<br>'+
 res.postalcodes[0].countryCode+'<br>'+
@@ -55,12 +55,12 @@ res.postalcodes[0].placeName;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function Callback5(data) 
+function Callback5(data)
 {
 document.body.removeChild(tempscript);
 tempscript = null;
 res = data;
-d1.innerHTML = 
+d1.innerHTML =
 res[7].details.signName+'<br>'+
 res[7].details.extScope+'<br>'+
 res[7].details.scope;
@@ -77,7 +77,8 @@ tempscript.src = str;
 document.body.appendChild(tempscript);
 }
 
-startCall("http://www.reddit.com/.json?limit=10&jsonp=Callback2");
+startCall("https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=Callback3&tags=coolworld&tagmode=any&format=json");
+//startCall("http://www.reddit.com/.json?limit=100&jsonp=Callback2");
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 
