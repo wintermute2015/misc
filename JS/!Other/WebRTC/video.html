@@ -1,0 +1,151 @@
+﻿<div class="contentarea">
+    <h1>
+        MDN - WebRTC: Still photo capture demo
+    </h1>
+    <p>
+        This example demonstrates how to set up a media stream using your built-in webcam, fetch an image from that
+        stream, and create a PNG using that image.
+    </p>
+    <div class="camera">
+        <video id="video">Video stream not available.</video>
+        <button id="startbutton" onclick="takepicture()">Take photo</button>
+    </div>
+    <canvas id="canvas">
+    </canvas>
+    <div class="output">
+        <img id="photo" alt="The screen capture will appear in this box.">
+    </div>
+    <p>
+        Visit our article <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Taking_still_photos">
+        Taking still photos with WebRTC</a> to learn more about the technologies used here.
+    </p>
+</div>
+
+<button onclick="play()">Play video</button>
+<button onclick="stop()">Stop video</button>
+<!--<video id="video">Video stream not available.</video>
+
+<button id="startbutton">Take photo</button>
+
+<canvas id="canvas">
+</canvas>-->
+<style>
+    #video {
+        border: 1px solid black;
+        box-shadow: 2px 2px 3px black;
+        width: 320px;
+        height: 240px;
+    }
+
+    #photo {
+        border: 1px solid black;
+        box-shadow: 2px 2px 3px black;
+        width: 320px;
+        height: 240px;
+    }
+
+    #canvas {
+        display: none;
+    }
+
+    .camera {
+        width: 340px;
+        display: inline-block;
+    }
+
+    .output {
+        width: 340px;
+        display: inline-block;
+    }
+
+    #startbutton {
+        display: block;
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        bottom: 32px;
+        background-color: rgba(0, 150, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 0px 0px 1px 2px rgba(0, 0, 0, 0.2);
+        font-size: 14px;
+        font-family: "Lucida Grande", "Arial", sans-serif;
+        color: rgba(255, 255, 255, 1.0);
+    }
+
+    .contentarea {
+        font-size: 16px;
+        font-family: "Lucida Grande", "Arial", sans-serif;
+        width: 760px;
+    }
+</style>
+<script>
+    video = document.getElementById('video');
+    canvas = document.getElementById('canvas');
+    photo = document.getElementById('photo');
+    startbutton = document.getElementById('startbutton');
+
+    var width = 620;    // We will scale the photo width to this
+    var height = 0;
+
+    function play() {
+        navigator.mediaDevices.getUserMedia({video: true, audio: false})
+            .then(function (stream) {
+                video.srcObject = stream;
+                video.play();
+
+                height = video.videoHeight / (video.videoWidth / width);
+                height = width / (4 / 3);
+            })
+            .catch(function (err) {
+                console.log("An error occurred: " + err);
+            });
+    }
+
+    clearphoto();
+
+    function stop() {
+      video.srcObject.getTracks()[0].stop();
+    }
+
+    function clearphoto() {
+      var context = canvas.getContext('2d');
+      context.fillStyle = "#AAA";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      var data = canvas.toDataURL('image/png');
+      photo.setAttribute('src', data);
+    }
+
+    function takepicture() {
+        var context = canvas.getContext('2d');
+        if (width && height) {
+            canvas.width = width;
+            canvas.height = height;
+            context.drawImage(video, 0, 0, width, height);
+
+            var data = canvas.toDataURL('image/png');
+            photo.setAttribute('src', data);
+            console.log(data)
+        } else {
+            clearphoto();
+        }
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
