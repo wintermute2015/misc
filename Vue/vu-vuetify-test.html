@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+<div id="app">
+	<v-app>
+		<v-content>
+			<template>
+				<v-row align="center">
+					<v-col class="text-center" cols="12" sm="4">
+						<div class="my-2">
+							<v-btn small>Normal</v-btn>
+						</div>
+						<div class="my-2">
+							<v-btn small color="primary">Primary</v-btn>
+						</div>
+						<div class="my-2">
+							<v-btn small color="error">Error</v-btn>
+						</div>
+						<div class="my-2">
+							<v-btn small disabled>Disabled</v-btn>
+						</div>
+					</v-col>
+					<v-col class="text-center" cols="12" sm="4">
+						<div class="my-2">
+							<v-btn>Normal</v-btn>
+						</div>
+						<div class="my-2">
+							<v-btn color="primary">Primary</v-btn>
+						</div>
+						<div class="my-2">
+							<v-btn color="error">Error</v-btn>
+						</div>
+						<div class="my-2">
+							<v-btn disabled>Disabled</v-btn>
+						</div>
+					</v-col>
+					<v-col class="text-center" cols="12" sm="4">
+						<div class="my-2">
+							<v-btn large>Normal</v-btn>
+						</div>
+						<div class="my-2">
+							<v-btn large color="primary">Primary</v-btn>
+						</div>
+						<div class="my-2">
+							<v-btn large color="error">Error</v-btn>
+						</div>
+						<div class="my-2">
+							<v-btn large disabled>Disabled</v-btn>
+						</div>
+					</v-col>
+				</v-row>
+
+				<v-simple-table fixed-header height="300px">
+					<template v-slot:default>
+						<thead>
+						<tr>
+							<th class="text-left">Name</th>
+							<th class="text-left">Calories</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr v-for="item in desserts" :key="item.name">
+							<td>{{ item.name }}</td>
+							<td>{{ item.calories }}</td>
+						</tr>
+						</tbody>
+					</template>
+				</v-simple-table>
+			</template>
+		</v-content>
+	</v-app>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script>
+	new Vue({
+		el: '#app',
+		vuetify: new Vuetify(),
+		data:{
+			desserts: [{name:'apple',calories: 555}]
+		}
+
+	})
+</script>
+</body>
+</html>

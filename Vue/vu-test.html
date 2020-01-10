@@ -1,108 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
-	<title>VU-Base</title>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
-	<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+	<meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+	<link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
+	<link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
 </head>
 
 <body>
 <div id="app">
-	<p v-if="loading">Loading...</p>
-	
-	<todo-item
-		v-for="item in groceryList"
-		v-bind:todo="item"
-		v-bind:key="item.id">
-	</todo-item>	
-	<hr>
-	<todo-item :todo="test"></todo-item>
-	
-	<p>{{ message }}</p>
-	<input v-model="message" v-on:blur1="fetchData">
-	
-	<ul>
-		<li v-for="item in items">
-			{{ item.name }} - {{ item.phone }}
-		</li>
-	</ul>
-	
-	<select v-model="selected">
-	  <option v-for="option in groceryList" v-bind:value="option.id">
-		{{ option.text }}
-	  </option>
-	</select>
-	<span>Выбрано: {{ selected }}</span>	
+	<!-- Your code here -->
 </div>
-  
 
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/vue-material"></script>
 <script>
-	Vue.component('todo-item', {
-		props: ['todo'],
-		template: '<li>{{ todo.text }} - {{this.city}}</li>',
-		data: function () {
-			return { 
-				counter: this.todo.text,
-				city: 'Kiev'
-			}
-		},		
-		created() {
-			this.setCity(this.todo.city);
-		},
-		methods: {
-			setCity(city) {
-				if (city == 1) {
-					this.city = 'NYC'
-				}
-				if (city == 2) {
-					this.city = 'LA'
-				}
-			}
-		}
-	})
-	
+	Vue.use(VueMaterial.default)
+
 	new Vue({
-		el: '#app',
-	  
-		data: { 
-			items: [],
-			loading: false,
-			message: '',
-			test: {text: 'VueJS', city: 2},
-			groceryList: [
-				{ id: 0, text: 'Select item' },
-				{ id: 1, text: 'Овощи' },
-				{ id: 2, text: 'Сыр' },
-				{ id: 3, text: 'Что там ещё люди едят?' }
-			],
-			selected: 0,
-			options: [
-			  { text: 'One', value: 'A' },
-			  { text: 'Two', value: 'B' },
-			  { text: 'Three', value: 'C' }
-			]
-			
-		},
-	  
-		created() {
-			//this.fetchData();
-		},
-
-		methods: {
-			fetchData() {
-				this.$http.get('https://ui-base.herokuapp.com/api/items/get')
-					.then(result => { 
-						console.log(result);
-						this.items = result.data;
-						this.loading = false;
-					})
-			}
-		}
-	  
+		el: '#app'
 	})
-
 </script>
+</body>
 </html>
