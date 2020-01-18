@@ -1,26 +1,312 @@
 <!doctype html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
-	<link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
-	<link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-material"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 </head>
 
 <body>
 <div id="app">
-	<!-- Your code here -->
+    <div>
+        <router-view></router-view>
+    </div>
+
 </div>
 
-<script src="https://unpkg.com/vue"></script>
-<script src="https://unpkg.com/vue-material"></script>
-<script>
-	Vue.use(VueMaterial.default)
 
-	new Vue({
-		el: '#app'
-	})
+<script>
+	const toLower = text => {
+		return text.toString().toLowerCase()
+	};
+
+	const searchByName = (items, term) => {
+		if (term) {
+			return items.filter(item => toLower(item.name).includes(toLower(term)))
+		}
+
+		return items
+	};
+    const appConfig = new Vue();
+
+    const List = {template: '<listUI></listUI>'};
+    const Table = {template: '<tableUI></tableUI>'};
+
+    Vue.component('tableUI', {
+        template: `
+		  <div>
+			<md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+			  <md-table-toolbar>
+				<div class="md-toolbar-section-start">
+				  <h1 class="md-title">Users</h1>
+				</div>
+
+				<md-field md-clearable class="md-toolbar-section-end">
+				  <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable" />
+				</md-field>
+			  </md-table-toolbar>
+
+			  <md-table-empty-state
+				md-label="No users found"
+				:md-description="\`No user found for this '' query. Try a different search term or create a new user.\`">
+				<md-button class="md-primary md-raised" @click="newUser">Create New User</md-button>
+			  </md-table-empty-state>
+
+			  <md-table-row slot="md-table-row" slot-scope="{ item }">
+				<md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell>
+				<md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
+				<md-table-cell md-label="Pic" md-sort-by="email"><md-avatar style="width: 166px;height: 150px;">
+				  <img :src="item.pic" alt="People">
+				</md-avatar></md-table-cell>
+				<md-table-cell md-label="Gender" md-sort-by="gender">{{ item.category }}</md-table-cell>
+				<md-table-cell md-label="Job Title" md-sort-by="title">{{ item.description }}</md-table-cell>
+			  </md-table-row>
+			</md-table>
+  		</div>`,
+        data: () => ({
+            items: [],
+			search: null,
+			searched: [],
+			users: [
+				{
+					id: 1,
+					name: "Shawna Dubbin",
+					email: "sdubbin0@geocities.com",
+					gender: "Male",
+					title: "Assistant Media Planner"
+				},
+				{
+					id: 2,
+					name: "Odette Demageard",
+					email: "odemageard1@spotify.com",
+					gender: "Female",
+					title: "Account Coordinator"
+				},
+				{
+					id: 3,
+					name: "Vera Taleworth",
+					email: "vtaleworth2@google.ca",
+					gender: "Male",
+					title: "Community Outreach Specialist"
+				},
+				{
+					id: 4,
+					name: "Lonnie Izkovitz",
+					email: "lizkovitz3@youtu.be",
+					gender: "Female",
+					title: "Operator"
+				},
+				{
+					id: 5,
+					name: "Thatcher Stave",
+					email: "tstave4@reference.com",
+					gender: "Male",
+					title: "Software Test Engineer III"
+				},
+				{
+					id: 6,
+					name: "Karim Chipping",
+					email: "kchipping5@scribd.com",
+					gender: "Female",
+					title: "Safety Technician II"
+				},
+				{
+					id: 7,
+					name: "Helge Holyard",
+					email: "hholyard6@howstuffworks.com",
+					gender: "Female",
+					title: "Internal Auditor"
+				},
+				{
+					id: 8,
+					name: "Rod Titterton",
+					email: "rtitterton7@nydailynews.com",
+					gender: "Male",
+					title: "Technical Writer"
+				},
+				{
+					id: 9,
+					name: "Gawen Applewhite",
+					email: "gapplewhite8@reverbnation.com",
+					gender: "Female",
+					title: "GIS Technical Architect"
+				},
+				{
+					id: 10,
+					name: "Nero Mulgrew",
+					email: "nmulgrew9@plala.or.jp",
+					gender: "Female",
+					title: "Staff Scientist"
+				},
+				{
+					id: 11,
+					name: "Cybill Rimington",
+					email: "crimingtona@usnews.com",
+					gender: "Female",
+					title: "Assistant Professor"
+				},
+				{
+					id: 12,
+					name: "Maureene Eggleson",
+					email: "megglesonb@elpais.com",
+					gender: "Male",
+					title: "Recruiting Manager"
+				},
+				{
+					id: 13,
+					name: "Cortney Caulket",
+					email: "ccaulketc@cbsnews.com",
+					gender: "Male",
+					title: "Safety Technician IV"
+				},
+				{
+					id: 14,
+					name: "Selig Swynfen",
+					email: "sswynfend@cpanel.net",
+					gender: "Female",
+					title: "Environmental Specialist"
+				},
+				{
+					id: 15,
+					name: "Ingar Raggles",
+					email: "iragglese@cbc.ca",
+					gender: "Female",
+					title: "VP Sales"
+				},
+				{
+					id: 16,
+					name: "Karmen Mines",
+					email: "kminesf@topsy.com",
+					gender: "Male",
+					title: "Administrative Officer"
+				},
+				{
+					id: 17,
+					name: "Salome Judron",
+					email: "sjudrong@jigsy.com",
+					gender: "Male",
+					title: "Staff Scientist"
+				},
+				{
+					id: 18,
+					name: "Clarinda Marieton",
+					email: "cmarietonh@theatlantic.com",
+					gender: "Male",
+					title: "Paralegal"
+				},
+				{
+					id: 19,
+					name: "Paxon Lotterington",
+					email: "plotteringtoni@netvibes.com",
+					gender: "Female",
+					title: "Marketing Assistant"
+				},
+				{
+					id: 20,
+					name: "Maura Thoms",
+					email: "mthomsj@webeden.co.uk",
+					gender: "Male",
+					title: "Actuary"
+				}
+			],
+        }),
+        created() {
+            this.getItems();
+			this.searched = this.users
+        },
+        methods: {
+            getItems() {
+                this.$http.get('http://ui-collection.herokuapp.com/api/items/getAll')
+                    .then(result => {
+                        this.items = result.data.filter((item) => item.pic);
+                        console.log(this.items)
+						this.searched = this.items
+                    })
+                    .catch(error => {
+                    });
+            },
+            sort(a, b) {
+                return parseInt(b.id) - parseInt(a.id);
+            },
+			newUser () {
+				window.alert('Noop')
+			},
+			searchOnTable () {
+				this.searched = searchByName(this.users, this.search)
+			}
+        }
+    });
+
+    Vue.component('listUI', {
+        template: `
+		<div>
+			<md-list class="md-triple-line" v-for="item in items" v-bind:key="item.id">
+
+			  <md-list-item>
+				<md-avatar style="width: 166px;height: 150px;">
+				  <img :src="item.pic" alt="People">
+				</md-avatar>
+
+				<div class="md-list-item-text">
+				  <span>{{item.name}}</span>
+				  <span>{{item.category}}</span>
+				  <p>{{item.description}}</p>
+				</div>
+
+
+			  </md-list-item>
+				<md-divider class="md-inset"></md-divider>
+			</md-list>
+
+  		</div>`,
+        data: function () {
+            return {
+                items: [],
+            };
+        },
+        created() {
+            this.getItems();
+
+        },
+        methods: {
+            getItems() {
+                this.$http.get('http://ui-collection.herokuapp.com/api/items/getAll')
+                    .then(result => {
+                        this.items = result.data.filter((item) => item.pic);
+                        console.log(this.items)
+                    })
+                    .catch(error => {
+                    });
+            },
+            sort(a, b) {
+                return parseInt(b.id) - parseInt(a.id);
+            },
+        }
+    });
+
+    Vue.use(VueMaterial.default);
+
+    const routes = [
+        {path: '/', component: List},
+        {path: '/table', component: Table},
+    ];
+
+    const router = new VueRouter({
+        routes,
+    });
+
+    new Vue({
+        el: '#app',
+        router
+    })
 </script>
 </body>
 </html>
