@@ -1,0 +1,499 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-material"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <template>
+        <div class="page-container">
+            <md-app md-mode="fixed">
+                <md-app-toolbar class="md-primary">
+                    <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
+                        <md-icon>menu</md-icon>
+                    </md-button>
+                    <span class="md-title" >Base 09</span>
+                </md-app-toolbar>
+
+                <md-app-drawer :md-active.sync="menuVisible" md-persistent1="mini" style="background: black; background1: linear-gradient(45deg, black, transparent)">
+                    <md-toolbar class="md-transparent" md-elevation="0" style="color: white;font-size: 20px;font-weight: 500;">Base 09</md-toolbar>
+                    <md-divider></md-divider>
+
+                    <md-list @click="menuVisible = !menuVisible" style="background: black; color: white">
+                        <md-list-item to="/" style="color: white">
+                            <md-icon style="color: white">home</md-icon>
+                            <span class="md-list-item-text" style="color: white">Home</span>
+                        </md-list-item>
+                        <md-divider></md-divider>
+
+                        <md-list-item to="/table">
+                            <md-icon style="color: white">pages</md-icon>
+                            <span class="md-list-item-text" style="color: white">Pictures</span>
+                        </md-list-item>
+                        <md-divider></md-divider>
+
+                        <md-list-item to="/list">
+                            <md-icon style="color: white">menu</md-icon>
+                            <span class="md-list-item-text" style="color: white">List</span>
+                        </md-list-item>
+                        <md-divider></md-divider>
+
+                        <md-list-item to="/base-item-show">
+                            <md-icon style="color: white">favorite</md-icon>
+                            <span class="md-list-item-text" style="color: white">Other</span>
+                        </md-list-item>
+                        <md-divider></md-divider>
+
+                    </md-list>
+                </md-app-drawer>
+
+                <md-app-content style="background: #eee">
+                    <router-view></router-view>
+                </md-app-content>
+            </md-app>
+
+            <md-bottom-bar md-type="shift">
+                <md-bottom-bar-item to="/" id="bottom-bar-item-home" md-label="Home" md-icon="home"></md-bottom-bar-item>
+                <md-bottom-bar-item to="/table" id="bottom-bar-item-pages" md-label="Pictures" md-icon="pages"></md-bottom-bar-item>
+                <md-bottom-bar-item to="/list" id="bottom-bar-item-posts" md-label="List" md-icon="menu"></md-bottom-bar-item>
+                <md-bottom-bar-item to="/base-item-show" id="bottom-bar-item-favorites" md-label="Other" md-icon="favorite"></md-bottom-bar-item>
+            </md-bottom-bar>
+        </div>
+    </template>
+</div>
+
+<style lang="scss" scoped>
+    .md-app {
+        height: 920px;
+        /*max-height: 920px;*/
+    }
+   .md-drawer {
+       width: 230px;
+       max-width: calc(100vw - 125px);
+   }
+    .md-table {
+        height: 85vh;
+   }
+    .md-table-content {
+        height: 70vh !important;
+        max-height: 70vh !important;
+   }
+/*
+    md-content md-table-content md-scrollbar md-theme-default*/
+</style>
+
+<script>
+    const toLower = text => {
+        return text.toString().toLowerCase()
+    };
+
+    const searchByName = (items, term) => {
+        if (term) {
+            return items.filter(item => toLower(item.name).includes(toLower(term)))
+        }
+
+        return items
+    };
+
+    const appConfig = new Vue();
+
+    const List = {template: '<listUI></listUI>'};
+    const Table = {template: '<tableUI></tableUI>'};
+    const Base = {template: '<baseUI></baseUI>'};
+    const BaseItemShow = {template: '<baseItemShow></baseItemShow>'};
+
+    Vue.component('baseUI', {
+        template: `
+		  <div>
+			<md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+			  <md-table-toolbar>
+				<div class="md-toolbar-section-start">
+				  <h1 class="md-title">Base 09</h1>
+				</div>
+
+				<md-field md-clearable class="md-toolbar-section-end">
+				  <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable" />
+				</md-field>
+			  </md-table-toolbar>
+
+<!--		  <md-table-empty-state
+				md-label="No users found"
+				:md-description="\`No user found for this '' query. Try a different search term or create a new user.\`">
+				<md-button class="md-primary md-raised" @click="newUser">Create New User</md-button>
+			  </md-table-empty-state>
+-->
+
+			  <md-table-empty-state>
+                <md-progress-spinner :md-diameter="100" :md-stroke="10" md-mode="indeterminate"></md-progress-spinner>
+			  </md-table-empty-state>
+
+			  <md-table-row slot="md-table-row" slot-scope="{ item }" v-on:click="showDetails(item)">
+				<md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell>
+				<md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
+
+				<md-table-cell md-label="Phone" md-sort-by="phone">{{ item.phone }}</md-table-cell>
+				<md-table-cell md-label="Street" md-sort-by="street">{{ item.street }}</md-table-cell>
+				<md-table-cell md-label="House" md-sort-by="house">{{ item.house }}</md-table-cell>
+				<md-table-cell md-label="Apt" md-sort-by="apt">{{ item.apt }}</md-table-cell>
+				<md-table-cell md-label="Index" md-sort-by="index">{{ item.index }}</md-table-cell>
+			  </md-table-row>
+			</md-table>
+  		</div>`,
+        data: () => ({
+            items: [],
+            search: null,
+            searched: [],
+        }),
+        created() {
+            this.getItems();
+            this.searched = this.items
+        },
+        methods: {
+            getItems() {
+                this.$http.get('http://ui-base.herokuapp.com/api/items/get')
+                    .then(result => {
+                        this.items = result.data.splice(0, 100);
+                        this.searched = this.items;
+                    })
+                    .catch(error => {
+                    });
+            },
+            sort(a, b) {
+                return parseInt(b.id) - parseInt(a.id);
+            },
+            newUser() {
+                window.alert('Noop')
+            },
+            searchOnTable() {
+                this.searched = searchByName(this.items, this.search)
+            },
+            showDetails(item) {
+                appConfig.item = item;
+                this.$router.push('base-item-show');
+            },
+        }
+    });
+
+    Vue.component('baseItemShow', {
+        template: `
+		    <div style="width:25%; margin: auto; padding-top: 5vh; min-width: 300px">
+                <form novalidate class="md-layout" @submit.prevent="saveUser">
+                  <md-card class="md-layout-item md-size-100 md-small-size-50">
+                    <md-card-header>
+                      <div class="md-title">{{ form.title }}</div>
+                    </md-card-header>
+<!--
+                    <md-card-content>
+                      <div class="md-layout md-gutter">
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="first-name">First Name</label>
+                            <md-input name="first-name" id="first-name" autocomplete="given-name" v-model="form.firstName" :disabled="sending" />
+
+                          </md-field>
+                        </div>
+
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="last-name">Last Name</label>
+                            <md-input name="last-name" id="last-name" autocomplete="family-name" v-model="form.lastName" :disabled="sending" />
+
+                          </md-field>
+                        </div>
+                      </div>
+
+                      <div class="md-layout md-gutter">
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="gender">Gender</label>
+                            <md-select name="gender" id="gender" v-model="form.gender" md-dense :disabled="sending">
+                              <md-option></md-option>
+                              <md-option value="M">M</md-option>
+                              <md-option value="F">F</md-option>
+                            </md-select>
+                            <span class="md-error">The gender is required</span>
+                          </md-field>
+                        </div>
+
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="age">Age</label>
+                            <md-input type="number" id="age" name="age" autocomplete="age" v-model="form.age" :disabled="sending" />
+
+
+                          </md-field>
+                        </div>
+                      </div>
+
+                      <md-field>
+                        <label for="email">Email</label>
+                        <md-input type="email" name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending" />
+
+
+                      </md-field>
+                    </md-card-content>
+-->
+
+                    <md-card-content>
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="id">ID</label>
+                            <md-input name="id" id="id" autocomplete="id" v-model="form.id" :disabled="sending" />
+                          </md-field>
+                        </div>
+
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="name">Name</label>
+                            <md-input name="name" id="name" autocomplete="name" v-model="form.name" :disabled="sending" />
+                          </md-field>
+                        </div>
+
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="phone">Phone</label>
+                            <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone" :disabled="sending" />
+                          </md-field>
+                        </div>
+
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="street">Street</label>
+                            <md-input name="street" id="street" autocomplete="street" v-model="form.street" :disabled="sending" />
+                          </md-field>
+                        </div>
+
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="house">house</label>
+                            <md-input name="house" id="house" autocomplete="house" v-model="form.house" :disabled="sending" />
+                          </md-field>
+                        </div>
+
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="apt">Apt</label>
+                            <md-input name="apt" id="apt" autocomplete="apt" v-model="form.apt" :disabled="sending" />
+                          </md-field>
+                        </div>
+
+                        <div class="md-layout-item md-small-size-100">
+                          <md-field>
+                            <label for="index">Postal Codes</label>
+                            <md-input name="index" id="index" autocomplete="index" v-model="form.index" :disabled="sending" />
+                          </md-field>
+                        </div>
+                    </md-card-content>
+
+                    <md-progress-bar md-mode="indeterminate" v-if="sending" />
+
+                    <md-card-actions>
+                     <!-- <md-button type="submit" class="md-primary" :disabled="sending">Create user</md-button>-->
+                      <md-button type="button" class="md-primary" v-on:click="back">Back</md-button>
+                    </md-card-actions>
+                  </md-card>
+
+                  <md-snackbar :md-active.sync="userSaved" md-position="left">The user {{ lastUser }} was saved with success!</md-snackbar>
+                </form>
+  		</div>`,
+        data: () => ({
+            form: {
+                title: null,
+                id: null,
+                name: null,
+                phone: null,
+                street: null,
+                house: null,
+                apt: null,
+                index: null,
+            },
+            userSaved: false,
+            sending: false,
+            lastUser: null
+        }),
+        created() {
+            if (!appConfig.item) {
+                this.$router.push('/base');
+            } else {
+                this.init();
+            }
+        },
+        methods: {
+            init() {
+                this.form = appConfig.item;
+                this.form.title = appConfig.item.name;
+            },
+            back() {
+                this.$router.push('/base');
+            },
+            clearForm () {
+                this.$v.$reset()
+                this.form.firstName = null
+                this.form.lastName = null
+                this.form.age = null
+                this.form.gender = null
+                this.form.email = null
+            },
+            saveUser () {
+                this.sending = true
+
+                // Instead of this timeout, here you can call your API
+                window.setTimeout(() => {
+                    this.lastUser = `${this.form.firstName} ${this.form.lastName}`
+                    this.userSaved = true
+                    this.sending = false
+                    this.clearForm()
+                }, 1500)
+            },
+
+        }
+    });
+
+    Vue.component('tableUI', {
+        template: `
+		  <div>
+			<md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+			  <md-table-toolbar>
+				<div class="md-toolbar-section-start">
+				  <h1 class="md-title">Pictures</h1>
+				</div>
+
+				<md-field md-clearable class="md-toolbar-section-end">
+				  <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable" />
+				</md-field>
+			  </md-table-toolbar>
+
+			  <md-table-empty-state>
+                <md-progress-spinner :md-diameter="100" :md-stroke="10" md-mode="indeterminate"></md-progress-spinner>
+			  </md-table-empty-state>
+
+			  <md-table-row slot="md-table-row" slot-scope="{ item }">
+			    <md-table-cell md-label="Pic" md-sort-by="pic"><md-avatar style1="width: 16px;height: 15px;">
+				  <img :src="item.pic" alt="People">
+				</md-avatar></md-table-cell>
+				<md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell>
+				<md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
+				<md-table-cell md-label="Category" md-sort-by="category">{{ item.category }}</md-table-cell>
+				<md-table-cell md-label="Description" md-sort-by="description">{{ item.description }}</md-table-cell>
+			  </md-table-row>
+			</md-table>
+  		</div>`,
+        data: () => ({
+            items: [],
+            search: null,
+            searched: [],
+        }),
+        created() {
+            this.getItems();
+            this.searched = this.items;
+        },
+        methods: {
+            getItems() {
+                this.$http.get('http://ui-collection.herokuapp.com/api/items/getAll')
+                    .then(result => {
+                        this.items = result.data.filter((item) => item.pic);
+                        this.searched = this.items;
+                    })
+                    .catch(error => {
+                    });
+            },
+            sort(a, b) {
+                return parseInt(b.id) - parseInt(a.id);
+            },
+            newUser() {
+                window.alert('Noop')
+            },
+            searchOnTable() {
+                this.searched = searchByName(this.items, this.search)
+            }
+        }
+    });
+
+    Vue.component('listUI', {
+        template: `
+		<div>
+		    <md-empty-state v-if="loading" style="padding-top: 35vh;">
+                <md-progress-spinner :md-diameter="100" :md-stroke="10" md-mode="indeterminate"></md-progress-spinner>
+            </md-empty-state>
+			<md-list class="md-triple-line" v-for="item in items" v-bind:key="item.id">
+
+			  <md-list-item>
+				<md-avatar style="width: 166px;height: 150px;">
+				  <img :src="item.pic" alt="People">
+				</md-avatar>
+
+				<div class="md-list-item-text">
+				  <span>{{item.name}}</span>
+				  <span>{{item.category}}</span>
+				  <p>{{item.description}}</p>
+				</div>
+
+
+			  </md-list-item>
+				<md-divider></md-divider>
+			</md-list>
+
+  		</div>`,
+        data: () => ({
+            items: [],
+            loading: true
+        }),
+        created() {
+            this.getItems();
+
+        },
+        methods: {
+            getItems() {
+                this.$http.get('http://ui-collection.herokuapp.com/api/items/getAll')
+                    .then(result => {
+                        this.items = result.data.filter((item) => item.pic);
+                        this.loading = false;
+                    })
+                    .catch(error => {
+                    });
+            },
+            sort(a, b) {
+                return parseInt(b.id) - parseInt(a.id);
+            },
+        }
+    });
+
+    Vue.use(VueMaterial.default);
+
+    const routes = [
+        {path: '/', component: Base},
+        {path: '*', component: Base},
+        {path: '/list', component: List},
+        {path: '/table', component: Table},
+        {path: '/base', component: Base},
+        {path: '/base-item-show', component: BaseItemShow},
+    ];
+
+    const router = new VueRouter({
+        routes,
+    });
+
+    new Vue({
+        el: '#app',
+        router,
+        data: () => ({
+            menuVisible: false,
+        })
+    })
+
+    // https://mrtomato-qa.dev.trustsourcing.com/standarts-categories
+    // sprint16tomato@mailinator.com
+</script>
+</body>
+</html>
