@@ -12,6 +12,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -23,11 +25,14 @@
                     <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
                         <md-icon>menu</md-icon>
                     </md-button>
-                    <span class="md-title" >Base 09</span>
+                    <span class="md-title">Base 09</span>
                 </md-app-toolbar>
 
-                <md-app-drawer :md-active.sync="menuVisible" md-persistent1="mini" style="background: black; background1: linear-gradient(45deg, black, transparent)">
-                    <md-toolbar class="md-transparent" md-elevation="0" style="color: white;font-size: 20px;font-weight: 500;">Base 09</md-toolbar>
+                <md-app-drawer :md-active.sync="menuVisible" md-persistent1="mini"
+                               style="background: black; background1: linear-gradient(45deg, black, transparent)">
+                    <md-toolbar class="md-transparent" md-elevation="0"
+                                style="color: white;font-size: 20px;font-weight: 500;">Base 09
+                    </md-toolbar>
                     <md-divider></md-divider>
 
                     <md-list @click="menuVisible = !menuVisible" style="background: black; color: white">
@@ -38,18 +43,18 @@
                         <md-divider></md-divider>
 
                         <md-list-item to="/table">
-                            <md-icon style="color: white">pages</md-icon>
+                            <md-icon style="color: white">camera_alt</md-icon>
                             <span class="md-list-item-text" style="color: white">Pictures</span>
                         </md-list-item>
                         <md-divider></md-divider>
 
                         <md-list-item to="/list">
-                            <md-icon style="color: white">menu</md-icon>
+                            <md-icon style="color: white">camera</md-icon>
                             <span class="md-list-item-text" style="color: white">List</span>
                         </md-list-item>
                         <md-divider></md-divider>
 
-                        <md-list-item to="/base-item-show">
+                        <md-list-item to="/certification-items">
                             <md-icon style="color: white">favorite</md-icon>
                             <span class="md-list-item-text" style="color: white">Other</span>
                         </md-list-item>
@@ -63,48 +68,42 @@
                 </md-app-content>
             </md-app>
 
-            <md-bottom-bar md-type="shift">
-                <md-bottom-bar-item to="/" id="bottom-bar-item-home" md-label="Home" md-icon="home"></md-bottom-bar-item>
-                <md-bottom-bar-item to="/table" id="bottom-bar-item-pages" md-label="Pictures" md-icon="pages"></md-bottom-bar-item>
-                <md-bottom-bar-item to="/list" id="bottom-bar-item-posts" md-label="List" md-icon="menu"></md-bottom-bar-item>
-                <md-bottom-bar-item to="/base-item-show" id="bottom-bar-item-favorites" md-label="Other" md-icon="favorite"></md-bottom-bar-item>
-            </md-bottom-bar>
+            <!--            <md-bottom-bar md-type="shift">
+                            <md-bottom-bar-item to="/" id="bottom-bar-item-home" md-label="Home" md-icon="home"></md-bottom-bar-item>
+                            <md-bottom-bar-item to="/table" id="bottom-bar-item-pages" md-label="Pictures" md-icon="pages"></md-bottom-bar-item>
+                            <md-bottom-bar-item to="/list" id="bottom-bar-item-posts" md-label="List" md-icon="menu"></md-bottom-bar-item>
+                            <md-bottom-bar-item to="/base-item-show" id="bottom-bar-item-favorites" md-label="Other" md-icon="favorite"></md-bottom-bar-item>
+                        </md-bottom-bar>-->
         </div>
     </template>
 </div>
 
 <style lang="scss" scoped>
     .md-app {
-        height: 920px;
+        height: 100vh;
         /*max-height: 920px;*/
     }
-   .md-drawer {
-       width: 230px;
-       max-width: calc(100vw - 125px);
-   }
+
+    .md-drawer {
+        width: 230px;
+        max-width: calc(100vw - 125px);
+    }
+
     .md-table {
-        height: 85vh;
-   }
+        height: 90vh;
+    }
+
     .md-table-content {
-        height: 70vh !important;
-        max-height: 70vh !important;
-   }
-/*
-    md-content md-table-content md-scrollbar md-theme-default*/
+        height: 90vh !important;
+        max-height: 90vh !important;
+    }
+
+    /*
+        md-content md-table-content md-scrollbar md-theme-default*/
 </style>
 
 <script>
-    const toLower = text => {
-        return text.toString().toLowerCase()
-    };
-
-    const searchByName = (items, term) => {
-        if (term) {
-            return items.filter(item => toLower(item.name).includes(toLower(term)))
-        }
-
-        return items
-    };
+    document.cookie = '.AspNetCore.Identity.Application=CfDJ8EEYfbHumMlOvTgWyaJgM1IornwdiNlGXlbavp1Qq25iAyrs_XiyyL0aKjQ0nRvx4mhKpZXMj2ajH1N_rZutSTwck6ATN46zLdcWym1E3xdnIxi8O9wyhjQHpIkrHqDcDeQ2A9CiMnkCgaHdP2UC1dI45rSqPczBLsw2nj3B_5ZSF_exm1PYXCUnY44Gd7bCaHSH86btiB3gYoU31VLvbIr9tf1xGluKhZzG0tgf9TXM0fD-MDJDkjEcm6O0Sv3yiB-g8Qdr5SR0_EiU5nxgnBau7jz-DGyVYb7SFwx0Is3_og5ug-l9aNvPbft-UkZfw4oq9Cs4AQ1gDJZye6WTGmQKvQ2lQH6xLjhQAc9OYxxb6ouzhvxWyqvuzg52RLg0WMUDqUQADtjGuQx9I-1CKSgdMLcDhYhqKRguO3-e6PZrBcPOqDBcI482cjh7F52yXMBcAAfDVm-LXzFBmNA1agqdOfK3_x8aWtewbaZDfjc_RE8FXmrW7PT3g6H3Hkm7iKimgk_7MeUDkBbcVYG3nzmL18f2HmJ02oJDTFhQQXxZbBSB-mWfnMCwcvXJ9ypsBEK093pWRU4ecfeJ-MaqK3myc8Xr8sQmp_fNk-NCQjbpkOSqTTAggS9fdvfR9ciWZE8AXFfO9EmuAzY2fwA8H3hqrJENuJKsLIn2Hvl1HVRKEhsuW-0CIskxrBcknyYvDQyTkt6yDBj-torj-OCRcWI'
 
     const appConfig = new Vue();
 
@@ -112,8 +111,111 @@
     const Table = {template: '<tableUI></tableUI>'};
     const Base = {template: '<baseUI></baseUI>'};
     const BaseItemShow = {template: '<baseItemShow></baseItemShow>'};
+    const CertificationItems = {template: '<certification-items></certification-items>'};
 
     Vue.component('baseUI', {
+        template: `
+		  <div>
+			<md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+			  <md-table-toolbar>
+				<div class="md-toolbar-section-start">
+				  <h1 class="md-title">Base 09</h1>
+				</div>
+
+				<md-field md-clearable class="md-toolbar-section-end">
+				  <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable" />
+				</md-field>
+			  </md-table-toolbar>
+
+<!--		  <md-table-empty-state
+				md-label="No users found"
+				:md-description="\`No user found for this '' query. Try a different search term or create a new user.\`">
+				<md-button class="md-primary md-raised" @click="newUser">Create New User</md-button>
+			  </md-table-empty-state>
+-->
+
+			  <md-table-empty-state>
+                <md-progress-spinner :md-diameter="100" :md-stroke="10" md-mode="indeterminate"></md-progress-spinner>
+			  </md-table-empty-state>
+
+			  <md-table-row slot="md-table-row" slot-scope="{ item }" v-on:click="showDetails(item)">
+				<md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell>
+				<md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
+
+				<md-table-cell md-label="Phone" md-sort-by="phone">{{ item.phone }}</md-table-cell>
+				<md-table-cell md-label="Street" md-sort-by="street">{{ item.street }}</md-table-cell>
+				<md-table-cell md-label="House" md-sort-by="house">{{ item.house }}</md-table-cell>
+				<md-table-cell md-label="Apt" md-sort-by="apt">{{ item.apt }}</md-table-cell>
+				<md-table-cell md-label="Index" md-sort-by="index">{{ item.index }}</md-table-cell>
+			  </md-table-row>
+			</md-table>
+  		</div>`,
+        data: () => ({
+            items: [],
+            filteredItems: [],
+            recordsCount: 20,
+            positionY: 0,
+            search: null,
+            searched: [],
+        }),
+        created() {
+            this.getItems();
+            this.searched = this.items
+        },
+        methods: {
+            getItems() {
+                this.$http.get('http://ui-base.herokuapp.com/api/items/get')
+                    .then(result => {
+                        this.items = result.data.splice(0, 100);
+                        this.filteredItems = result.data.splice(0, 100);
+                        this.searched = this.items;
+                        setTimeout(() => {
+                            //document.querySelector('.md-table-content').addEventListener('scroll', this.handleScroll)
+                        }, 100)
+                    })
+                    .catch(error => {
+                    });
+            },
+            sort(a, b) {
+                return parseInt(b.id) - parseInt(a.id);
+            },
+            handleScroll () {
+                let position = document.querySelector('.md-table-content').scrollTop;
+                let items, positionY, recordsCount;
+                recordsCount = this.recordsCount;
+                positionY = this.positionY;
+                //console.log(positionY, ' - ' ,recordsCount)
+                items = this.filteredItems.slice(0, recordsCount);
+                if (position > positionY) {
+                    this.items = items;
+                    this.searched = items;
+                    this.recordsCount = recordsCount + 10;
+                    this.positionY = positionY + 200;
+                }
+            },
+            newUser() {
+                window.alert('Noop')
+            },
+            searchOnTable() {
+                this.searched = this.searchByName(this.filteredItems, this.search)
+            },
+            searchByName(items, term) {
+                if (term) {
+                    return items.filter(item => this.toLower(item.name).includes(this.toLower(term)))
+                }
+                return items
+            },
+            toLower(text) {
+                return text.toString().toLowerCase()
+            },
+            showDetails(item) {
+                appConfig.item = item;
+                this.$router.push('base-item-show');
+            },
+        }
+    });
+
+    Vue.component('certification-items', {
         template: `
 		  <div>
 			<md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
@@ -161,10 +263,27 @@
         },
         methods: {
             getItems() {
-                this.$http.get('http://ui-base.herokuapp.com/api/items/get')
+                axios.get('http://localhost:5000/api/Admin/GetAllUsers',
+                    {
+                        withCredentials: true,
+                        headers: {
+                            'Access-Control-Allow-Origin': 'localhost:3000',
+                        },
+                    })
                     .then(result => {
-                        this.items = result.data.splice(0, 100);
+                        /*
+                        this.items = result.data.map((item) => {
+                            return {
+                                'name': item.restaurant.name
+                            }
+                        });
+                        */
+
+                        this.items = result.data;
                         this.searched = this.items;
+                        setTimeout(() => {
+                            document.querySelector('.md-table-content').addEventListener('scroll', () => console.log(document.querySelector('.md-table-content').scrollTop))
+                        }, 100)
                     })
                     .catch(error => {
                     });
@@ -337,7 +456,7 @@
             back() {
                 this.$router.push('/base');
             },
-            clearForm () {
+            clearForm() {
                 this.$v.$reset()
                 this.form.firstName = null
                 this.form.lastName = null
@@ -345,7 +464,7 @@
                 this.form.gender = null
                 this.form.email = null
             },
-            saveUser () {
+            saveUser() {
                 this.sending = true
 
                 // Instead of this timeout, here you can call your API
@@ -379,10 +498,10 @@
 			  </md-table-empty-state>
 
 			  <md-table-row slot="md-table-row" slot-scope="{ item }">
+				<md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell>
 			    <md-table-cell md-label="Pic" md-sort-by="pic"><md-avatar style1="width: 16px;height: 15px;">
 				  <img :src="item.pic" alt="People">
 				</md-avatar></md-table-cell>
-				<md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell>
 				<md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
 				<md-table-cell md-label="Category" md-sort-by="category">{{ item.category }}</md-table-cell>
 				<md-table-cell md-label="Description" md-sort-by="description">{{ item.description }}</md-table-cell>
@@ -478,6 +597,7 @@
         {path: '/table', component: Table},
         {path: '/base', component: Base},
         {path: '/base-item-show', component: BaseItemShow},
+        {path: '/certification-items', component: CertificationItems},
     ];
 
     const router = new VueRouter({
