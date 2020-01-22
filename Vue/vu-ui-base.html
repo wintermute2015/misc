@@ -25,7 +25,7 @@
                     <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
                         <md-icon>menu</md-icon>
                     </md-button>
-                    <span class="md-title">Base 09</span>
+                    <!--<span class="md-title">Base 09</span>-->
                 </md-app-toolbar>
 
                 <md-app-drawer :md-active.sync="menuVisible" md-persistent1="mini"
@@ -57,6 +57,11 @@
                         <md-list-item to="/certification-items">
                             <md-icon style="color: white">favorite</md-icon>
                             <span class="md-list-item-text" style="color: white">Other</span>
+                        </md-list-item>
+
+                        <md-list-item to="/select-items">
+                            <md-icon style="color: white">notifications_active</md-icon>
+                            <span class="md-list-item-text" style="color: white">Notifications</span>
                         </md-list-item>
                         <md-divider></md-divider>
 
@@ -112,6 +117,7 @@
     const Base = {template: '<baseUI></baseUI>'};
     const BaseItemShow = {template: '<baseItemShow></baseItemShow>'};
     const CertificationItems = {template: '<certification-items></certification-items>'};
+    const SelectItems = {template: '<select-items></select-items>'};
 
     Vue.component('baseUI', {
         template: `
@@ -603,6 +609,177 @@
         }
     });
 
+    Vue.component('select-items', {
+        template: `
+        <div>
+          <md-card md-with-hover style="width: 50%; margin: auto;">
+          <md-ripple>
+            <md-card-header>
+              <div class="md-title">Card with hover effect</div>
+              <div class="md-subhead">It also have a ripple</div>
+            </md-card-header>
+
+            <md-card-content>
+                    <div class="md-layout-item">
+<!--                      <md-field>
+                        <label for="movies">Movies</label>
+                        <md-select v-model="selectedMovies" name="movies" id="movies" multiple1>
+                          <md-option value="fight-club">Fight Club</md-option>
+                          <md-option value="godfather">Godfather</md-option>
+                          <md-option value="godfather-ii">Godfather II</md-option>
+                          <md-option value="godfather-iii">Godfather III</md-option>
+                          <md-option value="godfellas">Godfellas</md-option>
+                          <md-option value="pulp-fiction">Pulp Fiction</md-option>
+                          <md-option value="scarface">Scarface</md-option>
+                        </md-select>
+                      </md-field>-->
+
+                        <md-autocomplete v-model="selectedCountry" :md-options="countries">
+                          <label>Country</label>
+                        </md-autocomplete>
+
+                        <md-autocomplete v-model="selectedEmployee" :md-options="employees" md-dense>
+                          <label>Employees</label>
+                        </md-autocomplete>
+
+                        <md-field>
+                            <label>Textarea with Autogrow</label>
+                            <md-textarea v-model="message" md-autogrow></md-textarea>
+                        </md-field>
+
+                      <div>
+                        <strong>Selected movies:</strong>
+                        {{ selectedCountry }}
+                        {{ selectedEmployee }}
+                        {{ message }}
+                      </div>
+                  </div>
+            </md-card-content>
+
+            <md-card-actions>
+                <md-button class="md-raised md-primary" v-on:click="sendMessage">Send</md-button>
+                <md-button class="md-raised md-primary" v-on:click="getItems">Cancel</md-button>
+            </md-card-actions>
+        </md-ripple>
+    </md-card>
+
+    <md-snackbar md-position="left" :md-duration="isInfinity ? Infinity : duration" :md-active.sync="showSnackbar" md-persistent>
+      <span>Connection timeout. Showing limited messages!</span>
+      <md-button class="md-primary" @click="showSnackbar = false">Retry</md-button>
+    </md-snackbar>
+</div>
+`,
+        data: () => ({
+            items: [],
+            duration: 4000,
+            showSnackbar: false,
+            isInfinity: false,
+            loading: true,
+            selectedMovies: [],
+            message: null,
+            selectedCountry: null,
+            selectedEmployee: null,
+            countries: [
+                'Algeria',
+                'Argentina',
+                'Brazil',
+                'Canada',
+                'Italy',
+                'Japan',
+                'United Kingdom',
+                'United States'
+            ],
+            employees:[],
+            employeesObject:[],
+            employees0:[
+                { id: 1, name: "Jim Halpert" },
+                { id: 2, name: "Dwight Schrute" },
+                { id: 3, name: "Michael Scott" },
+                { id: 4, name: "Pam Beesly" },
+                { id: 5, name: "Angela Martin" },
+                { id: 6, name: "Kelly Kapoor" },
+                { id: 7, name: "Ryan Howard" },
+                { id: 8, name: "Kevin Malone" },
+                { id: 9, name: "Creed Bratton" },
+            ],
+            employees1: [
+                'Jim Halpert',
+                'Dwight Schrute',
+                'Michael Scott',
+                'Pam Beesly',
+                'Angela Martin',
+                'Kelly Kapoor',
+                'Ryan Howard',
+                'Kevin Malone',
+                'Creed Bratton',
+                'Oscar Nunez',
+                'Toby Flenderson',
+                'Stanley Hudson',
+                'Meredith Palmer',
+                'Phyllis Lapin-Vance'
+            ]
+        }),
+        created() {
+            //this.getItems();
+        },
+        methods: {
+            sendMessage() {
+                const id = this.employeesObject.filter(item => item.name === this.selectedEmployee)[0].id;
+                this.showSnackbar = true;
+                this.NotifyUserById(id, this.message);
+                this.selectedEmployee = '';
+                this.message = '';
+            },
+            NotifyAllUsers() {
+                axios.post('http://localhost:7000/api/Notification/NotifyAllUsers',
+                    {
+                        message: 'Test message'
+                    },
+                    {
+                        withCredentials: true,
+                    })
+                    .then(result => {
+                        console.log(result)
+                    })
+                    .catch(error => {
+                    });
+            },
+            NotifyUserById(id, message) {
+                axios.post('http://localhost:7000/api/Notification/NotifyUser?userId=' + id,
+                    {
+                        message: message
+                    },
+                    {
+                        withCredentials: true,
+                    })
+                    .then(result => {
+                        console.log(result)
+                    })
+                    .catch(error => {
+                    });
+            },
+            getItems() {
+                axios.get('http://localhost:5000/api/Admin/GetAllUsers',
+                    {
+                        withCredentials: true,
+                        headers: {
+                            'Access-Control-Allow-Origin': 'localhost:3000',
+                        },
+                    })
+                    .then(result => {
+                        this.employees = result.data.filter(item => item.name !== null);
+                        this.employeesObject = [...this.employees];
+                        this.employees = this.employees.map((item) => {
+                            return item.name;
+                        });
+                        this.searched = this.items;
+                    })
+                    .catch(error => {
+                    });
+            },
+        }
+    });
+
     Vue.use(VueMaterial.default);
 
     const routes = [
@@ -613,6 +790,7 @@
         {path: '/base', component: Base},
         {path: '/base-item-show', component: BaseItemShow},
         {path: '/certification-items', component: CertificationItems},
+        {path: '/select-items', component: SelectItems},
     ];
 
     const router = new VueRouter({
